@@ -50,27 +50,27 @@ export default function AppAppBar() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, gap: 3 }}>
             <Sitemark />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Button variant="text" color="info" size="small">
-                Features
+                Клуби
               </Button>
               <Button variant="text" color="info" size="small">
-                Testimonials
+                Учасники
               </Button>
               <Button variant="text" color="info" size="small">
-                Highlights
+                Кабінет
               </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                FAQ
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                Blog
-              </Button>
+              {/*<Button variant="text" color="info" size="small">*/}
+              {/*  Pricing*/}
+              {/*</Button>*/}
+              {/*<Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>*/}
+              {/*  FAQ*/}
+              {/*</Button>*/}
+              {/*<Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>*/}
+              {/*  Blog*/}
+              {/*</Button>*/}
             </Box>
           </Box>
           <Box
@@ -81,10 +81,10 @@ export default function AppAppBar() {
             }}
           >
             <Button color="primary" variant="text" size="small">
-              Sign in
+              Увійти
             </Button>
             <Button color="primary" variant="contained" size="small">
-              Sign up
+              Зареєструватись
             </Button>
             <ColorModeIconDropdown />
           </Box>
@@ -124,12 +124,12 @@ export default function AppAppBar() {
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
                   <Button color="primary" variant="contained" fullWidth>
-                    Sign up
+                    Зареєструватись
                   </Button>
                 </MenuItem>
                 <MenuItem>
                   <Button color="primary" variant="outlined" fullWidth>
-                    Sign in
+                    Увійти
                   </Button>
                 </MenuItem>
               </Box>
