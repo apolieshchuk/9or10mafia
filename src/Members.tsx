@@ -25,7 +25,9 @@ import CustomizedDataGrid from "./components/dashboard/CustomizedDataGrid";
 import CustomizedTreeView from "./components/dashboard/CustomizedTreeView";
 import ChartUserByCountry from "./components/dashboard/ChartUserByCountry";
 import {DataGrid} from "@mui/x-data-grid";
-import {columns, rows} from "./internals/data/gridData";
+import {columns, rows} from "./internals/data/gridDataClubs";
+import {useEffect} from "react";
+import axios from "axios";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -70,6 +72,22 @@ const MembersContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function MembersList(props: { disableCustomTheme?: boolean }) {
+  const [members, setMembers] = React.useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { data } = await axios.get('http://localhost:3000/users');
+        const array = (data.items || []).map((item: any, i: number) => {
+          return { ...item, id: i + 1 };
+        })
+        setMembers(array || []);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchData();
+  }, [])
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -107,7 +125,7 @@ export default function MembersList(props: { disableCustomTheme?: boolean }) {
             <Grid size={{ xs: 12, lg: 9 }}>
               <DataGrid
                 checkboxSelection
-                rows={rows}
+                rows={members}
                 columns={columns}
                 getRowClassName={(params) =>
                   params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
@@ -149,7 +167,7 @@ export default function MembersList(props: { disableCustomTheme?: boolean }) {
             <Grid size={{ xs: 12, lg: 3 }}>
               <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
                 {/*<CustomizedTreeView />*/}
-                <ChartUserByCountry />
+                {/*<ChartUserByCountry />*/}
               </Stack>
             </Grid>
           </Grid>

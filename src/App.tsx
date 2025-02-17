@@ -6,19 +6,22 @@ import SignIn from "./SignIn";
 import ClubsList from "./Clubs";
 import MembersList from "./Members";
 import SignUpClub from "./SignUpClub";
+import {AuthProvider} from "./AuthProvider";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MarketingPage />}/>
-        <Route path="register" element={<SignUp />} />
-        <Route path="register-club" element={<SignUpClub />} />
-        <Route path="login" element={<SignIn />} />
-        <Route path="members" element={<MembersList />} />
-        <Route path="clubs" element={<ClubsList />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MarketingPage />}/>
+          <Route path="register" element={<SignUp />} />
+          <Route path="register-club" element={<SignUpClub />} />
+          <Route path="login" element={<SignIn />} />
+          <Route path="members" element={<MembersList />} />
+          <Route path="clubs" element={<ClubsList />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

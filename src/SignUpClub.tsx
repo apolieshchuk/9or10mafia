@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -71,6 +72,8 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [nickNameError, setNickNameError] = React.useState(false);
   const [nickNameErrorMessage, setNickNameErrorMessage] = React.useState('');
+  const [addressError, setAddressError] = React.useState(false);
+  const [addressErrorMessage, setAddressErrorMessage] = React.useState('');
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
@@ -78,6 +81,7 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
     const name = document.getElementById('name') as HTMLInputElement;
     const contact = document.getElementById('contact') as HTMLInputElement;
     const nickname = document.getElementById('nickname') as HTMLInputElement;
+    const address = document.getElementById('address') as HTMLInputElement;
 
     let isValid = true;
 
@@ -126,21 +130,38 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
       setNickNameErrorMessage('');
     }
 
+    if (!address.value || address.value.length < 1) {
+      setAddressError(true);
+      setAddressErrorMessage('Потрібно вказати логін');
+      isValid = false;
+    } else {
+      setAddressError(false);
+      setAddressErrorMessage('');
+    }
+
     return isValid;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError || nickNameError) {
-      event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (nameError || emailError || passwordError || nickNameError || contactError) {
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
+    const email = document.getElementById('email') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
+    const name = document.getElementById('name') as HTMLInputElement;
+    const contact = document.getElementById('contact') as HTMLInputElement;
+    const nickname = document.getElementById('nickname') as HTMLInputElement;
+    const address = document.getElementById('address') as HTMLInputElement;
+    await axios.post('http://localhost:3000/club', {
+      name: name.value,
+      nickname: nickname.value,
+      address: address.value,
+      contact: contact.value,
+      email: email.value,
+      password: password.value,
     });
+    document.location.href = '/login';
   };
 
   return (
@@ -215,14 +236,29 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="contact">Контактні дані</FormLabel>
+              <FormLabel htmlFor="contact">Контактні дані (у випадку надання некоректних контактних даних клуб може бути заблоковано без попередження)</FormLabel>
               <TextField
                 required
                 fullWidth
                 id="contact"
-                placeholder="+38(050)123-45-67"
+                placeholder="telegram: +38(050)123-45-67, viber: +38(050)123-45-67"
                 name="contact"
                 autoComplete="contact"
+                variant="outlined"
+                error={contactError}
+                helperText={contactErrorMessage}
+                color={contactError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="address">Адреса</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="address"
+                placeholder="Канада. м.Ванкувер"
+                name="address"
+                autoComplete="address"
                 variant="outlined"
                 error={contactError}
                 helperText={contactErrorMessage}
@@ -245,6 +281,7 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
+
             {/*<FormControlLabel*/}
             {/*  control={<Checkbox value="allowExtraEmails" color="primary" />}*/}
             {/*  label="I want to receive updates via email."*/}

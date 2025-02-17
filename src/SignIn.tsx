@@ -16,8 +16,12 @@ import { styled } from '@mui/material/styles';
 import ForgotPassword from './components/ForgotPassword';
 import AppTheme from './theme/AppTheme';
 import ColorModeSelect from './theme/ColorModeSelect';
-import { GoogleIcon, FacebookIcon } from './components/CustomIcons';
 import SitemarkIcon from "./components/SitemarkIcon";
+import SelectInput from "@mui/material/Select/SelectInput";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import axios from "axios";
+import {useAuth} from "./AuthProvider";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -62,11 +66,13 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
+  const [authType, setAuthType] = React.useState('users');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const { login } = useAuth();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -76,16 +82,18 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const email = document.getElementById('email') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
+
+    const { data } = await axios.post('http://localhost:3000/auth/login', {
+      email: email.value,
+      password: password.value,
+      authType,
     });
+    const token = data?.token;
+    token && login(token)
   };
 
   const validateInputs = () => {
@@ -184,6 +192,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
+            <FormControl>
+              <FormLabel id="auth-type-label">Тип облікового запису</FormLabel>
+              <Select
+                labelId="auth-type-label"
+                id="auth-type"
+                value={authType}
+                label="Auth Type"
+                onChange={(e) => setAuthType(e.target.value)}
+              >
+                <MenuItem value={'users'}>Гравець</MenuItem>
+                <MenuItem value={'clubs'}>Клуб</MenuItem>
+              </Select>
+            </FormControl>
             {/*<FormControlLabel*/}
             {/*  control={<Checkbox value="remember" color="primary" />}*/}
             {/*  label="Remember me"*/}
@@ -195,7 +216,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Sign in
+              Увійти
             </Button>
             <Link
               component="button"
@@ -204,7 +225,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="body2"
               sx={{ alignSelf: 'center' }}
             >
-              Forgot your password?
+              Забули пароль?
             </Link>
           </Box>
           {/*<Divider>or</Divider>*/}

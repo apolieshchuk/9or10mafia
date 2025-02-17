@@ -17,6 +17,7 @@ import AppTheme from './theme/AppTheme';
 import ColorModeSelect from './theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon } from './components/CustomIcons';
 import SitemarkIcon from "./components/SitemarkIcon";
+import axios from "axios";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -117,18 +118,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (nameError || emailError || passwordError || nickNameError) {
-      event.preventDefault();
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
+    const email = document.getElementById('email') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
+    const name = document.getElementById('name') as HTMLInputElement;
+    const nickname = document.getElementById('nickname') as HTMLInputElement;
+    await axios.post('http://localhost:3000/user', {
+      name: name.value,
+      nickname: nickname.value,
+      email: email.value,
+      password: password.value,
     });
+    document.location.href = '/login';
   };
 
   return (
