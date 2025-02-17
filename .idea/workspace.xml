@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="init commit">
-      <change afterPath="$PROJECT_DIR$/public/images/bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/logo-black-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/logo-black.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/logo-white-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/logo-white.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MarketingPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/MarketingPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hero.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SitemarkIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SitemarkIcon.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/theme/themePrimitives.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme/themePrimitives.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-    </list>
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="init commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,26 +26,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/public/images",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.build.executor": "Run",
-    "npm.start.executor": "Run",
-    "settings.editor.selected.configurable": "project.scopes",
-    "ts.external.directory.path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/public/images" />
       <recent name="$PROJECT_DIR$/assets" />
     </key>
@@ -112,7 +100,7 @@
       <option name="presentableId" value="Default" />
       <updated>1739659657465</updated>
       <workItem from="1739659658911" duration="2741000" />
-      <workItem from="1739747944025" duration="10321000" />
+      <workItem from="1739747944025" duration="16252000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -130,7 +118,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739748325954</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="init commit">
+      <option name="closed" value="true" />
+      <created>1739772739826</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1739772739826</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

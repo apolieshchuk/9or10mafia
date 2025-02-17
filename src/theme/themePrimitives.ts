@@ -341,7 +341,7 @@ export const colorSchemes = {
 };
 
 export const typography = {
-  fontFamily: 'Anton, sans-serif',
+  fontFamily: 'Roboto, sans-serif',
   h1: {
     fontSize: defaultTheme.typography.pxToRem(48),
     fontWeight: 600,

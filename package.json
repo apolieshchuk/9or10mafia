@@ -3,16 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "@mui/material": "6.4.4",
-    "@mui/icons-material": "6.4.4",
-    "@mui/utils": "6.4.3",
-    "@mui/system": "6.4.3",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
+    "@mui/icons-material": "6.4.4",
+    "@mui/material": "6.4.4",
+    "@mui/system": "6.4.3",
+    "@mui/utils": "6.4.3",
     "@types/react": "19.0.9",
     "@types/react-dom": "19.0.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "^7.1.5",
     "typescript": "5.7.3"
   },
   "scripts": {

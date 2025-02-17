@@ -100,8 +100,8 @@ export default function Hero() {
               width: {sm: '100%', md: '80%'},
             }}
           >
-            Рейтингова платформа інтелектуально-психологічної гри "Мафія". Створюйте клуби, редагуйте та
-            діліться рейтингами з іншими гравцями.
+            <div>Рейтингова платформа інтелектуально-психологічної гри "Мафія".</div>
+            <div>Створюйте клуби, редагуйте та діліться рейтингами з іншими гравцями.</div>
           </Typography>
           <Stack
             direction={{xs: 'column', sm: 'row'}}
@@ -128,6 +128,7 @@ export default function Hero() {
             {/*  }}*/}
             {/*/>*/}
             <Button
+              href={'login'}
               variant="contained"
               color="primary"
               size="small"
@@ -136,6 +137,7 @@ export default function Hero() {
               Увійти
             </Button>
             <Button
+              href={'register'}
               variant="contained"
               color="primary"
               size="small"

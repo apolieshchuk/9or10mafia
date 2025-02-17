@@ -59,7 +59,7 @@ export default function AppAppBar() {
               <Button variant="text" color="info" size="small">
                 Учасники
               </Button>
-              <Button variant="text" color="info" size="small">
+              <Button href={'login'} variant="text" color="info" size="small">
                 Кабінет
               </Button>
               {/*<Button variant="text" color="info" size="small">*/}
@@ -80,11 +80,11 @@ export default function AppAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button color="primary" variant="text" size="small">
+            <Button href={'login'} color="primary" variant="text" size="small">
               Увійти
             </Button>
-            <Button color="primary" variant="contained" size="small">
-              Зареєструватись
+            <Button href={'register'} color="primary" variant="text" size="small">
+              Зареєструватися
             </Button>
             <ColorModeIconDropdown />
           </Box>
@@ -115,20 +115,20 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
 
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
+                <MenuItem>Клуби</MenuItem>
+                <MenuItem>Учасники</MenuItem>
+                {/*<MenuItem>Highlights</MenuItem>*/}
+                {/*<MenuItem>Pricing</MenuItem>*/}
+                {/*<MenuItem>FAQ</MenuItem>*/}
+                {/*<MenuItem>Blog</MenuItem>*/}
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
-                    Зареєструватись
+                  <Button href={'register'} color="primary" variant="outlined" fullWidth>
+                    Зареєструватися
                   </Button>
                 </MenuItem>
                 <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
+                  <Button href={'login'} color="primary" variant="outlined" fullWidth>
                     Увійти
                   </Button>
                 </MenuItem>
