@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="init commit">
+      <change afterPath="$PROJECT_DIR$/public/favicon.ico" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SignUpClub.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUpClub.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +43,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src",
+    "last_opened_file_path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/public",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,11 +58,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/theme/customizations" />
       <recent name="$PROJECT_DIR$/src/components/dashboard" />
       <recent name="$PROJECT_DIR$/src/components" />
-      <recent name="$PROJECT_DIR$/public/images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -118,7 +119,7 @@
       <updated>1739659657465</updated>
       <workItem from="1739659658911" duration="2741000" />
       <workItem from="1739747944025" duration="16252000" />
-      <workItem from="1739779916581" duration="6797000" />
+      <workItem from="1739779916581" duration="7354000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -160,7 +161,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739785609480</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="init commit">
+      <option name="closed" value="true" />
+      <created>1739786985502</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1739786985502</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
