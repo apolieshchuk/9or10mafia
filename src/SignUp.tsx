@@ -150,7 +150,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+            sx={{ width: '100%', fontSize: 'clamp(1.5rem, 10vw, 2rem)' }}
           >
             <SitemarkIcon />
             &nbsp;&nbsp;Зареєструватися
@@ -161,7 +161,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <FormControl>
-              <FormLabel htmlFor="name">Ігровий нік</FormLabel>
+              <FormLabel htmlFor="nickname">Ігровий нік</FormLabel>
               <TextField
                 autoComplete="nickname"
                 name="nickname"

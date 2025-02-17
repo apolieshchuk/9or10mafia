@@ -63,6 +63,8 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+  const [contactError, setContactError] = React.useState(false);
+  const [contactErrorMessage, setContactErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [nameError, setNameError] = React.useState(false);
@@ -74,6 +76,7 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
     const name = document.getElementById('name') as HTMLInputElement;
+    const contact = document.getElementById('contact') as HTMLInputElement;
     const nickname = document.getElementById('nickname') as HTMLInputElement;
 
     let isValid = true;
@@ -87,6 +90,15 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
       setEmailErrorMessage('');
     }
 
+    if (!contact.value || contact.value.length < 1) {
+      setContactError(true);
+      setContactErrorMessage("Потрібно вказати контактні дані з керівництвом клубу" );
+      isValid = false;
+    } else {
+      setContactError(false);
+      setContactErrorMessage('');
+    }
+
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Пароль повинен бути більше 6ти символів');
@@ -98,7 +110,7 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
 
     if (!name.value || name.value.length < 1) {
       setNameError(true);
-      setNameErrorMessage("Потрібно вказати ім'я" );
+      setNameErrorMessage("Потрібно вказати назву клуба" );
       isValid = false;
     } else {
       setNameError(false);
@@ -107,7 +119,7 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
 
     if (!nickname.value || nickname.value.length < 1) {
       setNickNameError(true);
-      setNickNameErrorMessage('Без нікнейму в "мафії" - нікуди');
+      setNickNameErrorMessage('Потрібно вказати логін');
       isValid = false;
     } else {
       setNickNameError(false);
@@ -150,30 +162,15 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+            sx={{ width: '100%', fontSize: 'clamp(1.5rem, 10vw, 2rem)' }}
           >
-            <SitemarkIcon />
-            &nbsp;&nbsp;Зареєструвати клуб
+            <SitemarkIcon />&nbsp;&nbsp;Зареєструвати клуб
           </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
-            {/*<FormControl>*/}
-            {/*  <FormLabel htmlFor="name">Ігровий нік</FormLabel>*/}
-            {/*  <TextField*/}
-            {/*    autoComplete="nickname"*/}
-            {/*    name="nickname"*/}
-            {/*    required*/}
-            {/*    fullWidth*/}
-            {/*    id="nickname"*/}
-            {/*    placeholder="Jon Snow"*/}
-            {/*    error={nickNameError}*/}
-            {/*    helperText={nickNameErrorMessage}*/}
-            {/*    color={nickNameError ? 'error' : 'primary'}*/}
-            {/*  />*/}
-            {/*</FormControl>*/}
             <FormControl>
               <FormLabel htmlFor="name">Назва клубу</FormLabel>
               <TextField
@@ -188,21 +185,50 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
                 color={nameError ? 'error' : 'primary'}
               />
             </FormControl>
-            {/*<FormControl>*/}
-            {/*  <FormLabel htmlFor="email">Електронна адреса</FormLabel>*/}
-            {/*  <TextField*/}
-            {/*    required*/}
-            {/*    fullWidth*/}
-            {/*    id="email"*/}
-            {/*    placeholder="your@email.com"*/}
-            {/*    name="email"*/}
-            {/*    autoComplete="email"*/}
-            {/*    variant="outlined"*/}
-            {/*    error={emailError}*/}
-            {/*    helperText={emailErrorMessage}*/}
-            {/*    color={passwordError ? 'error' : 'primary'}*/}
-            {/*  />*/}
-            {/*</FormControl>*/}
+            <FormControl>
+              <FormLabel htmlFor="nickname">Логін (буде використовуватись для авторизації)</FormLabel>
+              <TextField
+                autoComplete="nickname"
+                name="nickname"
+                required
+                fullWidth
+                id="nickname"
+                placeholder="9or10van"
+                error={nickNameError}
+                helperText={nickNameErrorMessage}
+                color={nickNameError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="email">Електронна адреса</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                placeholder="your@email.com"
+                name="email"
+                autoComplete="email"
+                variant="outlined"
+                error={emailError}
+                helperText={emailErrorMessage}
+                color={passwordError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="contact">Контактні дані</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="contact"
+                placeholder="+38(050)123-45-67"
+                name="contact"
+                autoComplete="contact"
+                variant="outlined"
+                error={contactError}
+                helperText={contactErrorMessage}
+                color={contactError ? 'error' : 'primary'}
+              />
+            </FormControl>
             <FormControl>
               <FormLabel htmlFor="password">Пароль</FormLabel>
               <TextField

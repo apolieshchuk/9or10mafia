@@ -5,45 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="init commit">
-      <change afterPath="$PROJECT_DIR$/src/Clubs.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Dashboard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Members.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/SignUpClub.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/AppNavbar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CardAlert.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/ChartUserByCountry.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CustomDatePicker.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CustomizedDataGrid.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CustomizedTreeView.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/Header.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/HighlightedCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MainGrid.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MenuButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/NavbarBreadcrumbs.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/OptionsMenu.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/PageViewsBarChart.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/Search.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SelectContent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SessionsChart.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SideMenu.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SideMenuMobile.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/StatCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/internals/components/Copyright.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/internals/components/CustomIcons.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/internals/data/gridData.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/theme/customizations/charts.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/theme/customizations/dataGrid.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/theme/customizations/datePickers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/theme/customizations/treeView.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hero.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SignUpClub.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUpClub.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +118,7 @@
       <updated>1739659657465</updated>
       <workItem from="1739659658911" duration="2741000" />
       <workItem from="1739747944025" duration="16252000" />
-      <workItem from="1739779916581" duration="5625000" />
+      <workItem from="1739779916581" duration="6797000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -188,7 +152,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739779954484</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="init commit">
+      <option name="closed" value="true" />
+      <created>1739785609480</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1739785609480</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
