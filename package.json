@@ -14,7 +14,16 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router-dom": "^7.1.5",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "@mui/x-date-pickers": "7.26.0",
+    "@mui/x-charts": "7.26.0",
+    "@mui/x-data-grid-pro": "7.26.0",
+    "@mui/x-tree-view": "7.26.0",
+    "dayjs": "1.11.13",
+    "@mui/x-data-grid": "7.26.0",
+    "clsx": "2.1.1",
+    "@react-spring/web": "9.7.5",
+    "@mui/x-date-pickers-pro": "7.26.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -60,7 +60,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function SignUp(props: { disableCustomTheme?: boolean }) {
+export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -153,56 +153,56 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
             <SitemarkIcon />
-            &nbsp;&nbsp;Зареєструватися
+            &nbsp;&nbsp;Зареєструвати клуб
           </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
+            {/*<FormControl>*/}
+            {/*  <FormLabel htmlFor="name">Ігровий нік</FormLabel>*/}
+            {/*  <TextField*/}
+            {/*    autoComplete="nickname"*/}
+            {/*    name="nickname"*/}
+            {/*    required*/}
+            {/*    fullWidth*/}
+            {/*    id="nickname"*/}
+            {/*    placeholder="Jon Snow"*/}
+            {/*    error={nickNameError}*/}
+            {/*    helperText={nickNameErrorMessage}*/}
+            {/*    color={nickNameError ? 'error' : 'primary'}*/}
+            {/*  />*/}
+            {/*</FormControl>*/}
             <FormControl>
-              <FormLabel htmlFor="name">Ігровий нік</FormLabel>
-              <TextField
-                autoComplete="nickname"
-                name="nickname"
-                required
-                fullWidth
-                id="nickname"
-                placeholder="Jon Snow"
-                error={nickNameError}
-                helperText={nickNameErrorMessage}
-                color={nickNameError ? 'error' : 'primary'}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="name">Імя</FormLabel>
+              <FormLabel htmlFor="name">Назва клубу</FormLabel>
               <TextField
                 autoComplete="name"
                 name="name"
                 required
                 fullWidth
                 id="name"
-                placeholder="Іван Шевченко"
+                placeholder="9 or 10 Vancouver Mafia Club"
                 error={nameError}
                 helperText={nameErrorMessage}
                 color={nameError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="email">Електронна адреса</FormLabel>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                placeholder="your@email.com"
-                name="email"
-                autoComplete="email"
-                variant="outlined"
-                error={emailError}
-                helperText={emailErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
-              />
-            </FormControl>
+            {/*<FormControl>*/}
+            {/*  <FormLabel htmlFor="email">Електронна адреса</FormLabel>*/}
+            {/*  <TextField*/}
+            {/*    required*/}
+            {/*    fullWidth*/}
+            {/*    id="email"*/}
+            {/*    placeholder="your@email.com"*/}
+            {/*    name="email"*/}
+            {/*    autoComplete="email"*/}
+            {/*    variant="outlined"*/}
+            {/*    error={emailError}*/}
+            {/*    helperText={emailErrorMessage}*/}
+            {/*    color={passwordError ? 'error' : 'primary'}*/}
+            {/*  />*/}
+            {/*</FormControl>*/}
             <FormControl>
               <FormLabel htmlFor="password">Пароль</FormLabel>
               <TextField

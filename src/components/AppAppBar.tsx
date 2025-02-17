@@ -53,10 +53,10 @@ export default function AppAppBar() {
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, gap: 3 }}>
             <Sitemark />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small">
+              <Button href={'clubs'} variant="text" color="info" size="small">
                 Клуби
               </Button>
-              <Button variant="text" color="info" size="small">
+              <Button href={'members'} variant="text" color="info" size="small">
                 Учасники
               </Button>
               <Button href={'login'} variant="text" color="info" size="small">
@@ -116,7 +116,7 @@ export default function AppAppBar() {
                 </Box>
 
                 <MenuItem>Клуби</MenuItem>
-                <MenuItem>Учасники</MenuItem>
+                <MenuItem href={'members'}>Учасники</MenuItem>
                 {/*<MenuItem>Highlights</MenuItem>*/}
                 {/*<MenuItem>Pricing</MenuItem>*/}
                 {/*<MenuItem>FAQ</MenuItem>*/}

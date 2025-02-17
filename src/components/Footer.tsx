@@ -80,8 +80,9 @@ export default function Footer() {
           <IconButton
             color="inherit"
             size="small"
-            href="https://www.instagram.com/mafia_vancouver_9or10_club/"
+            // href="https://www.instagram.com/mafia_vancouver_9or10_club/"
             aria-label="Instagram"
+            onClick={() => window.open('https://www.instagram.com/mafia_vancouver_9or10_club/', "_blank")}
             sx={{ alignSelf: 'center' }}
           >
             <InstagramIcon />
@@ -89,7 +90,8 @@ export default function Footer() {
           <IconButton
             color="inherit"
             size="small"
-            href="https://www.youtube.com/@9or10MafiaVancouver"
+            // href="https://www.youtube.com/@9or10MafiaVancouver"
+            onClick={() => window.open('https://www.youtube.com/@9or10MafiaVancouver', "_blank")}
             aria-label="YouTube"
             sx={{ alignSelf: 'center' }}
           >

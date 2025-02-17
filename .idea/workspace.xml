@@ -4,11 +4,58 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="init commit" />
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="init commit">
+      <change afterPath="$PROJECT_DIR$/src/Clubs.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Dashboard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Members.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/SignUpClub.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/AppNavbar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CardAlert.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/ChartUserByCountry.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CustomDatePicker.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CustomizedDataGrid.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/CustomizedTreeView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/Header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/HighlightedCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MainGrid.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MenuButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/NavbarBreadcrumbs.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/OptionsMenu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/PageViewsBarChart.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/Search.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SelectContent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SessionsChart.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SideMenu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/SideMenuMobile.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/StatCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/internals/components/Copyright.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/internals/components/CustomIcons.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/internals/data/gridData.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/theme/customizations/charts.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/theme/customizations/dataGrid.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/theme/customizations/datePickers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/theme/customizations/treeView.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hero.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,37 +73,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.start.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.build.executor": "Run",
+    "npm.start.executor": "Run",
+    "settings.editor.selected.configurable": "project.scopes",
+    "ts.external.directory.path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/theme/customizations" />
+      <recent name="$PROJECT_DIR$/src/components/dashboard" />
       <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/public/images" />
-      <recent name="$PROJECT_DIR$/assets" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.build">
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="start" />
+    </option>
+  </component>
+  <component name="RunManager" selected="npm.start">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -101,6 +154,7 @@
       <updated>1739659657465</updated>
       <workItem from="1739659658911" duration="2741000" />
       <workItem from="1739747944025" duration="16252000" />
+      <workItem from="1739779916581" duration="5625000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -126,7 +180,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739772739826</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="init commit">
+      <option name="closed" value="true" />
+      <created>1739779954484</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1739779954484</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
