@@ -16,6 +16,7 @@ import {chartsCustomizations} from "./theme/customizations/charts";
 import {dataGridCustomizations} from "./theme/customizations/dataGrid";
 import {datePickersCustomizations} from "./theme/customizations/datePickers";
 import {treeViewCustomizations} from "./theme/customizations/treeView";
+import AppAppBar from "./components/AppAppBar";
 
 
 const xThemeComponents = {
@@ -29,7 +30,8 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
-      <Box sx={{ display: 'flex' }}>
+      <AppAppBar />
+      <Box sx={{ display: 'flex', mt: '5rem' }}>
         <SideMenu />
         <AppNavbar />
         {/* Main content */}

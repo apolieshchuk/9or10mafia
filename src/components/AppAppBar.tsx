@@ -13,6 +13,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import Sitemark from './SitemarkIcon';
+import {useAuth} from "../AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -32,6 +34,8 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -80,12 +84,29 @@ export default function AppAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button href={'login'} color="primary" variant="text" size="small">
-              Увійти
-            </Button>
-            <Button href={'register'} color="primary" variant="text" size="small">
-              Зареєструватися
-            </Button>
+            {
+              user && <Button onClick={() => navigate('/profile')} color="primary" variant="text" size="small">
+                    Мій Профіль ({ user?.name })
+                </Button>
+            }
+            {
+              user && <Button onClick={() => {
+                logout()
+                navigate('/')
+              }} color="primary" variant="text" size="small">
+                    Вийти
+                </Button>
+            }
+            {
+              !user && <Button href={'login'} color="primary" variant="text" size="small">
+                Увійти
+              </Button>
+            }
+            {
+              !user && <Button href={'register'} color="primary" variant="text" size="small">
+                Зареєструватися
+              </Button>
+            }
             <ColorModeIconDropdown />
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>

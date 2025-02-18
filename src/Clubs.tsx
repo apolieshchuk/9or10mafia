@@ -28,6 +28,7 @@ import {DataGrid} from "@mui/x-data-grid";
 import {columns, rows} from "./internals/data/gridDataMembers";
 import {use, useEffect} from "react";
 import axios from "axios";
+import AppAppBar from "./components/AppAppBar";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -92,35 +93,36 @@ export default function ClubsList(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <ClubsContainer direction="column" justifyContent="space-between">
-        <Box sx={{ width: '100%', gap: 3, display: 'flex', justifyContent: 'space-between' }}>
-          <Button
-            href={'/'}
-            variant="outlined"
-            color="primary"
-            size="small"
-            fullWidth={true}
-            // sx={{minWidth: 'fit-content'}}
-            // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}
-          >
-            Головна
-          </Button>
-          <Button
-            href={'/members'}
-            variant="outlined"
-            color="primary"
-            size="small"
-            fullWidth={true}
-            // sx={{minWidth: 'fit-content'}}
-            // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}
-          >
-            Учасники
-          </Button>
-        </Box>
+        <AppAppBar />
+        {/*<Box sx={{ width: '100%', gap: 3, display: 'flex', justifyContent: 'space-between' }}>*/}
+        {/*  <Button*/}
+        {/*    href={'/'}*/}
+        {/*    variant="outlined"*/}
+        {/*    color="primary"*/}
+        {/*    size="small"*/}
+        {/*    fullWidth={true}*/}
+        {/*    // sx={{minWidth: 'fit-content'}}*/}
+        {/*    // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}*/}
+        {/*  >*/}
+        {/*    Головна*/}
+        {/*  </Button>*/}
+        {/*  <Button*/}
+        {/*    href={'/members'}*/}
+        {/*    variant="outlined"*/}
+        {/*    color="primary"*/}
+        {/*    size="small"*/}
+        {/*    fullWidth={true}*/}
+        {/*    // sx={{minWidth: 'fit-content'}}*/}
+        {/*    // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}*/}
+        {/*  >*/}
+        {/*    Учасники*/}
+        {/*  </Button>*/}
+        {/*</Box>*/}
         {/*<ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />*/}
         {/*<Typography component="h2" variant="h6" sx={{ mb: 2 }}>*/}
         {/*  Details*/}
         {/*</Typography>*/}
-        <Box sx={{ mt: '2rem' }}>
+        <Box sx={{ mt: '5rem' }}>
           <Grid container spacing={2} columns={12}>
             <Grid size={{ xs: 12, lg: 9 }}>
               <DataGrid

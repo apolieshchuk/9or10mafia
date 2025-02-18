@@ -22,6 +22,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import {useAuth} from "./AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -72,7 +73,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
-  const { login } = useAuth();
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -93,7 +95,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       authType,
     });
     const token = data?.token;
-    token && login(token)
+    token && setToken(token)
+    navigate('/profile')
   };
 
   const validateInputs = () => {
