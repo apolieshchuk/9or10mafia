@@ -109,7 +109,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   const handleJoinClub = async () => {
     try {
       if (!clubSelectId) return;
-      await axios.post('http://localhost:3000/clubs/join', {
+      await axios.post('http://localhost:3000/club/join', {
         clubId: clubSelectId,
       });
       setClubSelectId(null)
@@ -166,48 +166,50 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 {/*  </Grid>*/}
                 {/*))}*/}
                 <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                  <Card sx={{ height: '100%' }}>
-                    <CardContent>
-                      <Diversity3Icon />
-                      {/*<Typography*/}
-                      {/*  component="h2"*/}
-                      {/*  variant="subtitle2"*/}
-                      {/*  gutterBottom*/}
-                      {/*  sx={{ fontWeight: '600' }}*/}
-                      {/*>*/}
-                      {/*  Стати учасником клубу*/}
-                      {/*</Typography>*/}
-                      {/*<Typography sx={{ color: 'text.secondary', mb: '8px' }}>*/}
-                      {/*  Uncover performance and visitor insights with our data wizardry.*/}
-                      {/*</Typography>*/}
-                      <Box>
-                        <InputLabel id="club-name-label">Стати учасником клубу</InputLabel>
-                        <Select
-                          labelId="club-name-label"
-                          id="club-name"
-                          input={<OutlinedInput label="Оберіть клуб" />}
-                          value={clubSelectId}
-                          label="Club Select"
-                          sx={{ mb: 3, width: '100%' }}
-                          onChange={(e: SelectChangeEvent<any>) => setClubSelectId(e.target.value)}
-                        >
-                          { clubs?.map((c: { name: string, _id: string }) => <MenuItem value={c._id}>{c.name}</MenuItem> )}
-                          {/*<MenuItem value={'users'}>Гравець</MenuItem>*/}
-                          {/*<MenuItem value={'clubs'}>Клуб</MenuItem>*/}
-                        </Select>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          color="primary"
-                          endIcon={<ChevronRightRoundedIcon />}
-                          fullWidth={isSmallScreen}
-                          onClick={handleJoinClub}
-                        >
-                          Приєднатися
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </Card>
+                  { user?.authType === 'Учасник' && (
+                    <Card sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Diversity3Icon />
+                        {/*<Typography*/}
+                        {/*  component="h2"*/}
+                        {/*  variant="subtitle2"*/}
+                        {/*  gutterBottom*/}
+                        {/*  sx={{ fontWeight: '600' }}*/}
+                        {/*>*/}
+                        {/*  Стати учасником клубу*/}
+                        {/*</Typography>*/}
+                        {/*<Typography sx={{ color: 'text.secondary', mb: '8px' }}>*/}
+                        {/*  Uncover performance and visitor insights with our data wizardry.*/}
+                        {/*</Typography>*/}
+                        <Box>
+                          <InputLabel id="club-name-label">Стати учасником клубу</InputLabel>
+                          <Select
+                            labelId="club-name-label"
+                            id="club-name"
+                            input={<OutlinedInput label="Оберіть клуб" />}
+                            value={clubSelectId}
+                            label="Club Select"
+                            sx={{ mb: 3, width: '100%' }}
+                            onChange={(e: SelectChangeEvent<any>) => setClubSelectId(e.target.value)}
+                          >
+                            { clubs?.map((c: { name: string, _id: string }) => <MenuItem value={c._id}>{c.name}</MenuItem> )}
+                            {/*<MenuItem value={'users'}>Гравець</MenuItem>*/}
+                            {/*<MenuItem value={'clubs'}>Клуб</MenuItem>*/}
+                          </Select>
+                          <Button
+                            variant="contained"
+                            size="small"
+                            color="primary"
+                            endIcon={<ChevronRightRoundedIcon />}
+                            fullWidth={isSmallScreen}
+                            onClick={handleJoinClub}
+                          >
+                            Приєднатися
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  )}
                 </Grid>
                 {/*<Grid size={{ xs: 12, md: 6 }}>*/}
                 {/*  <SessionsChart />*/}

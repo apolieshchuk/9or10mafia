@@ -47,7 +47,7 @@ export default function DashboardClubs(props: { disableCustomTheme?: boolean }) 
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('http://localhost:3000/clubs');
+        const { data } = await axios.get('http://localhost:3000/user/clubs');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })

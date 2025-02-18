@@ -89,14 +89,18 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
 
-    const { data } = await axios.post('http://localhost:3000/auth/login', {
+    await axios.post('http://localhost:3000/auth/login', {
       email: email.value,
       password: password.value,
       authType,
+    }).then(({ data }) => {
+      const token = data?.token;
+      token && setToken(token)
+      navigate('/profile')
+    }).catch((e) => {
+      console.error(e);
+      alert('Некоректний логін або пароль');
     });
-    const token = data?.token;
-    token && setToken(token)
-    navigate('/profile')
   };
 
   const validateInputs = () => {
