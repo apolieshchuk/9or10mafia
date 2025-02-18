@@ -18,6 +18,11 @@ import ColorModeSelect from './theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon } from './components/CustomIcons';
 import SitemarkIcon from "./components/SitemarkIcon";
 import axios from "axios";
+import {useEffect} from "react";
+import InputLabel from "@mui/material/InputLabel";
+import Select, {SelectChangeEvent} from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -70,6 +75,24 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [nickNameError, setNickNameError] = React.useState(false);
   const [nickNameErrorMessage, setNickNameErrorMessage] = React.useState('');
+  const [clubSelectId, setClubSelectId] = React.useState(null);
+  const [clubs, setClubs] = React.useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { data } = await axios.get('http://localhost:3000/clubs');
+        const array = (data.items || []).map((item: any, i: number) => {
+          return { ...item, id: i + 1 };
+        })
+        setClubs(array || []);
+        setClubSelectId(array[0]?._id || null);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchData();
+  }, [])
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
@@ -132,8 +155,16 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       nickname: nickname.value,
       email: email.value,
       password: password.value,
-    });
-    document.location.href = '/login';
+      clubs: [clubSelectId],
+    }).catch((e) => {
+      const statusCode = e.response?.status;
+      if (statusCode === 409) {
+        alert('Користувач з такою електронною адресою вже існує. Зверніться до адміністратора');
+      }
+      throw e
+    }).then(() => {
+      document.location.href = '/login';
+    })
   };
 
   return (
@@ -228,6 +259,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             {/*  control={<Checkbox value="allowExtraEmails" color="primary" />}*/}
             {/*  label="I want to receive updates via email."*/}
             {/*/>*/}
+            <FormControl>
+              <FormLabel htmlFor="club">Клуб</FormLabel>
+              <Select
+                labelId="club-name-label"
+                id="club-name"
+                input={<OutlinedInput label="Оберіть клуб" />}
+                value={clubSelectId}
+                label="Club Select"
+                sx={{ mb: 3, width: '100%' }}
+                onChange={(e: SelectChangeEvent<any>) => setClubSelectId(e.target.value)}
+              >
+                { clubs?.map((c: { name: string, _id: string }) => <MenuItem value={c._id}>{c.name}</MenuItem> )}
+                {/*<MenuItem value={'users'}>Гравець</MenuItem>*/}
+                {/*<MenuItem value={'clubs'}>Клуб</MenuItem>*/}
+              </Select>
+            </FormControl>
             <Button
               type="submit"
               fullWidth

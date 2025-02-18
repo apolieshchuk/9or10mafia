@@ -12,12 +12,14 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import {useNavigate} from "react-router-dom";
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon /> },
-  { text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
-  { text: 'Clients', icon: <PeopleRoundedIcon /> },
-  { text: 'Tasks', icon: <AssignmentRoundedIcon /> },
+  { text: 'Home', icon: <HomeRoundedIcon />, path: '/profile' },
+  // { text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
+  { text: 'Учасники', icon: <PeopleRoundedIcon />, path: '/profile/users' },
+  { text: 'Клуби', icon: <PeopleRoundedIcon />, path: '/profile/clubs' },
+  // { text: 'Tasks', icon: <AssignmentRoundedIcon /> },
 ];
 
 const secondaryListItems = [
@@ -27,12 +29,16 @@ const secondaryListItems = [
 ];
 
 export default function MenuContent() {
+  const navigate = useNavigate();
+  const [path, setPath] = React.useState(window.location.pathname);
+  // setPath(window.location.pathname)
+  // console.log(`--->`, window.location.pathname, 'MenuContent.tsx:32')
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
         {mainListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={index === 0}>
+            <ListItemButton selected={path === item.path} onClick={() => navigate(item.path)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

@@ -13,7 +13,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 // import TwitterIcon from '@mui/icons-material/X';
 import SitemarkIcon from './SitemarkIcon';
 
-function Copyright() {
+export function Copyright() {
   return (
     <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
       {'Copyright © '}

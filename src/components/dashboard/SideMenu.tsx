@@ -10,6 +10,7 @@ import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
+import Button from "@mui/material/Button";
 
 const drawerWidth = 240;
 
@@ -29,7 +30,6 @@ export default function SideMenu() {
     <Drawer
       variant="permanent"
       sx={{
-        mt:'5rem',
         display: { xs: 'none', md: 'block' },
         [`& .${drawerClasses.paper}`]: {
           backgroundColor: 'background.paper',
@@ -43,7 +43,17 @@ export default function SideMenu() {
           p: 1.5,
         }}
       >
-        <SelectContent />
+        <Button
+          href={'/'}
+          variant="outlined"
+          color="primary"
+          size="small"
+          // sx={{minWidth: 'fit-content'}}
+          // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}
+        >
+          На головну сторінку
+        </Button>
+        {/*<SelectContent />*/}
       </Box>
       <Divider />
       <Box
@@ -55,7 +65,7 @@ export default function SideMenu() {
         }}
       >
         <MenuContent />
-        <CardAlert />
+        {/*<CardAlert />*/}
       </Box>
       <Stack
         direction="row"

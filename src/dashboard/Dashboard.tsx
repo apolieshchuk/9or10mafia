@@ -7,16 +7,16 @@ import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import AppNavbar from './components/dashboard/AppNavbar';
-import Header from './components/dashboard/Header';
-import MainGrid from './components/dashboard/MainGrid';
-import SideMenu from './components/dashboard/SideMenu';
-import AppTheme from './theme/AppTheme';
-import {chartsCustomizations} from "./theme/customizations/charts";
-import {dataGridCustomizations} from "./theme/customizations/dataGrid";
-import {datePickersCustomizations} from "./theme/customizations/datePickers";
-import {treeViewCustomizations} from "./theme/customizations/treeView";
-import AppAppBar from "./components/AppAppBar";
+import AppNavbar from '../components/dashboard/AppNavbar';
+import Header from '../components/dashboard/Header';
+import MainGrid from '../components/dashboard/MainGrid';
+import SideMenu from '../components/dashboard/SideMenu';
+import AppTheme from '../theme/AppTheme';
+import {chartsCustomizations} from "../theme/customizations/charts";
+import {dataGridCustomizations} from "../theme/customizations/dataGrid";
+import {datePickersCustomizations} from "../theme/customizations/datePickers";
+import {treeViewCustomizations} from "../theme/customizations/treeView";
+import AppAppBar from "../components/AppAppBar";
 
 
 const xThemeComponents = {
@@ -30,11 +30,12 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
-      <AppAppBar />
-      <Box sx={{ display: 'flex', mt: '5rem' }}>
+      {/*<AppAppBar />*/}
+      <Box sx={{ display: 'flex' }}>
         <SideMenu />
         <AppNavbar />
         {/* Main content */}
+
         <Box
           component="main"
           sx={(theme) => ({

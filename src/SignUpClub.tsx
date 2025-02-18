@@ -160,8 +160,15 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
       contact: contact.value,
       email: email.value,
       password: password.value,
-    });
-    document.location.href = '/login';
+    }).catch((e) => {
+      const statusCode = e.response?.status;
+      if (statusCode === 409) {
+        alert('Користувач з такою електронною адресою вже існує. Зверніться до адміністратора');
+      }
+      throw e
+    }).then(() => {
+      document.location.href = '/login';
+    })
   };
 
   return (

@@ -6,7 +6,7 @@ import {styled} from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 import {DataGrid} from "@mui/x-data-grid";
-import {columns, rows} from "./internals/data/gridDataClubs";
+import {columns, rows} from "./internals/data/gridDataMembers";
 import {useEffect} from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";

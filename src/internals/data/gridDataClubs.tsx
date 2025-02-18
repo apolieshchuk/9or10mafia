@@ -79,8 +79,7 @@ export function renderAvatar(
 }
 
 export const columns: GridColDef[] = [
-  { field: 'nickname', headerName: 'Нік', flex: 1, minWidth: 200 },
-  { field: 'name', headerName: 'Імя', flex: 1, minWidth: 200 },
+  { field: 'name', headerName: 'Назва клубу', flex: 1, minWidth: 200 },
   // {
   //   field: 'status',
   //   headerName: 'Status',
@@ -89,29 +88,29 @@ export const columns: GridColDef[] = [
   //   renderCell: (params) => renderStatus(params.value as any),
   // },
   {
-    field: 'club',
-    headerName: 'Клуб',
+    field: 'address',
+    headerName: 'Адреса',
     headerAlign: 'left',
     align: 'left',
     flex: 1,
     minWidth: 100,
   },
-  // {
-  //   field: 'email',
-  //   headerName: 'Email',
-  //   headerAlign: 'left',
-  //   align: 'left',
-  //   flex: 1,
-  //   minWidth: 100,
-  // },
-  // {
-  //   field: 'usersAmount',
-  //   headerName: 'Учасники',
-  //   headerAlign: 'left',
-  //   align: 'left',
-  //   flex: .5,
-  //   minWidth: 80,
-  // },
+  {
+    field: 'email',
+    headerName: 'Email',
+    headerAlign: 'left',
+    align: 'left',
+    flex: 1,
+    minWidth: 100,
+  },
+  {
+    field: 'usersAmount',
+    headerName: 'Учасники',
+    headerAlign: 'left',
+    align: 'left',
+    flex: .5,
+    minWidth: 80,
+  },
   // {
   //   field: 'viewsPerUser',
   //   headerName: 'Views per User',

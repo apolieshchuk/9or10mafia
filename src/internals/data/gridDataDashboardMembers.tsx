@@ -79,6 +79,7 @@ export function renderAvatar(
 }
 
 export const columns: GridColDef[] = [
+  // { field: 'name', headerName: 'Назва клубу', flex: 1, minWidth: 200 },
   { field: 'nickname', headerName: 'Нік', flex: 1, minWidth: 200 },
   { field: 'name', headerName: 'Імя', flex: 1, minWidth: 200 },
   // {
@@ -88,22 +89,22 @@ export const columns: GridColDef[] = [
   //   minWidth: 80,
   //   renderCell: (params) => renderStatus(params.value as any),
   // },
-  {
-    field: 'club',
-    headerName: 'Клуб',
-    headerAlign: 'left',
-    align: 'left',
-    flex: 1,
-    minWidth: 100,
-  },
   // {
-  //   field: 'email',
-  //   headerName: 'Email',
+  //   field: 'address',
+  //   headerName: 'Адреса',
   //   headerAlign: 'left',
   //   align: 'left',
   //   flex: 1,
   //   minWidth: 100,
   // },
+  {
+    field: 'email',
+    headerName: 'Email',
+    headerAlign: 'left',
+    align: 'left',
+    flex: 1,
+    minWidth: 100,
+  },
   // {
   //   field: 'usersAmount',
   //   headerName: 'Учасники',

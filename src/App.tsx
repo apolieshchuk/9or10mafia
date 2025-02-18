@@ -8,7 +8,10 @@ import MembersList from "./Members";
 import SignUpClub from "./SignUpClub";
 import {AuthProvider} from "./AuthProvider";
 import {PrivateRoute} from "./PrivateRoute";
-import Dashboard from "./Dashboard";
+import Dashboard from "./dashboard/Dashboard";
+import DashboardHome from "./dashboard/DashboardHome";
+import DashboardUsers from "./dashboard/DashboardUsers";
+import DashboardClubs from "./dashboard/DashboardClubs";
 
 const App = () => {
   return (
@@ -21,7 +24,9 @@ const App = () => {
           <Route path="login" element={<SignIn />} />
           <Route path="members" element={<MembersList />} />
           <Route path="clubs" element={<ClubsList />} />
-          <Route path="profile" element={<PrivateRoute Component={Dashboard}/>} />
+          <Route path="profile" element={<PrivateRoute Component={DashboardHome}/>} />
+          <Route path="profile/users" element={<PrivateRoute Component={DashboardUsers}/>} />
+          <Route path="profile/clubs" element={<PrivateRoute Component={DashboardClubs}/>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

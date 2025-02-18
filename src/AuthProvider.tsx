@@ -1,7 +1,6 @@
 import React, {createContext, useState, useEffect, useContext, ReactElement, useMemo} from "react";
 import {jwtDecode, JwtPayload } from "jwt-decode";
-import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import axios from "./axios";
 
 type User = {
   authType: 'Клуб' | 'Учасник';
@@ -36,8 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactElement }) => {
       try {
         const user = jwtDecode(token) as User;
         setUser(user);
-        // const decoded = jwtDecode<User>(token);
-        // (decoded?.exp || 0) * 1000 > Date.now() ? setUser(decoded) : logout();
+        if ((user?.exp || 0) * 1000 < Date.now()) logout();
       } catch (e) {
         // logout();
       }

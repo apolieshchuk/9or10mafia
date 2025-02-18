@@ -25,7 +25,7 @@ import CustomizedDataGrid from "./components/dashboard/CustomizedDataGrid";
 import CustomizedTreeView from "./components/dashboard/CustomizedTreeView";
 import ChartUserByCountry from "./components/dashboard/ChartUserByCountry";
 import {DataGrid} from "@mui/x-data-grid";
-import {columns, rows} from "./internals/data/gridDataMembers";
+import {columns, rows} from "./internals/data/gridDataClubs";
 import {use, useEffect} from "react";
 import axios from "axios";
 import AppAppBar from "./components/AppAppBar";
