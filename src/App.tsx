@@ -12,6 +12,7 @@ import Dashboard from "./dashboard/Dashboard";
 import DashboardHome from "./dashboard/DashboardHome";
 import DashboardUsers from "./dashboard/DashboardUsers";
 import DashboardClubs from "./dashboard/DashboardClubs";
+import DashboardRatingPeriods from "./dashboard/DashboardRatingPeriods";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="profile" element={<PrivateRoute Component={DashboardHome}/>} />
           <Route path="profile/users" element={<PrivateRoute Component={DashboardUsers}/>} />
           <Route path="profile/clubs" element={<PrivateRoute Component={DashboardClubs}/>} />
+          <Route path="profile/rating-periods" element={<PrivateRoute Component={DashboardRatingPeriods}/>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

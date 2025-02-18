@@ -15,6 +15,9 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../AuthProvider";
 import {useEffect} from "react";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
+
 
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, path: '/profile' },
@@ -35,12 +38,17 @@ export default function MenuContent() {
   const [path, setPath] = React.useState(window.location.pathname);
   const [listItems, setListItems] = React.useState(mainListItems);
   const { user } = useAuth();
+  // const [isClub, setIsClub] = React.useState(false);
   useEffect(() => {
+    let items = [...mainListItems];
     if (user?.authType === 'Клуб') {
-      setListItems(() => [...mainListItems, { text: 'Учасники', icon: <PeopleRoundedIcon />, path: '/profile/users' }]);
+      items = [...items, { text: 'Учасники', icon: <PeopleRoundedIcon />, path: '/profile/users' }];
     }  else {
-      setListItems(() => [...mainListItems, { text: 'Клуби', icon: <PeopleRoundedIcon />, path: '/profile/clubs' }]);
+      items = [...items, { text: 'Клуби', icon: <Diversity3Icon />, path: '/profile/clubs' }];
     }
+    items = [...items, { text: 'Рейтинг', icon: <EmojiEventsIcon />, path: '/profile/rating-periods' }];
+    setListItems(() => items);
+
   }, [user]);
 
   // setPath(window.location.pathname)

@@ -29,6 +29,7 @@ import ChartUserByCountry from "../components/dashboard/ChartUserByCountry";
 import {Copyright} from "../components/Footer";
 import CardContent from "@mui/material/CardContent";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Button from "@mui/material/Button";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Card from "@mui/material/Card";
@@ -40,6 +41,7 @@ import axios from "axios";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import {useAuth} from "../AuthProvider";
+import TextField from "@mui/material/TextField";
 
 
 const xThemeComponents = {
@@ -119,6 +121,26 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
       alert(msg || 'Помилка при додаванні до клубу');
     }
   }
+
+  const handleCreateRatingPeriod = async () => {
+    try {
+      const name = document.getElementById('rank-period') as HTMLInputElement;
+      if (!name?.value) {
+        alert('Необхідно вказати назву рейтингового періоду');
+        return;
+      }
+      await axios.post('http://localhost:3000/club/rating-period', {
+        name: name.value,
+      });
+      setClubSelectId(null)
+      alert('Ви успішно створили рейтинговий період');
+      name.value = '';
+    } catch (e: any) {
+      const msg = e?.response?.data?.message;
+      alert(msg || 'Помилка при створенні рейтингового періоду');
+    }
+  }
+
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -205,6 +227,46 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                             onClick={handleJoinClub}
                           >
                             Приєднатися
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  )}
+                  { user?.authType === 'Клуб' && (
+                    <Card sx={{ height: '100%' }}>
+                      <CardContent>
+                        <EmojiEventsIcon />
+                        {/*<Typography*/}
+                        {/*  component="h2"*/}
+                        {/*  variant="subtitle2"*/}
+                        {/*  gutterBottom*/}
+                        {/*  sx={{ fontWeight: '600' }}*/}
+                        {/*>*/}
+                        {/*  Стати учасником клубу*/}
+                        {/*</Typography>*/}
+                        {/*<Typography sx={{ color: 'text.secondary', mb: '8px' }}>*/}
+                        {/*  Uncover performance and visitor insights with our data wizardry.*/}
+                        {/*</Typography>*/}
+                        <Box>
+                          <InputLabel id="rank-period-label">Створити рейтинговий період</InputLabel>
+                          <TextField
+                            autoComplete="rank-period"
+                            name="rank-period"
+                            required
+                            fullWidth
+                            id="rank-period"
+                            placeholder="Сезон Зима 2025"
+                            sx={{ mb: 3 }}
+                          />
+                          <Button
+                            variant="contained"
+                            size="small"
+                            color="primary"
+                            endIcon={<ChevronRightRoundedIcon />}
+                            fullWidth={isSmallScreen}
+                            onClick={handleCreateRatingPeriod}
+                          >
+                            Створити
                           </Button>
                         </Box>
                       </CardContent>
