@@ -42,6 +42,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import {useAuth} from "../AuthProvider";
 import TextField from "@mui/material/TextField";
+import {useNavigate} from "react-router-dom";
 
 
 const xThemeComponents = {
@@ -90,7 +91,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [clubSelectId, setClubSelectId] = React.useState(null);
-
+  const navigate = useNavigate();
   const [clubs, setClubs] = React.useState([]);
 
   useEffect(() => {
@@ -182,12 +183,36 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 columns={12}
                 sx={{ mt: '2rem', mb: (theme) => theme.spacing(2) }}
               >
+                { user?.authType === 'Клуб' && (
+                  <Grid size={{ xs: 6, sm: 2, lg: 2 }}>
+                    <Card sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Stack direction={'row'} spacing={1}>
+                          <EmojiEventsIcon />
+                          <InputLabel id="new-game">Нова гра</InputLabel>
+                        </Stack>
+                        <Box sx={{ mt: 2 }}>
+                          <Button
+                            variant="contained"
+                            size="small"
+                            color="primary"
+                            endIcon={<ChevronRightRoundedIcon />}
+                            fullWidth={isSmallScreen}
+                            onClick={() => navigate('/new-game')}
+                          >
+                            Почати
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )}
                 {/*{data.map((card, index) => (*/}
                 {/*  <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>*/}
                 {/*    <StatCard {...card} />*/}
                 {/*  </Grid>*/}
                 {/*))}*/}
-                <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+                <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                   { user?.authType === 'Учасник' && (
                     <Card sx={{ height: '100%' }}>
                       <CardContent>
@@ -235,20 +260,11 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                   { user?.authType === 'Клуб' && (
                     <Card sx={{ height: '100%' }}>
                       <CardContent>
-                        <EmojiEventsIcon />
-                        {/*<Typography*/}
-                        {/*  component="h2"*/}
-                        {/*  variant="subtitle2"*/}
-                        {/*  gutterBottom*/}
-                        {/*  sx={{ fontWeight: '600' }}*/}
-                        {/*>*/}
-                        {/*  Стати учасником клубу*/}
-                        {/*</Typography>*/}
-                        {/*<Typography sx={{ color: 'text.secondary', mb: '8px' }}>*/}
-                        {/*  Uncover performance and visitor insights with our data wizardry.*/}
-                        {/*</Typography>*/}
-                        <Box>
+                        <Stack direction={'row'} spacing={1}>
+                          <EmojiEventsIcon />
                           <InputLabel id="rank-period-label">Створити рейтинговий період</InputLabel>
+                        </Stack>
+                        <Box sx={{ mt: 2 }}>
                           <TextField
                             autoComplete="rank-period"
                             name="rank-period"
