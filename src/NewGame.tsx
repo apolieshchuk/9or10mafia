@@ -61,8 +61,8 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }, {} as Record<number, any>));
   const setPlayers = (item: any) => _setPlayers(() => item);
 
-  const setPlayerNickname = (n: number, title: string) => {
-    setPlayers({ ...players, [n]: { ...players[n], title } });
+  const setPlayerNickname = (n: number, title: string, id: string) => {
+    setPlayers({ ...players, [n]: { ...players[n], title, id } });
   }
 
   const addWarning = (n: number) => {
@@ -155,12 +155,12 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                     value={players[n].title}
                     onChange={(event, newValue) => {
                       if (typeof newValue === 'string') {
-                        setPlayerNickname(n, newValue);
+                        setPlayerNickname(n, newValue, '');
                       } else if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
-                        setPlayerNickname(n, newValue.inputValue);
+                        setPlayerNickname(n, newValue.inputValue?.title || '', newValue.inputValue?.id || '');
                       } else {
-                        setPlayerNickname(n, newValue?.title || "");
+                        setPlayerNickname(n, newValue?.title || "", newValue?._id);
                       }
                     }}
                     filterOptions={(options, params) => {
