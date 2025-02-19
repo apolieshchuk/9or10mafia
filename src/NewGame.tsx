@@ -51,12 +51,19 @@ const ClubsContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const RolesPoolDefault = ['М1', 'М2', 'Д', 'Ш']
+const RolesPoolDefault = [1, 2, 3, 4]
+const RolesPoolMap: Record<number, string> = {
+  0: '',
+  1: 'М1',
+  2: 'М2',
+  3: 'Д',
+  4: 'Ш'
+}
 
 export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [clubUsers, setClubUsers] = React.useState([]);
   const [players, _setPlayers] = React.useState([1,2,3,4,5,6,7,8,9,10].reduce((acc, n) => {
-    acc[n] = { n, title: '', warnings: 0, role: '' };
+    acc[n] = { n, title: '', warnings: 0, role: 0 };
     return acc
   }, {} as Record<number, any>));
   const setPlayers = (item: any) => _setPlayers(() => item);
@@ -66,19 +73,22 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const addWarning = (n: number) => {
-    setPlayers({ ...players, [n]: { ...players[n], warnings: Math.min(players[n].warnings + 1, 4) } });
+    setPlayers({ ...players, [n]: { ...players[n], warnings: (players[n].warnings + 1) % 5 } });
   }
 
   const addRole = (n: number) => {
+    const currentRole = players[n].role || 0;
     const pool = RolesPoolDefault.filter(role => !rolesPool.includes(role));
-    const role = pool.pop()
-    setPlayers({ ...players, [n]: { ...players[n], role: role } });
+    let role = pool.length ? pool.find((r) => r > currentRole) : 0;
+    role = role || 0;
+    setPlayers({ ...players, [n]: { ...players[n], role } });
   }
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('http://localhost:3000/club/users');
+        const urlPath = window.location.pathname.includes('new-game-rating') ? 'club/users' : 'users'
+        const { data } = await axios.get(`http://localhost:3000/${urlPath}`);
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })
@@ -165,10 +175,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
               //
               // </Grid>
               <>
-                <Grid sx={{ p: '.2rem' }}  size={{ xs: 1.5, sm: 1, lg: 1 }}>
+                <Grid sx={{ cursor: 'pointer', p: '.2rem' }}  size={{ xs: 1.5, sm: 1, lg: 1 }}>
                   {n === 0 ? <ThumbUpIcon/> : n}
                 </Grid>
-                <Grid sx={{ p: '.3rem' }} size={{ xs: 5.5, sm: 7.5, lg: 7.5 }}>
+                <Grid sx={{  p: '.3rem' }} size={{ xs: 5.5, sm: 7.5, lg: 7.5 }}>
                   {n === 0 ? 'Нік' : <Autocomplete
                     size={'small'}
                     value={players[n].title}
@@ -233,11 +243,17 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                     )}
                   />}
                 </Grid>
-                <Grid sx={{ cursor: 'pointer', p: '.5rem' }} onClick={() => n && addWarning(n) } size={{ xs: 3.5, sm: 2, lg: 1.5 }}>
+                <Grid sx={{
+                  backgroundColor: players[n]?.warnings === 3 ? 'rgba(255,165,0, 0.2)' : players[n]?.warnings === 4 ? 'rgba(255,0,0, 0.3)' : 'transparent',
+                  cursor: 'pointer' }} onClick={() => n && addWarning(n) } size={{ xs: 1.75, sm: 2, lg: 1.5 }}>
                   {n === 0 ? "Фоли" : new Array(players[n].warnings).fill('⚠️').join('  ')}
                 </Grid>
-                <Grid sx={{ cursor: 'pointer', py: '.4rem' }} size={{ xs: 1.5, sm: 1.5, lg: 2 }} onClick={() => n && addRole(n)} >
-                  {n === 0 ? 'Роль' : `${players[n].role} `}
+                <Grid sx={{
+                  fontWeight: n !== 0 ? 800 : '',
+                  cursor: 'pointer',
+                  py: '.4rem'
+                }} size={{ xs: 3.25, sm: 1.5, lg: 2 }} onClick={() => n && addRole(n)} >
+                  {n === 0 ? 'Роль' : `${RolesPoolMap[players[n].role]} `}
                 </Grid>
               </>
             ))
