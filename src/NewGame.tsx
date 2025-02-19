@@ -129,27 +129,43 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         {/*<Typography component="h2" variant="h6" sx={{ mb: 2 }}>*/}
         {/*  Details*/}
         {/*</Typography>*/}
-        <Grid sx={{
+        <Grid minHeight={30} container columns={12} sx={{
+          p: 0,
+          // justifyContent: 'center',
+          textAlign: 'center',
           maxWidth: '1200px',
           width: '100%',
           mt: '5rem',
-          // '--Grid-borderWidth': '1px',
-          // borderTop: 'var(--Grid-borderWidth) solid',
-          // borderLeft: 'var(--Grid-borderWidth) solid',
-          // borderColor: 'divider',
-          // '& > div': {
-          //   borderRight: 'var(--Grid-borderWidth) solid',
-          //   borderBottom: 'var(--Grid-borderWidth) solid',
-          //   borderColor: 'divider',
-          // },
+          '--Grid-borderWidth': '1px',
+          borderTop: 'var(--Grid-borderWidth) solid',
+          borderLeft: 'var(--Grid-borderWidth) solid',
+          borderColor: 'divider',
+          '& > div': {
+            borderRight: 'var(--Grid-borderWidth) solid',
+            borderBottom: 'var(--Grid-borderWidth) solid',
+            borderColor: 'divider',
+          },
         }}>
           {
             [{ n: 0 }, ...Object.values(players)].map(({ n }) => (
-              <Grid columns={12} sx={{ p: 0, justifyContent: 'center', width: '100%', textAlign: 'center' }} minHeight={30} container gap={0}>
-                <Grid sx={{ border: 1, p: '.5rem' }}  size={{ xs: 1.5, sm: 1, lg: 1 }}>
+              // <Grid sx={{
+              //   // '--Grid-borderWidth': '1px',
+              //   // borderTop: 'var(--Grid-borderWidth) solid',
+              //   // borderLeft: 'var(--Grid-borderWidth) solid',
+              //   // borderColor: 'divider',
+              //   // '& > div': {
+              //   //   borderRight: 'var(--Grid-borderWidth) solid',
+              //   //   borderBottom: 'var(--Grid-borderWidth) solid',
+              //   //   borderColor: 'divider',
+              //   // },
+              //   p: 0, justifyContent: 'center', width: '100%', textAlign: 'center' }} columns={12} minHeight={30} container gap={0}>
+              //
+              // </Grid>
+              <>
+                <Grid sx={{ p: '.2rem' }}  size={{ xs: 1.5, sm: 1, lg: 1 }}>
                   {n === 0 ? <ThumbUpIcon/> : n}
                 </Grid>
-                <Grid sx={{ border: 1, p: '.5rem' }} size={{ xs: 5.5, sm: 7.5, lg: 7.5 }}>
+                <Grid sx={{ p: '.3rem' }} size={{ xs: 5.5, sm: 7.5, lg: 7.5 }}>
                   {n === 0 ? 'Нік' : <Autocomplete
                     size={'small'}
                     value={players[n].title}
@@ -214,13 +230,13 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                     )}
                   />}
                 </Grid>
-                <Grid sx={{ cursor: 'pointer', border: 0.1, p: '.5rem' }} onClick={() => n && addWarning(n) } size={{ xs: 3.5, sm: 2, lg: 1.5 }}>
+                <Grid sx={{ cursor: 'pointer', p: '.5rem' }} onClick={() => n && addWarning(n) } size={{ xs: 3.5, sm: 2, lg: 1.5 }}>
                   {n === 0 ? "Фоли" : new Array(players[n].warnings).fill('⚠️').join('  ')}
                 </Grid>
-                <Grid sx={{ cursor: 'pointer', border: 1, p: '.5rem' }} size={{ xs: 1.5, sm: 1.5, lg: 1.5 }} onClick={() => n && addRole(n)} >
+                <Grid sx={{ cursor: 'pointer', py: '.4rem' }} size={{ xs: 1.5, sm: 1.5, lg: 2 }} onClick={() => n && addRole(n)} >
                   {n === 0 ? 'Роль' : `${players[n].role} `}
                 </Grid>
-              </Grid>
+              </>
             ))
           }
         </Grid>
