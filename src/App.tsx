@@ -26,11 +26,12 @@ const App = () => {
           <Route path="login" element={<SignIn />} />
           <Route path="members" element={<MembersList />} />
           <Route path="clubs" element={<ClubsList />} />
+          <Route path="new-game" element={<NewGame />} />
           <Route path="profile" element={<PrivateRoute Component={DashboardHome}/>} />
           <Route path="profile/users" element={<PrivateRoute Component={DashboardUsers}/>} />
           <Route path="profile/clubs" element={<PrivateRoute Component={DashboardClubs}/>} />
           <Route path="profile/rating-periods" element={<PrivateRoute Component={DashboardRatingPeriods}/>} />
-          <Route path="new-game" element={<PrivateRoute Component={NewGame}/>} />
+          <Route path="new-game-rating" element={<PrivateRoute Component={NewGame}/>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

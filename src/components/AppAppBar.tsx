@@ -63,9 +63,12 @@ export default function AppAppBar() {
               <Button href={'clubs'} variant="text" color="info" size="small">
                 Клуби
               </Button>
+              <Button href={'/new-game'} size="small">
+                Фан гра
+              </Button>
               {
-                user?.authType === 'Клуб' && <Button href={'/new-game'} variant="outlined" color="secondary" size="small">
-                      Нова гра
+                user?.authType === 'Клуб' && <Button href={'/new-game-rating'} variant="outlined" color="secondary" size="small">
+                      Рейтингова гра
                   </Button>
               }
               {/*<Button variant="text" color="info" size="small">*/}

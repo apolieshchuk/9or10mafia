@@ -51,7 +51,7 @@ const ClubsContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const RolesPool = ['М1', 'М2', 'Д', 'Ш']
+const RolesPoolDefault = ['М1', 'М2', 'Д', 'Ш']
 
 export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [clubUsers, setClubUsers] = React.useState([]);
@@ -70,8 +70,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const addRole = (n: number) => {
-    const pickedRoles = Object.values(players).map((player: any) => player.role).filter(Boolean);
-    const pool = ['', ...RolesPool.filter(role => !pickedRoles.includes(role))];
+    const pool = RolesPoolDefault.filter(role => !rolesPool.includes(role));
     const role = pool.pop()
     setPlayers({ ...players, [n]: { ...players[n], role: role } });
   }
@@ -94,6 +93,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   // get active players nickname list
   const activePlayers = useMemo(() => {
     return Object.values(players).filter(player => player.title).map(player => player.title)
+  }, [players]);
+
+  const rolesPool = useMemo(() => {
+    return Object.values(players).filter(player => player.role).map(player => player.role)
   }, [players]);
 
   return (
