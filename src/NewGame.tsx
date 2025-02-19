@@ -8,14 +8,9 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import AppTheme from "./theme/AppTheme";
 import CssBaseline from "@mui/material/CssBaseline";
-import Button from "@mui/material/Button";
-import ColorModeSelect from "./theme/ColorModeSelect";
-import SitemarkIcon from "./components/SitemarkIcon";
-import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import WarningIcon from '@mui/icons-material/Warning';
 import {styled} from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
@@ -29,6 +24,7 @@ import {use, useEffect, useMemo} from "react";
 import axios from "axios";
 import AppAppBar from "./components/AppAppBar";
 import {Autocomplete, createFilterOptions} from "@mui/material";
+import Box from "@mui/material/Box";
 
 const filter = createFilterOptions();
 
@@ -96,10 +92,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }, [])
 
   // get active players nickname list
-  const cachedValue = useMemo(() => {
-    console.log(`--->`, Object.values(players).filter(player => player.title), 'NewGame.tsx:100')
-    return Object.values(players).filter(player => player.title)
+  const activePlayers = useMemo(() => {
+    return Object.values(players).filter(player => player.title).map(player => player.title)
   }, [players]);
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -149,12 +145,13 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         }}>
           {
             [{ n: 0 }, ...Object.values(players)].map(({ n }) => (
-              <Grid minHeight={50} border={'medium'} container gap={2} spacing={3}>
-                <Grid border={'medium'}  size={{ xs: 1, sm: 1, lg: 1 }}>
+              <Grid columns={12} sx={{ p: 0, justifyContent: 'center', width: '100%', textAlign: 'center' }} minHeight={30} container gap={0}>
+                <Grid sx={{ border: 1, p: '.5rem' }}  size={{ xs: 1.5, sm: 1, lg: 1 }}>
                   {n === 0 ? <ThumbUpIcon/> : n}
                 </Grid>
-                <Grid size={{ xs: 6, sm: 7.5, lg: 7.5 }}>
+                <Grid sx={{ border: 1, p: '.5rem' }} size={{ xs: 5.5, sm: 7.5, lg: 7.5 }}>
                   {n === 0 ? 'Нік' : <Autocomplete
+                    size={'small'}
                     value={players[n].title}
                     onChange={(event, newValue) => {
                       if (typeof newValue === 'string') {
@@ -163,7 +160,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                         // Create a new value from the user input
                         setPlayerNickname(n, newValue.inputValue);
                       } else {
-                        setPlayerNickname(n, newValue.title);
+                        setPlayerNickname(n, newValue?.title || "");
                       }
                     }}
                     filterOptions={(options, params) => {
@@ -187,6 +184,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                     id="free-solo-with-text-demo"
                     options={
                       clubUsers
+                        .filter((user: any) => !activePlayers.includes(user.nickname))
                         .map((option: { nickname: string}) => ({...option, title: option.nickname}))
                     }
                     getOptionLabel={(option) => {
@@ -216,10 +214,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                     )}
                   />}
                 </Grid>
-                <Grid sx={{ cursor: 'pointer' }} onClick={() => n && addWarning(n) } size={{ xs: 3, sm: 2, lg: 1.5 }}>
-                  {n === 0 ? 'Фоли' : new Array(players[n].warnings).fill('⚠️').join('  ')}
+                <Grid sx={{ cursor: 'pointer', border: 0.1, p: '.5rem' }} onClick={() => n && addWarning(n) } size={{ xs: 3.5, sm: 2, lg: 1.5 }}>
+                  {n === 0 ? "Фоли" : new Array(players[n].warnings).fill('⚠️').join('  ')}
                 </Grid>
-                <Grid sx={{ cursor: 'pointer' }} size={{ xs: 2, sm: 1.5, lg: 1.5 }} onClick={() => n && addRole(n)} >
+                <Grid sx={{ cursor: 'pointer', border: 1, p: '.5rem' }} size={{ xs: 1.5, sm: 1.5, lg: 1.5 }} onClick={() => n && addRole(n)} >
                   {n === 0 ? 'Роль' : `${players[n].role} `}
                 </Grid>
               </Grid>

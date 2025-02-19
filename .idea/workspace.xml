@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add raing-periods">
-      <change afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add new-game init">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/theme/customizations/dataGrid.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme/customizations/dataGrid.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +121,7 @@
       <workItem from="1739747944025" duration="16252000" />
       <workItem from="1739779916581" duration="62368000" />
       <workItem from="1739898912386" duration="26000" />
-      <workItem from="1739952607343" duration="2324000" />
+      <workItem from="1739952607343" duration="4868000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -223,7 +219,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739868145380</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="add new-game init">
+      <option name="closed" value="true" />
+      <created>1739955836681</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1739955836681</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,6 +248,7 @@
     <MESSAGE value="init" />
     <MESSAGE value="init commit" />
     <MESSAGE value="add raing-periods" />
-    <option name="LAST_COMMIT_MESSAGE" value="add raing-periods" />
+    <MESSAGE value="add new-game init" />
+    <option name="LAST_COMMIT_MESSAGE" value="add new-game init" />
   </component>
 </project>
