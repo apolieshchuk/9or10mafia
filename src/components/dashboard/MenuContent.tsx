@@ -43,7 +43,8 @@ export default function MenuContent() {
     let items = [...mainListItems];
     if (user?.authType === 'Клуб') {
       items = [...items, { text: 'Учасники', icon: <PeopleRoundedIcon />, path: '/profile/users' }];
-    }  else {
+    } else {
+      items = [...items, { text: 'Ігри', icon: <EmojiEventsIcon />, path: '/profile/games' }];
       items = [...items, { text: 'Клуби', icon: <Diversity3Icon />, path: '/profile/clubs' }];
     }
     items = [...items, { text: 'Рейтинг', icon: <EmojiEventsIcon />, path: '/profile/rating-periods' }];

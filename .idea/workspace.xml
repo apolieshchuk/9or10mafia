@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="header menu fixes">
+      <change afterPath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Members.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Members.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/AppNavbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/AppNavbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/CustomizedDataGrid.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/CustomizedDataGrid.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/SideMenuMobile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/SideMenuMobile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardRatingPeriods.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardRatingPeriods.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardUsers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardUsers.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/internals/data/gridDataDashboardMembers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/internals/data/gridDataDashboardMembers.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +45,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src/dashboard&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -65,9 +60,9 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/dashboard" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/internals/data" />
-      <recent name="$PROJECT_DIR$/src/dashboard" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/src/theme/customizations" />
     </key>
@@ -130,7 +125,8 @@
       <workItem from="1739779916581" duration="62368000" />
       <workItem from="1739898912386" duration="26000" />
       <workItem from="1739952607343" duration="11657000" />
-      <workItem from="1740542219450" duration="20784000" />
+      <workItem from="1740542219450" duration="24730000" />
+      <workItem from="1740569571605" duration="561000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -316,7 +312,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740563626429</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="header menu fixes">
+      <option name="closed" value="true" />
+      <created>1740564996421</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1740564996421</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

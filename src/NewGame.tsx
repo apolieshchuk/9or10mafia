@@ -196,16 +196,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     user?.authType === 'Клуб' && path.endsWith('new-game-rating') && setTimeout(async () => {
       if (confirm("Відправити результати гри?")) {
         await axios.post(`http://localhost:3000/club/rating-game`, {
-          players: Object.values(players).map(player => {
-            return {
-              title: player.title,
-              role: RolesPoolMap[player.role],
-              killed: player.killed,
-              bestTurn: player.bestTurn,
-              warnings: player.warnings,
-              id: player.id
-            }
-          }),
+          players: Object.values(players),
           winState: winner,
           votings
         });

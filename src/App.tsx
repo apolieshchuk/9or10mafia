@@ -14,6 +14,7 @@ import DashboardUsers from "./dashboard/DashboardUsers";
 import DashboardClubs from "./dashboard/DashboardClubs";
 import DashboardRatingPeriods from "./dashboard/DashboardRatingPeriods";
 import NewGame from "./NewGame";
+import DashboardGames from "./dashboard/DashboardGames";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="profile" element={<PrivateRoute Component={DashboardHome}/>} />
           <Route path="profile/users" element={<PrivateRoute Component={DashboardUsers}/>} />
           <Route path="profile/clubs" element={<PrivateRoute Component={DashboardClubs}/>} />
+          <Route path="profile/games" element={<PrivateRoute Component={DashboardGames}/>} />
           <Route path="profile/rating-periods" element={<PrivateRoute Component={DashboardRatingPeriods}/>} />
           <Route path="new-game-rating" element={<PrivateRoute Component={NewGame}/>} />
         </Routes>
