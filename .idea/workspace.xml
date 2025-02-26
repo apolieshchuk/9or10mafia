@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="header menu fixes">
-      <change afterPath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" afterDir="false" />
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add dashboard games">
+      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +121,7 @@
       <workItem from="1739898912386" duration="26000" />
       <workItem from="1739952607343" duration="11657000" />
       <workItem from="1740542219450" duration="24730000" />
-      <workItem from="1740569571605" duration="561000" />
+      <workItem from="1740569571605" duration="710000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -320,7 +315,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740564996421</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="add dashboard games">
+      <option name="closed" value="true" />
+      <created>1740570204059</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1740570204059</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -343,6 +346,7 @@
     <MESSAGE value="add raing-periods" />
     <MESSAGE value="add new-game init" />
     <MESSAGE value="header menu fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="header menu fixes" />
+    <MESSAGE value="add dashboard games" />
+    <option name="LAST_COMMIT_MESSAGE" value="add dashboard games" />
   </component>
 </project>

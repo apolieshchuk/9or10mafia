@@ -25,7 +25,7 @@ const columns: GridColDef[] = [
   {field: 'createdAt', headerName: 'Дата', flex: 1, minWidth: 170},
   {
     field: 'role',
-    headerName: 'Р',
+    headerName: 'Роль',
     headerAlign: 'left',
     align: 'left',
     flex: 1,
@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'winner',
-    headerName: 'П',
+    headerName: 'Перемога',
     headerAlign: 'left',
     align: 'left',
     flex: 1,
