@@ -46,7 +46,7 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
     <React.Fragment>
       <IconButton
         data-screenshot="toggle-mode"
-        onClick={handleClick}
+        onClick={() => mode === 'light' ? handleMode('dark')() : handleMode('light')()}
         disableRipple
         size="small"
         aria-controls={open ? 'color-scheme-menu' : undefined}
@@ -56,34 +56,34 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
       >
         {icon}
       </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        slotProps={{
-          paper: {
-            variant: 'outlined',
-            elevation: 0,
-            sx: {
-              my: '4px',
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem selected={mode === 'system'} onClick={handleMode('system')}>
-          System
-        </MenuItem>
-        <MenuItem selected={mode === 'light'} onClick={handleMode('light')}>
-          Light
-        </MenuItem>
-        <MenuItem selected={mode === 'dark'} onClick={handleMode('dark')}>
-          Dark
-        </MenuItem>
-      </Menu>
+      {/*<Menu*/}
+      {/*  anchorEl={anchorEl}*/}
+      {/*  id="account-menu"*/}
+      {/*  open={open}*/}
+      {/*  onClose={handleClose}*/}
+      {/*  onClick={handleClose}*/}
+      {/*  slotProps={{*/}
+      {/*    paper: {*/}
+      {/*      variant: 'outlined',*/}
+      {/*      elevation: 0,*/}
+      {/*      sx: {*/}
+      {/*        my: '4px',*/}
+      {/*      },*/}
+      {/*    },*/}
+      {/*  }}*/}
+      {/*  transformOrigin={{ horizontal: 'right', vertical: 'top' }}*/}
+      {/*  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}*/}
+      {/*>*/}
+      {/*  /!*<MenuItem selected={mode === 'system'} onClick={handleMode('system')}>*!/*/}
+      {/*  /!*  System*!/*/}
+      {/*  /!*</MenuItem>*!/*/}
+      {/*  /!*<MenuItem selected={mode === 'light'} onClick={handleMode('light')}>*!/*/}
+      {/*  /!*  Light*!/*/}
+      {/*  /!*</MenuItem>*!/*/}
+      {/*  /!*<MenuItem selected={mode === 'dark'} onClick={handleMode('dark')}>*!/*/}
+      {/*  /!*  Dark*!/*/}
+      {/*  /!*</MenuItem>*!/*/}
+      {/*</Menu>*/}
     </React.Fragment>
   );
 }

@@ -27,6 +27,7 @@ import AppAppBar from "./components/AppAppBar";
 import {Autocomplete, createFilterOptions} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import {useAuth} from "./AuthProvider";
 
 const filter = createFilterOptions();
 
@@ -63,6 +64,8 @@ const RolesPoolMap: Record<number, string> = {
 }
 
 export default function NewGame(props: { disableCustomTheme?: boolean }) {
+  const { user } = useAuth();
+  const [path, setPath] = React.useState(window.location.pathname);
   const [clubUsers, setClubUsers] = React.useState([]);
   const [winState, setWinState] = React.useState('');
   const [hideRoles, setHideRoles] = React.useState(false);
@@ -189,7 +192,8 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       return
     }
     setWinState(() => winner === winState ? '' : winner);
-    setTimeout(async () => {
+
+    user?.authType === 'Клуб' && path.endsWith('new-game-rating') && setTimeout(async () => {
       if (confirm("Відправити результати гри?")) {
         await axios.post(`http://localhost:3000/club/rating-game`, {
           players: Object.values(players).map(player => {
@@ -214,7 +218,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const urlPath = window.location.pathname.includes('new-game-rating') ? 'club/users' : 'users'
+        const urlPath = window.location.pathname.endsWith('new-game-rating') ? 'club/users' : 'users'
         const {data} = await axios.get(`http://localhost:3000/${urlPath}`);
         const array = (data.items || []).map((item: any, i: number) => {
           return {...item, id: i + 1};

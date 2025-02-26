@@ -89,8 +89,8 @@ export const columns: GridColDef[] = [
   //   renderCell: (params) => renderStatus(params.value as any),
   // },
   {
-    field: 'club',
-    headerName: 'Клуб',
+    field: 'clubs',
+    headerName: 'Клуби',
     headerAlign: 'left',
     align: 'left',
     flex: 1,

@@ -5,12 +5,71 @@ import Button from "@mui/material/Button";
 import {styled} from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
-import {DataGrid} from "@mui/x-data-grid";
-import {columns, rows} from "./internals/data/gridDataMembers";
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {useEffect} from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import AppAppBar from "./components/AppAppBar";
+
+
+export const columns: GridColDef[] = [
+  { field: 'nickname', headerName: 'Нік', flex: 1, minWidth: 200 },
+  { field: 'name', headerName: 'Імя', flex: 1, minWidth: 200 },
+  // {
+  //   field: 'status',
+  //   headerName: 'Status',
+  //   flex: 0.5,
+  //   minWidth: 80,
+  //   renderCell: (params) => renderStatus(params.value as any),
+  // },
+  {
+    field: 'clubs',
+    headerName: 'Клуби',
+    headerAlign: 'left',
+    align: 'left',
+    flex: 1,
+    minWidth: 100,
+  },
+  // {
+  //   field: 'email',
+  //   headerName: 'Email',
+  //   headerAlign: 'left',
+  //   align: 'left',
+  //   flex: 1,
+  //   minWidth: 100,
+  // },
+  // {
+  //   field: 'usersAmount',
+  //   headerName: 'Учасники',
+  //   headerAlign: 'left',
+  //   align: 'left',
+  //   flex: .5,
+  //   minWidth: 80,
+  // },
+  // {
+  //   field: 'viewsPerUser',
+  //   headerName: 'Views per User',
+  //   headerAlign: 'right',
+  //   align: 'right',
+  //   flex: 1,
+  //   minWidth: 120,
+  // },
+  // {
+  //   field: 'averageTime',
+  //   headerName: 'Average Time',
+  //   headerAlign: 'right',
+  //   align: 'right',
+  //   flex: 1,
+  //   minWidth: 100,
+  // },
+  // {
+  //   field: 'conversions',
+  //   headerName: 'Daily Conversions',
+  //   flex: 1,
+  //   minWidth: 150,
+  //   renderCell: renderSparklineCell,
+  // },
+];
 
 
 const MembersContainer = styled(Stack)(({ theme }) => ({
@@ -58,39 +117,11 @@ export default function MembersList(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
       <MembersContainer direction="column" justifyContent="space-between">
         <AppAppBar />
-        {/*<Box sx={{ width: '100%', gap: 3, display: 'flex', justifyContent: 'space-between' }}>*/}
-        {/*  <Button*/}
-        {/*    href={'/'}*/}
-        {/*    variant="outlined"*/}
-        {/*    color="primary"*/}
-        {/*    size="small"*/}
-        {/*    fullWidth={true}*/}
-        {/*    // sx={{minWidth: 'fit-content'}}*/}
-        {/*    // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}*/}
-        {/*  >*/}
-        {/*    Головна*/}
-        {/*  </Button>*/}
-        {/*  <Button*/}
-        {/*    href={'/clubs'}*/}
-        {/*    variant="outlined"*/}
-        {/*    color="primary"*/}
-        {/*    size="small"*/}
-        {/*    fullWidth={true}*/}
-        {/*    // sx={{minWidth: 'fit-content'}}*/}
-        {/*    // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}*/}
-        {/*  >*/}
-        {/*    Клуби*/}
-        {/*  </Button>*/}
-        {/*</Box>*/}
-        {/*<ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />*/}
-        {/*<Typography component="h2" variant="h6" sx={{ mb: 2 }}>*/}
-        {/*  Details*/}
-        {/*</Typography>*/}
         <Box sx={{ mt: '5rem' }}>
           <Grid container spacing={2} columns={12}>
             <Grid size={{ xs: 12, lg: 9 }}>
               <DataGrid
-                checkboxSelection
+                // checkboxSelection
                 rows={members}
                 columns={columns}
                 getRowClassName={(params) =>
@@ -101,33 +132,35 @@ export default function MembersList(props: { disableCustomTheme?: boolean }) {
                 }}
                 pageSizeOptions={[15]}
                 disableColumnResize
+                disableColumnMenu
+                disableColumnSorting
                 density="compact"
-                slotProps={{
-                  filterPanel: {
-                    filterFormProps: {
-                      logicOperatorInputProps: {
-                        variant: 'outlined',
-                        size: 'small',
-                      },
-                      columnInputProps: {
-                        variant: 'outlined',
-                        size: 'small',
-                        sx: { mt: 'auto' },
-                      },
-                      operatorInputProps: {
-                        variant: 'outlined',
-                        size: 'small',
-                        sx: { mt: 'auto' },
-                      },
-                      valueInputProps: {
-                        InputComponentProps: {
-                          variant: 'outlined',
-                          size: 'small',
-                        },
-                      },
-                    },
-                  },
-                }}
+                // slotProps={{
+                //   filterPanel: {
+                //     filterFormProps: {
+                //       logicOperatorInputProps: {
+                //         variant: 'outlined',
+                //         size: 'small',
+                //       },
+                //       columnInputProps: {
+                //         variant: 'outlined',
+                //         size: 'small',
+                //         sx: { mt: 'auto' },
+                //       },
+                //       operatorInputProps: {
+                //         variant: 'outlined',
+                //         size: 'small',
+                //         sx: { mt: 'auto' },
+                //       },
+                //       valueInputProps: {
+                //         InputComponentProps: {
+                //           variant: 'outlined',
+                //           size: 'small',
+                //         },
+                //       },
+                //     },
+                //   },
+                // }}
               />
             </Grid>
             <Grid size={{ xs: 12, lg: 3 }}>
