@@ -79,10 +79,18 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const setPlayers = (item: any) => _setPlayers(() => item);
 
   const setPlayerNickname = (n: number, title: string, id: string) => {
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
     setPlayers({...players, [n]: {...players[n], title, id}});
   }
 
   const addWarning = (n: number) => {
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
     setPlayers({...players, [n]: {...players[n], warnings: (players[n].warnings + 1) % 5}});
   }
 
@@ -114,14 +122,19 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const bestTurn = (n: number, i: number) => {
-    const currentBestTurn = players[n].bestTurn || [];
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
+    const currentBestTurn = [...players[n].bestTurn || []] ;
+    if (currentBestTurn.length >= 3) {
+      return;
+    }
 
     // set all other players bestTurn to default []
-    Object.keys(players).forEach((key: string) => {
-      if (key !== n.toString()) {
-        setPlayers({...players, [parseInt(key)]: {...players[parseInt(key)], bestTurn: []}});
-      }
-    })
+    Object.keys(players).forEach((key) => {
+      players[Number(key)].bestTurn = [];
+    });
 
     if (currentBestTurn.includes(i)) {
       setPlayers({...players, [n]: {...players[n], bestTurn: currentBestTurn.filter((turn: number) => turn !== i)}});
@@ -134,6 +147,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const promoteVote = (n: number) => {
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
     if (!n) return;
     const currentVoting = activeVoting || votings[1];
     // if (!activeVoting) setActiveVoting(() => votings[0]);
@@ -145,6 +162,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const voteForPlayer = (candidate: number, votes: number) => {
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
     if (!activeVoting) return;
     const activeVotingCandidates = activeVoting?.candidates
     if (activeVotingCandidates[candidate] === votes) {
@@ -155,6 +176,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const win = (winner: string) => {
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
     if (rolesPool.length !== 4) {
       alert('Не всім розподілено ролі');
       return;
@@ -164,9 +189,22 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       return
     }
     setWinState(() => winner === winState ? '' : winner);
-    setTimeout(() => {
+    setTimeout(async () => {
       if (confirm("Відправити результати гри?")) {
-        console.log("User chose to continue"); // ToDO: send results to server
+        await axios.post(`http://localhost:3000/club/rating-game`, {
+          players: Object.values(players).map(player => {
+            return {
+              title: player.title,
+              role: RolesPoolMap[player.role],
+              killed: player.killed,
+              bestTurn: player.bestTurn,
+              warnings: player.warnings,
+              id: player.id
+            }
+          }),
+          winState: winner,
+          votings
+        });
       } else {
         setWinState(() => '');
       }
@@ -209,11 +247,11 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       <NewGameContainer direction="column" justifyContent="space-between" alignItems="center">
         <AppAppBar/>
         <Box sx={{mt: '5.3rem', display: {xs: 'flex', md: 'flex'}, justifyContent: 'space-between', flexGrow: 1}}>
-          <Button onClick={() => win('mafia')} sx={{mr: '1rem'}} variant="outlined"
+          <Button onClick={() => !winState && win('mafia')} sx={{mr: '1rem'}} variant="outlined"
                   color={winState === 'mafia' ? 'secondary' : 'info'} size="small">
             Перемога мафії
           </Button>
-          <Button onClick={() => win('citizens')} variant="outlined"
+          <Button onClick={() => !winState && win('citizens')} variant="outlined"
                   color={winState === 'citizens' ? 'secondary' : 'info'} size="small">
             Перемога мирних
           </Button>
@@ -255,7 +293,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                                 // Create a new value from the user input
                                 setPlayerNickname(n, newValue.inputValue || newValue.inputValue?.title || '', newValue.inputValue?.id || '');
                               } else {
-                                setPlayerNickname(n, newValue?.title || "", newValue?._id);
+                                setPlayerNickname(n, newValue?.title || `Гість ${n}`, newValue?._id);
                               }
                             }}
                             filterOptions={(options, params) => {
@@ -313,7 +351,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                           p: n === 0 ? '.5rem' : '.1rem',
                           backgroundColor: players[n]?.warnings === 3 ? 'rgba(255,165,0, 0.2)' : players[n]?.warnings === 4 ? 'rgba(255,0,0, 0.3)' : 'transparent',
                           cursor: 'pointer'
-                        }} onClick={() => n && addWarning(n)} size={{xs: 1.75, sm: 2, lg: 1.5}}>
+                        }} onClick={() => addWarning(n)} size={{xs: 1.75, sm: 2, lg: 1.5}}>
                           {n === 0 ? "Ф" : new Array(players[n].warnings).fill('⚠️').join('  ')}
                         </Grid>
                         <Grid sx={{
@@ -355,7 +393,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         </Grid>
 
         {
-          activeVoting && Object.keys(activeVoting.candidates)?.length && <>
+          activeVoting && Boolean(Object.keys(activeVoting.candidates)?.length) && <>
                 <Grid minHeight={30} container columns={12} sx={{
                   p: 0,
                   // justifyContent: 'center',
