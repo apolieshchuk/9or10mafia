@@ -11,6 +11,7 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import SideMenuMobile from './SideMenuMobile';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from "../../theme/ColorModeIconDropdown";
+import Button from "@mui/material/Button";
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -64,9 +65,16 @@ export default function AppNavbar() {
             sx={{ justifyContent: 'center', mr: 'auto' }}
           >
             <CustomIcon />
-            <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-              Dashboard
-            </Typography>
+            <Button
+              href={'/'}
+              variant="outlined"
+              color="primary"
+              size="small"
+              // sx={{minWidth: 'fit-content'}}
+              // sx={{ position: 'fixed', top: '1rem', left: '1rem' }}
+            >
+              На головну сторінку
+            </Button>
           </Stack>
           <ColorModeIconDropdown />
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>

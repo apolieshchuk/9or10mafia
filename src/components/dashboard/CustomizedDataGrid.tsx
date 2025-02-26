@@ -5,7 +5,9 @@ import { columns, rows } from '../../internals/data/gridDataMembers';
 export default function CustomizedDataGrid() {
   return (
     <DataGrid
-      checkboxSelection
+      // checkboxSelection
+      disableColumnSorting
+      disableColumnMenu
       rows={rows}
       columns={columns}
       getRowClassName={(params) =>

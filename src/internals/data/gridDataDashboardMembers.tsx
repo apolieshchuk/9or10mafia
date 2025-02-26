@@ -80,8 +80,8 @@ export function renderAvatar(
 
 export const columns: GridColDef[] = [
   // { field: 'name', headerName: 'Назва клубу', flex: 1, minWidth: 200 },
-  { field: 'nickname', headerName: 'Нік', flex: 1, minWidth: 200 },
-  { field: 'name', headerName: 'Імя', flex: 1, minWidth: 200 },
+  { field: 'nickname', headerName: 'Нік', flex: 1, minWidth: 100 },
+  { field: 'name', headerName: 'Імя', flex: 1, minWidth: 100 },
   // {
   //   field: 'status',
   //   headerName: 'Status',

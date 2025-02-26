@@ -180,20 +180,6 @@ export default function AppAppBar() {
                         </MenuItem>
                     </>
                 }
-
-                {/*{*/}
-                {/*  user && <Button onClick={() => navigate('/profile')} color="primary" variant="text" size="small">*/}
-                {/*        Мій Профіль ({user?.name})*/}
-                {/*    </Button>*/}
-                {/*}*/}
-                {/*{*/}
-                {/*  user && <Button onClick={() => {*/}
-                {/*    logout()*/}
-                {/*    navigate('/')*/}
-                {/*  }} color="primary" variant="text" size="small">*/}
-                {/*        Вийти*/}
-                {/*    </Button>*/}
-                {/*}*/}
               </Box>
             </Drawer>
           </Box>

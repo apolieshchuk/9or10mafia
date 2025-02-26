@@ -94,7 +94,9 @@ export default function DashboardRatingPeriods(props: { disableCustomTheme?: boo
               {/*</Typography>*/}
               <Grid sx={{ mt: '2rem' }} size={{ xs: 12, lg: 9 }}>
                 <DataGrid
-                  checkboxSelection
+                  // checkboxSelection
+                  disableColumnSorting
+                  disableColumnMenu
                   rows={periods}
                   columns={columns}
                   getRowClassName={(params) =>

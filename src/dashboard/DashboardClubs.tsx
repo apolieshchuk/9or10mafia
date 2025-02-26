@@ -94,7 +94,10 @@ export default function DashboardClubs(props: { disableCustomTheme?: boolean }) 
               {/*</Typography>*/}
               <Grid sx={{ mt: '2rem' }} size={{ xs: 12, lg: 9 }}>
                 <DataGrid
-                  checkboxSelection
+                  disableColumnSelector
+                  // checkboxSelection
+                  disableColumnSorting
+                  disableColumnMenu
                   rows={clubs}
                   columns={columns}
                   getRowClassName={(params) =>
@@ -106,32 +109,32 @@ export default function DashboardClubs(props: { disableCustomTheme?: boolean }) 
                   pageSizeOptions={[10, 20, 50]}
                   disableColumnResize
                   density="compact"
-                  slotProps={{
-                    filterPanel: {
-                      filterFormProps: {
-                        logicOperatorInputProps: {
-                          variant: 'outlined',
-                          size: 'small',
-                        },
-                        columnInputProps: {
-                          variant: 'outlined',
-                          size: 'small',
-                          sx: { mt: 'auto' },
-                        },
-                        operatorInputProps: {
-                          variant: 'outlined',
-                          size: 'small',
-                          sx: { mt: 'auto' },
-                        },
-                        valueInputProps: {
-                          InputComponentProps: {
-                            variant: 'outlined',
-                            size: 'small',
-                          },
-                        },
-                      },
-                    },
-                  }}
+                  // slotProps={{
+                  //   filterPanel: {
+                  //     filterFormProps: {
+                  //       logicOperatorInputProps: {
+                  //         variant: 'outlined',
+                  //         size: 'small',
+                  //       },
+                  //       columnInputProps: {
+                  //         variant: 'outlined',
+                  //         size: 'small',
+                  //         sx: { mt: 'auto' },
+                  //       },
+                  //       operatorInputProps: {
+                  //         variant: 'outlined',
+                  //         size: 'small',
+                  //         sx: { mt: 'auto' },
+                  //       },
+                  //       valueInputProps: {
+                  //         InputComponentProps: {
+                  //           variant: 'outlined',
+                  //           size: 'small',
+                  //         },
+                  //       },
+                  //     },
+                  //   },
+                  // }}
                 />
               </Grid>
               <Copyright />
