@@ -198,7 +198,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                             color="primary"
                             endIcon={<ChevronRightRoundedIcon />}
                             fullWidth={isSmallScreen}
-                            onClick={() => navigate('/new-game')}
+                            onClick={() => navigate('/new-game-rating')}
                           >
                             Почати
                           </Button>

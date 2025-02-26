@@ -10,6 +10,7 @@ import AppTheme from "./theme/AppTheme";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import WarningIcon from '@mui/icons-material/Warning';
 import {styled} from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
@@ -25,6 +26,7 @@ import axios from "axios";
 import AppAppBar from "./components/AppAppBar";
 import {Autocomplete, createFilterOptions} from "@mui/material";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 const filter = createFilterOptions();
 
@@ -62,8 +64,10 @@ const RolesPoolMap: Record<number, string> = {
 
 export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [clubUsers, setClubUsers] = React.useState([]);
+  const [winState, setWinState] = React.useState('');
+  const [hideRoles, setHideRoles] = React.useState(false);
   const [players, _setPlayers] = React.useState([1,2,3,4,5,6,7,8,9,10].reduce((acc, n) => {
-    acc[n] = { n, title: '', warnings: 0, role: 0 };
+    acc[n] = { n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: [] };
     return acc
   }, {} as Record<number, any>));
   const setPlayers = (item: any) => _setPlayers(() => item);
@@ -77,11 +81,62 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const addRole = (n: number) => {
+    if (n === 0) {
+      return setHideRoles(!hideRoles);
+    }
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
     const currentRole = players[n].role || 0;
     const pool = RolesPoolDefault.filter(role => !rolesPool.includes(role));
     let role = pool.length ? pool.find((r) => r > currentRole) : 0;
     role = role || 0;
     setPlayers({ ...players, [n]: { ...players[n], role } });
+  }
+
+  const killPlayer = (n: number) => {
+    if (winState) {
+      alert('Гра закінчена');
+      return;
+    }
+    const currentKilledStatus = players[n].killed || 0;
+    const pool = [1, 2, 3].filter(killed => !killedPool.includes(killed));
+    let killed = pool.length ? pool.find((r) => r > currentKilledStatus) : 0;
+    killed = killed || 0;
+    setPlayers({ ...players, [n]: { ...players[n], killed } });
+  }
+
+  const bestTurn = (n: number, i: number) => {
+    const currentBestTurn = players[n].bestTurn || [];
+
+    // set all other players bestTurn to default []
+    Object.keys(players).forEach((key: string) => {
+      if (key !== n.toString()) {
+        setPlayers({...players, [parseInt(key)]: {...players[parseInt(key)], bestTurn: []}});
+      }
+    })
+
+    if (currentBestTurn.includes(i)) {
+      setPlayers({ ...players, [n]: { ...players[n], bestTurn: currentBestTurn.filter((turn: number) => turn !== i) } });
+      return;
+    }
+    if (currentBestTurn.length >= 3) {
+      return;
+    }
+    setPlayers({ ...players, [n]: { ...players[n], bestTurn: [...currentBestTurn, i] } });
+  }
+
+  const win = (winner: string) => {
+    if (rolesPool.length !== 4) {
+      alert('Не всім розподілено ролі');
+      return;
+    }
+    if (Object.values(players).filter(player => player.title).length < 10) {
+      alert('Не всім розподілено нікнейми');
+      return
+    }
+    return setWinState(() => winner === winState ? '' : winner);
   }
 
   useEffect(() => {
@@ -107,6 +162,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
   const rolesPool = useMemo(() => {
     return Object.values(players).filter(player => player.role).map(player => player.role)
+  }, [players]);
+
+  const killedPool = useMemo(() => {
+    return Object.values(players).filter(player => player.killed).map(player => player.killed)
   }, [players]);
 
   return (
@@ -142,13 +201,21 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         {/*<Typography component="h2" variant="h6" sx={{ mb: 2 }}>*/}
         {/*  Details*/}
         {/*</Typography>*/}
+        <Box sx={{ mt: '5.3rem', display: { xs: 'flex', md: 'flex' }, justifyContent: 'space-between', flexGrow: 1 }}>
+          <Button onClick={() => win('mafia')} sx={{ mr: '1rem' }} variant="outlined" color={winState === 'mafia' ? 'secondary' : 'info'} size="small">
+            Перемога мафії
+          </Button>
+          <Button onClick={() => win('citizens')} variant="outlined" color={winState === 'citizens' ? 'secondary' : 'info'} size="small">
+            Перемога мирних
+          </Button>
+        </Box>
         <Grid minHeight={30} container columns={12} sx={{
           p: 0,
           // justifyContent: 'center',
           textAlign: 'center',
           maxWidth: '1200px',
           width: '100%',
-          mt: '5rem',
+          mt: '.5rem',
           '--Grid-borderWidth': '1px',
           borderTop: 'var(--Grid-borderWidth) solid',
           borderLeft: 'var(--Grid-borderWidth) solid',
@@ -175,85 +242,114 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
               //
               // </Grid>
               <>
-                <Grid sx={{ cursor: 'pointer', p: '.2rem' }}  size={{ xs: 1.5, sm: 1, lg: 1 }}>
-                  {n === 0 ? <ThumbUpIcon/> : n}
-                </Grid>
-                <Grid sx={{  p: '.3rem' }} size={{ xs: 5.5, sm: 7.5, lg: 7.5 }}>
-                  {n === 0 ? 'Нік' : <Autocomplete
-                    size={'small'}
-                    value={players[n].title}
-                    onChange={(event, newValue) => {
-                      if (typeof newValue === 'string') {
-                        setPlayerNickname(n, newValue, '');
-                      } else if (newValue && newValue.inputValue) {
-                        // Create a new value from the user input
-                        setPlayerNickname(n, newValue.inputValue?.title || '', newValue.inputValue?.id || '');
-                      } else {
-                        setPlayerNickname(n, newValue?.title || "", newValue?._id);
-                      }
-                    }}
-                    filterOptions={(options, params) => {
-                      const filtered = filter(options, params);
+                {
+                  players[n]?.killed !== 1 && <>
+                        <Grid sx={{ cursor: 'pointer', p: '.2rem' }}  size={{ xs: 1.5, sm: 1, lg: 1 }}>
+                          {n === 0 ? <ThumbUpIcon/> : n}
+                        </Grid>
+                        <Grid sx={{  p: '.3rem' }} size={{ xs: 5.5, sm: 7.5, lg: 7.5 }}>
+                          {n === 0 ? 'Нік' : <Autocomplete
+                            size={'small'}
+                            value={players[n].title}
+                            onChange={(event, newValue) => {
+                              if (typeof newValue === 'string') {
+                                setPlayerNickname(n, newValue, '');
+                              } else if (newValue && newValue.inputValue) {
+                                // Create a new value from the user input
+                                setPlayerNickname(n, newValue.inputValue || newValue.inputValue?.title || '', newValue.inputValue?.id || '');
+                              } else {
+                                setPlayerNickname(n, newValue?.title || "", newValue?._id);
+                              }
+                            }}
+                            filterOptions={(options, params) => {
+                              const filtered = filter(options, params);
 
-                      const { inputValue } = params;
-                      // Suggest the creation of a new value
-                      const isExisting = options.some((option) => inputValue === option.title);
-                      if (inputValue !== '' && !isExisting) {
-                        filtered.push({
-                          inputValue,
-                          title: `Add "${inputValue}"`,
-                        });
-                      }
+                              const { inputValue } = params;
+                              // Suggest the creation of a new value
+                              const isExisting = options.some((option) => inputValue === option.title);
+                              if (inputValue !== '' && !isExisting) {
+                                filtered.push({
+                                  inputValue,
+                                  title: `Add "${inputValue}"`,
+                                });
+                              }
 
-                      return filtered;
-                    }}
-                    selectOnFocus
-                    clearOnBlur
-                    handleHomeEndKeys
-                    id="free-solo-with-text-demo"
-                    options={
-                      clubUsers
-                        .filter((user: any) => !activePlayers.includes(user.nickname))
-                        .map((option: { nickname: string}) => ({...option, title: option.nickname}))
-                    }
-                    getOptionLabel={(option) => {
-                      // Value selected with enter, right from the input
-                      if (typeof option === 'string') {
-                        return option;
+                              return filtered;
+                            }}
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            id="free-solo-with-text-demo"
+                            options={
+                              clubUsers
+                                .filter((user: any) => !activePlayers.includes(user.nickname))
+                                .map((option: { nickname: string}) => ({...option, title: option.nickname}))
+                            }
+                            getOptionLabel={(option) => {
+                              // Value selected with enter, right from the input
+                              if (typeof option === 'string') {
+                                return option;
+                              }
+                              // Add "xxx" option created dynamically
+                              if (option.inputValue) {
+                                return option.inputValue;
+                              }
+                              // Regular option
+                              return option.title;
+                            }}
+                            renderOption={(props, option) => {
+                              const { key, ...optionProps } = props;
+                              return (
+                                <li key={key} {...optionProps}>
+                                  {option.title}
+                                </li>
+                              );
+                            }}
+                            // sx={{ width: 300 }}
+                            freeSolo
+                            renderInput={(params) => (
+                              <TextField {...params} />
+                            )}
+                          />}
+                        </Grid>
+                        <Grid sx={{
+                          p: n === 0 ? '.5rem' : '.1rem',
+                          backgroundColor: players[n]?.warnings === 3 ? 'rgba(255,165,0, 0.2)' : players[n]?.warnings === 4 ? 'rgba(255,0,0, 0.3)' : 'transparent',
+                          cursor: 'pointer' }} onClick={() => n && addWarning(n) } size={{ xs: 1.75, sm: 2, lg: 1.5 }}>
+                          {n === 0 ? "Ф" : new Array(players[n].warnings).fill('⚠️').join('  ')}
+                        </Grid>
+                        <Grid sx={{
+                          p: '.5rem',
+                          fontWeight: n !== 0 ? 800 : '',
+                          cursor: 'pointer',
+                        }} size={{ xs: 2, sm: 1, lg: 1.5 }} onClick={() => addRole(n)} >
+                          {n === 0 ? 'Р' : hideRoles ? '?' : `${RolesPoolMap[players[n].role]} `}
+                        </Grid>
+                  </>
+                }
+                {
+                  n !==0 && players[n]?.killed === 1 &&
+                    <Grid container columns={12} sx={{ p: '.3rem' }} size={{ xs: 10.75, sm: 11.5, lg: 11.5 }}>
+                      {
+                        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
+                          return <Grid sx={{
+                            backgroundColor: players[n].bestTurn.includes(i) ? 'rgb(0, 54, 107)' : 'transparent',
+                            borderColor: 'gray !important',
+                            borderRight: 'var(--Grid-borderWidth) solid',
+                            cursor: 'pointer'
+                          }} size={{ xs: 12/10 }} onClick={() => bestTurn(n, i)} >
+                            {i}
+                          </Grid>
+                        })
                       }
-                      // Add "xxx" option created dynamically
-                      if (option.inputValue) {
-                        return option.inputValue;
-                      }
-                      // Regular option
-                      return option.title;
-                    }}
-                    renderOption={(props, option) => {
-                      const { key, ...optionProps } = props;
-                      return (
-                        <li key={key} {...optionProps}>
-                          {option.title}
-                        </li>
-                      );
-                    }}
-                    // sx={{ width: 300 }}
-                    freeSolo
-                    renderInput={(params) => (
-                      <TextField {...params} />
-                    )}
-                  />}
-                </Grid>
-                <Grid sx={{
-                  backgroundColor: players[n]?.warnings === 3 ? 'rgba(255,165,0, 0.2)' : players[n]?.warnings === 4 ? 'rgba(255,0,0, 0.3)' : 'transparent',
-                  cursor: 'pointer' }} onClick={() => n && addWarning(n) } size={{ xs: 1.75, sm: 2, lg: 1.5 }}>
-                  {n === 0 ? "Фоли" : new Array(players[n].warnings).fill('⚠️').join('  ')}
-                </Grid>
+                    </Grid>
+                }
                 <Grid sx={{
                   fontWeight: n !== 0 ? 800 : '',
                   cursor: 'pointer',
                   py: '.4rem'
-                }} size={{ xs: 3.25, sm: 1.5, lg: 2 }} onClick={() => n && addRole(n)} >
-                  {n === 0 ? 'Роль' : `${RolesPoolMap[players[n].role]} `}
+                }} size={{ xs: 1.25, sm: 0.5, lg: 0.5 }} onClick={() => n && killPlayer(n)} >
+                  {n === 0 ?  <HeartBrokenIcon/> : players[n].killed ? `${players[n].killed}` : '' }
                 </Grid>
               </>
             ))
