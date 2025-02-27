@@ -4,19 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add dashboard games">
-      <change afterPath="$PROJECT_DIR$/src/Rating.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/GameStatsBarChart.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MvpStatCard.tsx" afterDir="false" />
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add rating">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hero.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/PageViewsBarChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/PageViewsBarChart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/SessionsChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/SessionsChart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Rating.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Rating.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/GameStatsBarChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/GameStatsBarChart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/MvpStatCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/MvpStatCard.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +125,7 @@
       <workItem from="1739952607343" duration="11657000" />
       <workItem from="1740542219450" duration="24730000" />
       <workItem from="1740569571605" duration="1421000" />
-      <workItem from="1740628742264" duration="11713000" />
+      <workItem from="1740628742264" duration="12029000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -343,7 +335,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740570308028</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="add rating">
+      <option name="closed" value="true" />
+      <created>1740654671953</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1740654671953</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -367,6 +367,7 @@
     <MESSAGE value="add new-game init" />
     <MESSAGE value="header menu fixes" />
     <MESSAGE value="add dashboard games" />
-    <option name="LAST_COMMIT_MESSAGE" value="add dashboard games" />
+    <MESSAGE value="add rating" />
+    <option name="LAST_COMMIT_MESSAGE" value="add rating" />
   </component>
 </project>

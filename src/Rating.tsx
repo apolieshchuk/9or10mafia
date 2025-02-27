@@ -115,6 +115,8 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
     description: '',
     citizenWinsRate: 0,
     mafiaWinsRate: 0,
+    donWinsRate: 0,
+    sheriffWinsRate: 0,
   });
   const [gamesStats, setGamesStats] = React.useState([]);
 
@@ -131,6 +133,8 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
           description: `Коефіцієнт перемог - ${mvpPlayer.totalWinsRate}%`,
           citizenWinsRate: mvpPlayer.citizenWinsRate,
           mafiaWinsRate: mvpPlayer.mafiaWinsRate,
+          donWinsRate: mvpPlayer.donWinsRate,
+          sheriffWinsRate: mvpPlayer.sheriffWinsRate,
         });
         setGamesStats(data.stats || {});
         setRating(data.players || []);

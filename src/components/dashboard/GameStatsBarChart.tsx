@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material/styles';
 import {useEffect, useMemo} from "react";
 
 export default function GameStatsBarChart({
-  stats
+  stats = [],
 }: { stats: any[] }) {
   const theme = useTheme();
   const colorPalette = [
@@ -21,8 +21,8 @@ export default function GameStatsBarChart({
     return stats.reduce((acc: number, [,curr]: any) => acc + curr.totalGames, 0)
   }, [stats])
   const prevMonthChange = useMemo(() => {
-    const currentMonth = stats.at(-1)[1].totalGames
-    const prevMonth = stats.at(-2)[1].totalGames
+    const currentMonth = stats.at(-1)?.[1].totalGames || 0
+    const prevMonth = stats.at(-2)?.[1].totalGames || 0
     return prevMonth ? ((currentMonth - prevMonth) / prevMonth) * 100 : 100
   }, [stats])
   const mnthNames = useMemo(() => {

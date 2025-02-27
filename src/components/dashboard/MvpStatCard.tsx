@@ -19,6 +19,8 @@ export type StatCardProps = {
   description: string;
   citizenWinsRate: number;
   mafiaWinsRate: number;
+  donWinsRate: number;
+  sheriffWinsRate: number;
 };
 
 function getDaysInMonth(month: number, year: number) {
@@ -53,6 +55,8 @@ export default function MvpStatCard({
   description,
   citizenWinsRate,
   mafiaWinsRate,
+  donWinsRate,
+  sheriffWinsRate,
 }: StatCardProps) {
   const theme = useTheme();
   const daysInWeek = getDaysInMonth(4, 2024);
@@ -107,8 +111,8 @@ export default function MvpStatCard({
             <Box sx={{  flexDirection: 'row' }} display={'flex'}>
               <Box sx={{ m: 1 }}>МИРНІ <Chip sx={{ ml: .5 }} icon={<ThumbUpIcon/>} size="small" color='error' label={`${citizenWinsRate}%`}/> </Box>
               <Box sx={{ m: 1 }}>МАФІЯ <Chip sx={{ ml: .5 }} icon={<ThumbDownIcon/>} size="small" color='default' label={`${mafiaWinsRate}%`}/> </Box>
-              <Box sx={{ m: 1 }}>ШЕРИФ <Chip sx={{ ml: .5 }} icon={<StarsIcon/>} size="small" color='error' label={`${mafiaWinsRate}%`}/> </Box>
-              <Box sx={{ m: 1 }}>ДОН <Chip sx={{ ml: .5 }} icon={<Face5Icon/>} size="small" color='default' label={`${mafiaWinsRate}%`}/> </Box>
+              <Box sx={{ m: 1 }}>ШЕРИФ <Chip sx={{ ml: .5 }} icon={<StarsIcon/>} size="small" color='error' label={`${sheriffWinsRate}%`}/> </Box>
+              <Box sx={{ m: 1 }}>ДОН <Chip sx={{ ml: .5 }} icon={<Face5Icon/>} size="small" color='default' label={`${donWinsRate}%`}/> </Box>
             </Box>
           </Stack>
           {/*<Box sx={{ width: '100%', height: 50 }}>*/}
