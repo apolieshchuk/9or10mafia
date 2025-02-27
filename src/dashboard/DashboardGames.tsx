@@ -20,6 +20,10 @@ import {useEffect} from "react";
 import {Copyright} from "../components/Footer";
 import axios from "../axios";
 import Chip from "@mui/material/Chip";
+import StarsIcon from '@mui/icons-material/Stars';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import Face5Icon from '@mui/icons-material/Face5';
 
 const columns: GridColDef[] = [
   {field: 'createdAt', headerName: 'Дата', flex: 1, minWidth: 170},
@@ -30,7 +34,10 @@ const columns: GridColDef[] = [
     align: 'left',
     flex: 1,
     minWidth: 50,
-    renderCell: (n) => <Chip label={n.value} color={n.row.role === 'М' || n.row.role === 'Д'? 'default' : 'error'} variant="outlined"/>,
+    renderCell: (n) => <Chip sx={{p: 1}} icon={n.row.role === 'Шер' ? <StarsIcon/> : n.row.role === 'Дон' ?
+      <Face5Icon/> : n.row.role === 'Маф' ? <ThumbDownIcon/> : <ThumbUpIcon/>} label={n.value}
+                             color={n.row.role === 'Маф' || n.row.role === 'Дон' ? 'default' : 'error'}
+                             variant="outlined"/>,
   },
   {
     field: 'winner',
@@ -39,7 +46,8 @@ const columns: GridColDef[] = [
     align: 'left',
     flex: 1,
     minWidth: 50,
-    renderCell: (n) => <Chip label={n.value} color={n.row.winner === 'Мафія' ? 'default' : 'default'} variant="outlined"/>,
+    renderCell: (n) => <Chip sx={{p: 1}} icon={n.row.winner === 'Маф' ? <ThumbDownIcon/> : <ThumbUpIcon/>}
+                             label={n.value} color={n.row.winner === 'Маф' ? 'default' : 'error'} variant="outlined"/>,
   },
   {
     field: 'bestTurnGuess',
@@ -50,8 +58,8 @@ const columns: GridColDef[] = [
     minWidth: 50,
   },
   {
-    field: 'rating',
-    headerName: 'Рейтинг',
+    field: 'points',
+    headerName: 'Бали',
     headerAlign: 'left',
     align: 'left',
     flex: .5,

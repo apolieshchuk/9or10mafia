@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add dashboard games">
+      <change afterPath="$PROJECT_DIR$/src/Rating.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/GameStatsBarChart.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dashboard/MvpStatCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hero.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/MenuContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/PageViewsBarChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/PageViewsBarChart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dashboard/SessionsChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/SessionsChart.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,31 +46,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src/dashboard&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.start.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/src/components/dashboard",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.build.executor": "Run",
+    "npm.start.executor": "Run",
+    "settings.editor.selected.configurable": "project.scopes",
+    "ts.external.directory.path": "/Users/antonpolieshchuk/Documents/mafia/vancouver/9or10mafia/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/dashboard" />
+      <recent name="$PROJECT_DIR$/src/components/dashboard" />
       <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/dashboard" />
       <recent name="$PROJECT_DIR$/src/internals/data" />
       <recent name="$PROJECT_DIR$/public" />
-      <recent name="$PROJECT_DIR$/src/theme/customizations" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/dashboard" />
@@ -121,7 +132,8 @@
       <workItem from="1739898912386" duration="26000" />
       <workItem from="1739952607343" duration="11657000" />
       <workItem from="1740542219450" duration="24730000" />
-      <workItem from="1740569571605" duration="710000" />
+      <workItem from="1740569571605" duration="1421000" />
+      <workItem from="1740628742264" duration="11713000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -323,7 +335,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740570204059</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="add dashboard games">
+      <option name="closed" value="true" />
+      <created>1740570308028</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1740570308028</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

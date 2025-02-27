@@ -161,7 +161,8 @@ export default function Hero() {
               Зареєструватися
             </Button>
             <Button
-              variant="contained"
+              disabled
+              variant="outlined"
               color="primary"
               href={'register-club'}
               size="small"

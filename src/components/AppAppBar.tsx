@@ -10,6 +10,7 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
+import StarIcon from '@mui/icons-material/Star';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import Sitemark from './SitemarkIcon';
@@ -57,22 +58,26 @@ export default function AppAppBar() {
           <Box sx={{flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, gap: 3}}>
             <Sitemark/>
             <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-              <Button sx={{mr: '.5rem'}} href={'members'}
-                      variant={window.location.pathname.includes('members') ? 'outlined' : 'text'} color="info"
-                      size="small">
-                Учасники
-              </Button>
-              <Button sx={{mr: '.5rem'}} href={'clubs'}
-                      variant={window.location.pathname.includes('clubs') ? 'outlined' : 'text'} color="info"
-                      size="small">
-                Клуби
+              <Button startIcon={<StarIcon/>} sx={{ mr: '.5rem' }} variant={window.location.pathname.endsWith('clubs-rating') ? 'outlined' : 'text'}
+                      href={'/clubs-rating'} size="small" color="secondary">
+                Рейтинг клубу
               </Button>
               <Button sx={{mr: '.5rem'}} variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
                       href={'/new-game'} size="small">
                 Фан гра
               </Button>
+              <Button sx={{mr: '.5rem'}} href={'members'}
+                      variant={window.location.pathname.includes('members') ? 'outlined' : 'text'} color="info"
+                      size="small">
+                Учасники
+              </Button>
+              {/*<Button sx={{mr: '.5rem'}} href={'clubs'}*/}
+              {/*        variant={window.location.pathname.includes('clubs') ? 'outlined' : 'text'} color="info"*/}
+              {/*        size="small">*/}
+              {/*  Клуби*/}
+              {/*</Button>*/}
               {
-                user?.authType === 'Клуб' && <Button href={'/new-game-rating'}
+                user?.authType === 'Клуб' && <Button href={'/new-game-rating'} sx={{mr: '.5rem'}}
                                                      variant={window.location.pathname.endsWith('new-game-rating') ? 'outlined' : 'text'}
                                                      color="secondary" size="small">
                       Рейтингова гра
@@ -138,13 +143,14 @@ export default function AppAppBar() {
                     <CloseRoundedIcon/>
                   </IconButton>
                 </Box>
-
-                <MenuItem selected={window.location.pathname.includes('members')}
-                          onClick={() => navigate('/members')}>Учасники</MenuItem>
-                <MenuItem selected={window.location.pathname.includes('clubs')}
-                          onClick={() => navigate('/clubs')}>Клуби</MenuItem>
+                <MenuItem selected={window.location.pathname.endsWith('clubs-rating')}
+                          onClick={() => navigate('/clubs-rating')}><StarIcon sx={{ mr: .5 }}/>Рейтинг клубу</MenuItem>
                 <MenuItem selected={window.location.pathname.endsWith('new-game')}
                           onClick={() => navigate('/new-game')}>Фан гра</MenuItem>
+                <MenuItem selected={window.location.pathname.includes('members')}
+                          onClick={() => navigate('/members')}>Учасники</MenuItem>
+                {/*<MenuItem selected={window.location.pathname.includes('clubs')}*/}
+                {/*          onClick={() => navigate('/clubs')}>Клуби</MenuItem>*/}
                 {user?.authType === 'Клуб' && <MenuItem selected={window.location.pathname.endsWith('new-game-rating')}
                                                         onClick={() => navigate('/new-game-rating')}>Рейтингова
                     гра</MenuItem>}

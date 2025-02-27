@@ -17,6 +17,7 @@ import {useAuth} from "../../AuthProvider";
 import {useEffect} from "react";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
+import AddchartIcon from "@mui/icons-material/Addchart";
 
 
 const mainListItems = [
@@ -47,7 +48,7 @@ export default function MenuContent() {
       items = [...items, { text: 'Ігри', icon: <EmojiEventsIcon />, path: '/profile/games' }];
       items = [...items, { text: 'Клуби', icon: <Diversity3Icon />, path: '/profile/clubs' }];
     }
-    items = [...items, { text: 'Рейтинг', icon: <EmojiEventsIcon />, path: '/profile/rating-periods' }];
+    items = [...items, { text: 'Рейтинговий період', icon: <AddchartIcon />, path: '/profile/rating-periods' }];
     setListItems(() => items);
 
   }, [user]);

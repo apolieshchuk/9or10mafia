@@ -6,19 +6,42 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
+import {useEffect, useMemo} from "react";
 
-export default function PageViewsBarChart() {
+export default function GameStatsBarChart({
+  stats
+}: { stats: any[] }) {
   const theme = useTheme();
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
     (theme.vars || theme).palette.primary.main,
     (theme.vars || theme).palette.primary.light,
   ];
+  const totalGames = useMemo(() => {
+    return stats.reduce((acc: number, [,curr]: any) => acc + curr.totalGames, 0)
+  }, [stats])
+  const prevMonthChange = useMemo(() => {
+    const currentMonth = stats.at(-1)[1].totalGames
+    const prevMonth = stats.at(-2)[1].totalGames
+    return prevMonth ? ((currentMonth - prevMonth) / prevMonth) * 100 : 100
+  }, [stats])
+  const mnthNames = useMemo(() => {
+    return stats.map(([,mnth]: any) => mnth.name)
+  }, [stats]);
+  const totalGamesPerMonth = useMemo(() => {
+    return stats.map(([,curr]: any) => curr.totalGames)
+  }, [stats])
+  const citizensWinsPerMonth = useMemo(() => {
+    return stats.map(([,curr]: any) => curr.citizensWins)
+  }, [stats])
+  const mafiaWinsPerMonth = useMemo(() => {
+    return stats.map(([,curr]: any) => curr.mafiaWins)
+  }, [stats])
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Статистика ігор
+          Всього ігор
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -30,12 +53,12 @@ export default function PageViewsBarChart() {
             }}
           >
             <Typography variant="h4" component="p">
-              1.3M
+              {totalGames}
             </Typography>
-            <Chip size="small" color="error" label="-8%" />
+            <Chip size="small" color={prevMonthChange>0 ? 'success' : 'error'} label={`${prevMonthChange}%`} />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Page views and downloads for the last 6 months
+            за останні 12 міс
           </Typography>
         </Stack>
         <BarChart
@@ -46,27 +69,27 @@ export default function PageViewsBarChart() {
               {
                 scaleType: 'band',
                 categoryGapRatio: 0.5,
-                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                data: mnthNames,
               },
             ] as any
           }
           series={[
+            // {
+            //   id: 'total-games',
+            //   label: 'Всього ігор',
+            //   data: totalGamesPerMonth,
+            //   stack: 'A',
+            // },
             {
-              id: 'page-views',
-              label: 'Page views',
-              data: [2234, 3872, 2998, 4125, 3357, 2789, 2998],
+              id: 'citizens-wins',
+              label: 'Перемога мирних',
+              data: citizensWinsPerMonth,
               stack: 'A',
             },
             {
-              id: 'downloads',
-              label: 'Downloads',
-              data: [3098, 4215, 2384, 2101, 4752, 3593, 2384],
-              stack: 'A',
-            },
-            {
-              id: 'conversions',
-              label: 'Conversions',
-              data: [4051, 2275, 3129, 4693, 3904, 2038, 2275],
+              id: 'mafia-wins',
+              label: 'Перемога мафії',
+              data: mafiaWinsPerMonth,
               stack: 'A',
             },
           ]}

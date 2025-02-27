@@ -90,9 +90,9 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   const { user } = useAuth();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [clubSelectId, setClubSelectId] = React.useState(null);
   const navigate = useNavigate();
   const [clubs, setClubs] = React.useState([]);
+  const [clubSelectId, setClubSelectId] = React.useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -102,6 +102,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
           return { ...item, id: i + 1 };
         })
         setClubs(array || []);
+        setClubSelectId(array[0]?._id);
       } catch (e) {
         console.error(e);
       }
@@ -229,7 +230,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                         {/*  Uncover performance and visitor insights with our data wizardry.*/}
                         {/*</Typography>*/}
                         <Box>
-                          <InputLabel id="club-name-label">Стати учасником клубу</InputLabel>
+                          <InputLabel  id="club-name-label">Стати учасником клубу</InputLabel>
                           <Select
                             labelId="club-name-label"
                             id="club-name"

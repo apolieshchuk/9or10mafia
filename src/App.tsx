@@ -15,6 +15,7 @@ import DashboardClubs from "./dashboard/DashboardClubs";
 import DashboardRatingPeriods from "./dashboard/DashboardRatingPeriods";
 import NewGame from "./NewGame";
 import DashboardGames from "./dashboard/DashboardGames";
+import Rating from "./Rating";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="register-club" element={<SignUpClub />} />
           <Route path="login" element={<SignIn />} />
           <Route path="members" element={<MembersList />} />
+          <Route path="clubs-rating" element={<Rating />} />
           <Route path="clubs" element={<ClubsList />} />
           <Route path="new-game" element={<NewGame />} />
           <Route path="profile" element={<PrivateRoute Component={DashboardHome}/>} />
