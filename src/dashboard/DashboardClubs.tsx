@@ -34,13 +34,6 @@ import axios from "../axios";
 
 const columns: GridColDef[] = [
   { field: 'name', headerName: 'Назва клубу', flex: 1, minWidth: 200 },
-  // {
-  //   field: 'status',
-  //   headerName: 'Status',
-  //   flex: 0.5,
-  //   minWidth: 80,
-  //   renderCell: (params) => renderStatus(params.value as any),
-  // },
   {
     field: 'address',
     headerName: 'Адреса',
