@@ -76,7 +76,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/clubs');
+        const { data } = await axios.get('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/clubs');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })
@@ -92,7 +92,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   const handleJoinClub = async () => {
     try {
       if (!clubSelectId) return;
-      await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/join', {
+      await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/join', {
         clubId: clubSelectId,
       });
       setClubSelectId(null)
@@ -110,7 +110,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
         alert('Необхідно вказати назву рейтингового періоду');
         return;
       }
-      await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/rating-period', {
+      await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/rating-period', {
         name: name.value,
       });
       setClubSelectId(null)

@@ -195,7 +195,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
     user?.authType === 'Клуб' && path.endsWith('new-game-rating') && setTimeout(async () => {
       if (confirm("Відправити результати гри?")) {
-        await axios.post(`https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/rating-game`, {
+        await axios.post(`https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/rating-game`, {
           players: Object.values(players),
           winState: winner,
           votings
@@ -210,7 +210,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     async function fetchData() {
       try {
         const urlPath = window.location.pathname.endsWith('new-game-rating') ? 'club/users' : 'users'
-        const {data} = await axios.get(`https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/${urlPath}`);
+        const {data} = await axios.get(`https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/${urlPath}`);
         const array = (data.items || []).map((item: any, i: number) => {
           return {...item, id: i + 1};
         })

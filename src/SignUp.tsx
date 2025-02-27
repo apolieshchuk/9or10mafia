@@ -81,7 +81,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/clubs');
+        const { data } = await axios.get('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/clubs');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })
@@ -150,7 +150,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     const password = document.getElementById('password') as HTMLInputElement;
     const name = document.getElementById('name') as HTMLInputElement;
     const nickname = document.getElementById('nickname') as HTMLInputElement;
-    await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/user', {
+    await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/user', {
       name: name.value,
       nickname: nickname.value,
       email: email.value,

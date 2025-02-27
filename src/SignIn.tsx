@@ -89,7 +89,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
 
-    await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/auth/login', {
+    await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/auth/login', {
       email: email.value,
       password: password.value,
       authType,
