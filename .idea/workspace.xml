@@ -6,9 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add rating">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Clubs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Clubs.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Members.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Members.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Rating.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Rating.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/GameStatsBarChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/GameStatsBarChart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/MvpStatCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dashboard/MvpStatCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SignUpClub.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUpClub.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardRatingPeriods.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardRatingPeriods.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardUsers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardUsers.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +134,7 @@
       <workItem from="1739952607343" duration="11657000" />
       <workItem from="1740542219450" duration="24730000" />
       <workItem from="1740569571605" duration="1421000" />
-      <workItem from="1740628742264" duration="12029000" />
+      <workItem from="1740628742264" duration="13977000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -343,7 +352,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740654671953</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="add rating">
+      <option name="closed" value="true" />
+      <created>1740654922565</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1740654922565</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

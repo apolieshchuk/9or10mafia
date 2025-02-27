@@ -123,7 +123,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.post('http://localhost:3000/club/rating', {
+        const { data } = await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/rating', {
           clubId: '67b33ab2a5a3524946cb0935' // ToDO
         });
         const mvpPlayer = data.players[0];

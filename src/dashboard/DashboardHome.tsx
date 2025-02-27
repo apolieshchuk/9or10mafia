@@ -3,7 +3,7 @@ import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-charts/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import type {} from '@mui/x-tree-view/themeAugmentation';
-import {alpha, useTheme} from '@mui/material/styles';
+import {alpha, styled, useTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -30,6 +30,8 @@ import {Copyright} from "../components/Footer";
 import CardContent from "@mui/material/CardContent";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Button from "@mui/material/Button";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Card from "@mui/material/Card";
@@ -52,40 +54,17 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-
-const data: StatCardProps[] = [
-  {
-    title: 'Users',
-    value: '14k',
-    interval: 'Last 30 days',
-    trend: 'up',
-    data: [
-      200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360, 340, 380,
-      360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600, 880, 920,
-    ],
-  },
-  {
-    title: 'Conversions',
-    value: '325',
-    interval: 'Last 30 days',
-    trend: 'down',
-    data: [
-      1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840, 600, 820,
-      780, 800, 760, 380, 740, 660, 620, 840, 500, 520, 480, 400, 360, 300, 220,
-    ],
-  },
-  {
-    title: 'Event count',
-    value: '200k',
-    interval: 'Last 30 days',
-    trend: 'neutral',
-    data: [
-      500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510, 530,
-      520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430, 520, 510,
-    ],
-  },
-];
-
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   const { user } = useAuth();
   const theme = useTheme();
@@ -97,7 +76,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('http://localhost:3000/clubs');
+        const { data } = await axios.get('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/clubs');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })
@@ -113,7 +92,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   const handleJoinClub = async () => {
     try {
       if (!clubSelectId) return;
-      await axios.post('http://localhost:3000/club/join', {
+      await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/join', {
         clubId: clubSelectId,
       });
       setClubSelectId(null)
@@ -131,7 +110,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
         alert('Необхідно вказати назву рейтингового періоду');
         return;
       }
-      await axios.post('http://localhost:3000/club/rating-period', {
+      await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/rating-period', {
         name: name.value,
       });
       setClubSelectId(null)
@@ -143,6 +122,9 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
     }
   }
 
+  const handleUploadAvatar = async () => {
+
+  }
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -184,6 +166,33 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 columns={12}
                 sx={{ mt: '2rem', mb: (theme) => theme.spacing(2) }}
               >
+                <Grid size={{ xs: 4 }}>
+                  <Card sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Stack direction={'row'} spacing={1}>
+                        <AccountBoxIcon />
+                        <InputLabel id="rank-period-label">Встановити Аватар</InputLabel>
+                      </Stack>
+                      <Button
+                        disabled
+                        sx={{ mt: 2 }}
+                        component="label"
+                        role={undefined}
+                        variant="outlined"
+                        tabIndex={-1}
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        Завантажити
+                        <VisuallyHiddenInput
+                          multiple={false}
+                          accept=".jpg, .jpeg, .png"
+                          type="file"
+                          onChange={(event) => console.log(event.target.files)}
+                        />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
                 { user?.authType === 'Клуб' && (
                   <Grid size={{ xs: 4 }}>
                     <Card sx={{ height: '100%' }}>
@@ -213,7 +222,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 {/*    <StatCard {...card} />*/}
                 {/*  </Grid>*/}
                 {/*))}*/}
-                <Grid size={{ xs: 8 }}>
+                <Grid size={{ xs: 4 }}>
                   { user?.authType === 'Учасник' && (
                     <Card sx={{ height: '100%' }}>
                       <CardContent>

@@ -153,7 +153,7 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
     const contact = document.getElementById('contact') as HTMLInputElement;
     const nickname = document.getElementById('nickname') as HTMLInputElement;
     const address = document.getElementById('address') as HTMLInputElement;
-    await axios.post('http://localhost:3000/club', {
+    await axios.post('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club', {
       name: name.value,
       nickname: nickname.value,
       address: address.value,

@@ -47,7 +47,7 @@ export default function DashboardUsers(props: { disableCustomTheme?: boolean }) 
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('http://localhost:3000/club/users');
+        const { data } = await axios.get('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/users');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })

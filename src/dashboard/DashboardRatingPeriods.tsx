@@ -47,7 +47,7 @@ export default function DashboardRatingPeriods(props: { disableCustomTheme?: boo
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('http://localhost:3000/club/rating-periods');
+        const { data } = await axios.get('https://ocv4b7jhja.execute-api.us-west-2.amazonaws.com/club/rating-periods');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })
