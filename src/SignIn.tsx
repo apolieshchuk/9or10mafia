@@ -96,7 +96,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     }).then(({ data }) => {
       const token = data?.token;
       token && setToken(token)
-      navigate('/profile')
+      navigate('/')
     }).catch((e) => {
       console.error(e);
       alert('Некоректний логін або пароль');
