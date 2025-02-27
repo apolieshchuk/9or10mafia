@@ -4,21 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add rating">
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="final commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Clubs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Clubs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Members.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Members.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Rating.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Rating.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignIn.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SignUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SignUpClub.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SignUpClub.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hero.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardClubs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardGames.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardRatingPeriods.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardRatingPeriods.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardUsers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardUsers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +74,7 @@
       <command value="start" />
     </option>
   </component>
-  <component name="RunManager" selected="npm.start">
+  <component name="RunManager" selected="npm.test">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -106,8 +95,19 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="test" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="test" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.test" />
         <item itemvalue="npm.start" />
         <item itemvalue="npm.build" />
       </list>
@@ -135,7 +135,7 @@
       <workItem from="1739952607343" duration="11657000" />
       <workItem from="1740542219450" duration="24730000" />
       <workItem from="1740569571605" duration="1421000" />
-      <workItem from="1740628742264" duration="21684000" />
+      <workItem from="1740628742264" duration="25130000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -369,7 +369,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740657055979</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="final commit">
+      <option name="closed" value="true" />
+      <created>1740692581974</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1740692581974</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -394,6 +402,7 @@
     <MESSAGE value="header menu fixes" />
     <MESSAGE value="add dashboard games" />
     <MESSAGE value="add rating" />
-    <option name="LAST_COMMIT_MESSAGE" value="add rating" />
+    <MESSAGE value="final commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="final commit" />
   </component>
 </project>

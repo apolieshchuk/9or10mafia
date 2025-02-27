@@ -15,7 +15,6 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from './theme/AppTheme';
 import ColorModeSelect from './theme/ColorModeSelect';
-import { GoogleIcon, FacebookIcon } from './components/CustomIcons';
 import SitemarkIcon from "./components/SitemarkIcon";
 import axios from "axios";
 import {useEffect} from "react";
