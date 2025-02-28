@@ -128,9 +128,9 @@ export default function MembersList(props: { disableCustomTheme?: boolean }) {
                   params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
                 }
                 initialState={{
-                  pagination: { paginationModel: { pageSize: 25 } },
+                  pagination: { paginationModel: { pageSize: 15 } },
                 }}
-                pageSizeOptions={[25]}
+                pageSizeOptions={[15]}
                 disableColumnResize
                 disableColumnMenu
                 disableColumnSorting
