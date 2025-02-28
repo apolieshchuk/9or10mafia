@@ -233,7 +233,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     // }, 30000);
 
     const preventRefresh = function () {
-      if (preventSleepMode && confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
+      if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
       } else {
         return false;
       }

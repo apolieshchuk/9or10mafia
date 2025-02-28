@@ -70,6 +70,8 @@ export default function AppAppBar() {
   };
 
   const navigateWithConfirm = (path: string)=>  {
+    const isNewGamePath = window.location.pathname.includes('new-game');
+    if (!isNewGamePath) return navigate(path);
     if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")) {
       navigate(path);
     }

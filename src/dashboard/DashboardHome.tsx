@@ -134,6 +134,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
         nickname: nickname.value,
       });
       const token = data?.token;
+      console.log(`--->`, token, 'DashboardHome.tsx:137')
       token && setToken(token)
       alert('Оновлено');
       nickname.value = '';
