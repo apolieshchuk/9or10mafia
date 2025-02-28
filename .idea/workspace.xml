@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="change mode fixes">
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add timer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/AppAppBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AppAppBar.tsx" afterDir="false" />
@@ -140,7 +140,8 @@
       <workItem from="1740702981445" duration="834000" />
       <workItem from="1740703942667" duration="1707000" />
       <workItem from="1740705996594" duration="356000" />
-      <workItem from="1740707430091" duration="4992000" />
+      <workItem from="1740707430091" duration="5108000" />
+      <workItem from="1740712679244" duration="738000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -478,7 +479,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740706046280</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="add timer">
+      <option name="closed" value="true" />
+      <created>1740712465469</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1740712465469</updated>
+    </task>
+    <task id="LOCAL-00044" summary="add timer">
+      <option name="closed" value="true" />
+      <created>1740712549637</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1740712549637</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -518,6 +535,7 @@
     <MESSAGE value="final commit" />
     <MESSAGE value="redirect after login" />
     <MESSAGE value="change mode fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="change mode fixes" />
+    <MESSAGE value="add timer" />
+    <option name="LAST_COMMIT_MESSAGE" value="add timer" />
   </component>
 </project>

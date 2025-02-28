@@ -114,7 +114,7 @@ export default function AppAppBar() {
           </Box>
           {
             window.location.pathname.includes('new-game') &&
-              <Typography color={stopWatch <= 0 ? 'error' :  stopWatch <= 10 ? 'warning': 'default' } onClick={startStopWatch} sx={{ mr: 3, cursor: 'pointer' }} variant='h1'>
+              <Typography color={stopWatch <= 0 ? 'error' :  stopWatch <= 10 ? 'warning': 'default' } onClick={startStopWatch} sx={{ mr: 3, cursor: 'pointer' }} variant='h2'>
                 {stopWatchFmt}
               </Typography>
           }

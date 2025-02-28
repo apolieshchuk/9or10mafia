@@ -130,13 +130,12 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       return;
     }
     const currentBestTurn = [...players[n].bestTurn || []] ;
-    if (currentBestTurn.length >= 3) {
-      return;
-    }
 
     // set all other players bestTurn to default []
     Object.keys(players).forEach((key) => {
-      players[Number(key)].bestTurn = [];
+      if (Number(key) !== n) {
+        players[Number(key)].bestTurn = [];
+      }
     });
 
     if (currentBestTurn.includes(i)) {
