@@ -12,7 +12,7 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
   const { mode, setMode } = useColorScheme();
 
   const changeMode = () => {
-    return mode === 'light' ? setMode('dark') : setMode('light');
+    return mode === 'light' ? setMode('dark') : setMode('dark'); // ToDo always dark pls blinking on iphone
   }
   if (!mode) {
     return (

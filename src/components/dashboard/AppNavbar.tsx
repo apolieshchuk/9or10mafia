@@ -76,7 +76,7 @@ export default function AppNavbar() {
               На головну сторінку
             </Button>
           </Stack>
-          <ColorModeIconDropdown />
+          {/*<ColorModeIconDropdown />*/}
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuRoundedIcon />
           </MenuButton>
