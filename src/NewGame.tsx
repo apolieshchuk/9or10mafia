@@ -235,6 +235,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     return Object.values(players).filter(player => player.killed).map(player => player.killed)
   }, [players]);
 
+  window.onbeforeunload = function () {
+    return "Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.";
+  }
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme/>
