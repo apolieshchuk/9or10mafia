@@ -67,7 +67,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
-  const { user } = useAuth();
+  const { user, setToken } = useAuth();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -130,9 +130,11 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
         alert('Необхідно вказати новий нікнейм');
         return;
       }
-      await axios.put('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/user', {
+      const { data } = await axios.put('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/user', {
         nickname: nickname.value,
       });
+      const token = data?.token;
+      token && setToken(token)
       alert('Оновлено');
       nickname.value = '';
     } catch (e: any) {

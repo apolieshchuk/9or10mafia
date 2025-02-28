@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="prevent ios sleep">
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="update nickname">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dashboard/DashboardHome.tsx" afterDir="false" />
     </list>
@@ -144,15 +144,7 @@
       <workItem from="1740730235785" duration="1644000" />
       <workItem from="1740732445952" duration="2494000" />
       <workItem from="1740735466104" duration="515000" />
-      <workItem from="1740736096387" duration="742000" />
-    </task>
-    <task id="LOCAL-00006" summary="init commit">
-      <option name="closed" value="true" />
-      <created>1739786985502</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1739786985502</updated>
+      <workItem from="1740736096387" duration="1792000" />
     </task>
     <task id="LOCAL-00007" summary="init commit">
       <option name="closed" value="true" />
@@ -538,7 +530,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740735963532</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="update nickname">
+      <option name="closed" value="true" />
+      <created>1740736845818</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1740736845819</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -583,6 +583,7 @@
     <MESSAGE value="remove some text" />
     <MESSAGE value="add warning about leave the page" />
     <MESSAGE value="prevent ios sleep" />
-    <option name="LAST_COMMIT_MESSAGE" value="prevent ios sleep" />
+    <MESSAGE value="update nickname" />
+    <option name="LAST_COMMIT_MESSAGE" value="update nickname" />
   </component>
 </project>
