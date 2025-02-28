@@ -223,11 +223,13 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
     const iosSleepPreventInterval = setInterval(function () {
       setPreventSleepMode(() => false);
-      window.location.href = "/new/page";
-      window.setTimeout(function () {
-        window.stop()
-        setPreventSleepMode(() => true);
-      }, 0);
+      setTimeout(() => {
+        window.location.href = "/new/page";
+        window.setTimeout(function () {
+          window.stop()
+          setPreventSleepMode(() => true);
+        }, 0);
+      }, 0)
     }, 30000);
 
     window.onbeforeunload = function () {
