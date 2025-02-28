@@ -124,7 +124,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
     async function fetchData() {
       try {
         const { data } = await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/rating', {
-          clubId: '67b33ab2a5a3524946cb0935' // ToDO
+          clubId: '67c0dc3b110964e2fdac7b37' // ToDO
         });
         const mvpPlayer = data.players[0];
         setMvp({
