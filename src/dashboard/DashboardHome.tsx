@@ -31,6 +31,7 @@ import CardContent from "@mui/material/CardContent";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Button from "@mui/material/Button";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
@@ -119,6 +120,24 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
     } catch (e: any) {
       const msg = e?.response?.data?.message;
       alert(msg || 'Помилка при створенні рейтингового періоду');
+    }
+  }
+
+  const handleChangeNickname = async () => {
+    try {
+      const nickname = document.getElementById('nickname') as HTMLInputElement;
+      if (!nickname?.value) {
+        alert('Необхідно вказати новий нікнейм');
+        return;
+      }
+      await axios.put('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/user', {
+        nickname: nickname.value,
+      });
+      alert('Оновлено');
+      nickname.value = '';
+    } catch (e: any) {
+      const msg = e?.response?.data?.message;
+      alert(msg || 'Помилка при оновлені нікнейму');
     }
   }
 
@@ -305,6 +324,44 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 {/*<Grid size={{ xs: 12, md: 6 }}>*/}
                 {/*  <PageViewsBarChart />*/}
                 {/*</Grid>*/}
+              </Grid>
+              <Grid
+                container
+                spacing={2}
+                columns={12}
+                sx={{ mt: '2rem', mb: (theme) => theme.spacing(2) }}
+              >
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <Card sx={{ height: '100%' }}>
+                    <CardContent>
+                      <Stack direction={'row'} spacing={1}>
+                        <FormatPaintIcon />
+                        <InputLabel id="nickname-label">Змінити нікнейм</InputLabel>
+                      </Stack>
+                      <Box sx={{ mt: 2 }}>
+                        <TextField
+                          autoComplete="nickname"
+                          name="nickname"
+                          required
+                          fullWidth
+                          id="nickname"
+                          placeholder="Новий нікнейм"
+                          sx={{ mb: 3 }}
+                        />
+                        <Button
+                          variant="contained"
+                          size="small"
+                          color="primary"
+                          endIcon={<ChevronRightRoundedIcon />}
+                          fullWidth={isSmallScreen}
+                          onClick={handleChangeNickname}
+                        >
+                          Змінити
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
               <Copyright/>
             </Box>
