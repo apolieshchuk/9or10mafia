@@ -69,6 +69,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [clubUsers, setClubUsers] = React.useState([]);
   const [winState, setWinState] = React.useState('');
   const [hideRoles, setHideRoles] = React.useState(false);
+  const [preventSleepMode, setPreventSleepMode] = React.useState(true);
   const [votings, setVotings] = React.useState([1, 2, 3, 4].reduce((acc, c) => {
     acc[c] = {c, title: `День ${c}`, candidates: {}};
     return acc
@@ -221,14 +222,16 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     fetchData();
 
     const iosSleepPreventInterval = setInterval(function () {
+      setPreventSleepMode(() => false);
       window.location.href = "/new/page";
       window.setTimeout(function () {
         window.stop()
+        setPreventSleepMode(() => true);
       }, 0);
     }, 30000);
 
     window.onbeforeunload = function () {
-      if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
+      if (preventSleepMode && confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
 
       } else {
         return false;
