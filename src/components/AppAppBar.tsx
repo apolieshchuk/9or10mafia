@@ -69,6 +69,12 @@ export default function AppAppBar() {
     setOpen(newOpen);
   };
 
+  const navigateWithConfirm = (path: string)=>  {
+    if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")) {
+      navigate(path);
+    }
+  }
+
   return (
     <AppBar
       position="fixed"
@@ -126,14 +132,14 @@ export default function AppAppBar() {
             }}
           >
             {
-              user && <Button onClick={() => navigate('/profile')} color="primary" variant="text" size="small">
+              user && <Button onClick={() => navigateWithConfirm('/profile')} color="primary" variant="text" size="small">
                     Мій Профіль ({user?.name})
                 </Button>
             }
             {
               user && <Button onClick={() => {
                 logout()
-                navigate('/')
+                navigateWithConfirm('/')
               }} color="primary" variant="text" size="small">
                     Вийти
                 </Button>
@@ -177,15 +183,15 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
                 <MenuItem selected={window.location.pathname.endsWith('clubs-rating')}
-                          onClick={() => navigate('/clubs-rating')}><StarIcon sx={{ mr: .5 }}/>Рейтинг клубу</MenuItem>
+                          onClick={() => navigateWithConfirm('/clubs-rating')}><StarIcon sx={{ mr: .5 }}/>Рейтинг клубу</MenuItem>
                 <MenuItem selected={window.location.pathname.endsWith('new-game')}
-                          onClick={() => navigate('/new-game')}>Фан гра</MenuItem>
+                          onClick={() => navigateWithConfirm('/new-game')}>Фан гра</MenuItem>
                 <MenuItem selected={window.location.pathname.includes('members')}
-                          onClick={() => navigate('/members')}>Учасники</MenuItem>
+                          onClick={() => navigateWithConfirm('/members')}>Учасники</MenuItem>
                 {/*<MenuItem selected={window.location.pathname.includes('clubs')}*/}
                 {/*          onClick={() => navigate('/clubs')}>Клуби</MenuItem>*/}
                 {user?.authType === 'Клуб' && <MenuItem selected={window.location.pathname.endsWith('new-game-rating')}
-                                                        onClick={() => navigate('/new-game-rating')}>Рейтингова
+                                                        onClick={() => navigateWithConfirm('/new-game-rating')}>Рейтингова
                     гра</MenuItem>}
                 <Divider sx={{my: 3}}/>
                 {
@@ -212,7 +218,7 @@ export default function AppAppBar() {
                         <MenuItem>
                             <Button onClick={() => {
                                 logout()
-                                navigate('/')
+                              navigateWithConfirm('/')
                             }} color="primary" variant="outlined" fullWidth>
                                 Вийти
                             </Button>

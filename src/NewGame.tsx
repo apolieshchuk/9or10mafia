@@ -243,7 +243,9 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     window.unload = preventRefresh;
     // @ts-ignore For mobile devices
     window.pagehide = preventRefresh;
-    // return () => iosSleepPreventInterval && clearInterval(iosSleepPreventInterval);
+    return () => {
+      window.onbeforeunload = null
+    };
   }, [])
 
   // get active players nickname list
