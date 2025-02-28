@@ -16,6 +16,8 @@ import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import Sitemark from './SitemarkIcon';
 import {useAuth} from "../AuthProvider";
 import {useNavigate} from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import {useEffect, useMemo} from "react";
 
 const StyledToolbar = styled(Toolbar)(({theme}) => ({
   display: 'flex',
@@ -33,10 +35,35 @@ const StyledToolbar = styled(Toolbar)(({theme}) => ({
   padding: '8px 12px',
 }));
 
+let stopWatchInterval: NodeJS.Timeout;
+let stopWatchStart = false;
+
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
   const {user, logout} = useAuth();
   const navigate = useNavigate();
+  const [stopWatch, setStopWatch] = React.useState(60);
+  // const [stopWatchStart, setStopWatchStart] = React.useState(false);
+  // const [stopWatchInterval, setStopWatchInterval] = React.useState(null as NodeJS.Timeout | null);
+
+  const stopWatchFmt= useMemo(() => {
+    const minutes = Math.floor((stopWatch % 3600) / 61);
+    const seconds = Math.floor(stopWatch % 61);
+    return seconds.toString().padStart(2, '0');
+  }, [stopWatch]);
+
+  useEffect(() => {
+    stopWatchInterval = setInterval(() => {
+      if (!stopWatchStart) return;
+      setStopWatch((prev) => Math.max(prev - 1, 0))
+    }, 1000);
+    return () => clearInterval(stopWatchInterval);
+  }, []);
+
+  const startStopWatch = () => {
+    setStopWatch(60);
+    stopWatchStart = true;
+  }
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -85,6 +112,12 @@ export default function AppAppBar() {
               }
             </Box>
           </Box>
+          {
+            window.location.pathname.includes('new-game') &&
+              <Typography color={stopWatch <= 0 ? 'error' :  stopWatch <= 10 ? 'warning': 'default' } onClick={startStopWatch} sx={{ mr: 3, cursor: 'pointer' }} variant='h1'>
+                {stopWatchFmt}
+              </Typography>
+          }
           <Box
             sx={{
               display: {xs: 'none', md: 'flex'},
