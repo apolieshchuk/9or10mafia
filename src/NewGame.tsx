@@ -220,17 +220,17 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       }
     }
     fetchData();
-
-    const iosSleepPreventInterval = setInterval(function () {
-      setPreventSleepMode(() => false);
-      setTimeout(() => {
-        window.location.href = "/new/page";
-        window.setTimeout(function () {
-          window.stop()
-          setPreventSleepMode(() => true);
-        }, 0);
-      }, 0)
-    }, 30000);
+    //
+    // const iosSleepPreventInterval = setInterval(function () {
+    //   setPreventSleepMode(() => false);
+    //   setTimeout(() => {
+    //     window.location.href = "/new/page";
+    //     window.setTimeout(function () {
+    //       window.stop()
+    //       setPreventSleepMode(() => true);
+    //     }, 0);
+    //   }, 0)
+    // }, 30000);
 
     const preventRefresh = function () {
       if (preventSleepMode && confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
@@ -239,10 +239,11 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       }
     };
     window.onbeforeunload = preventRefresh;
-    // For mobile devices
-    // @ts-ignore
+    // @ts-ignore For mobile devices
     window.unload = preventRefresh;
-    return () => iosSleepPreventInterval && clearInterval(iosSleepPreventInterval);
+    // @ts-ignore For mobile devices
+    window.pagehide = preventRefresh;
+    // return () => iosSleepPreventInterval && clearInterval(iosSleepPreventInterval);
   }, [])
 
   // get active players nickname list
