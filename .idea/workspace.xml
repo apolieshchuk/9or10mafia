@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="redirect after login">
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="change mode fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/theme/ColorModeIconDropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme/ColorModeIconDropdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +136,7 @@
       <workItem from="1740542219450" duration="24730000" />
       <workItem from="1740569571605" duration="1421000" />
       <workItem from="1740628742264" duration="28212000" />
-      <workItem from="1740702981445" duration="326000" />
+      <workItem from="1740702981445" duration="725000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -418,7 +418,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740701237874</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="change mode fixes">
+      <option name="closed" value="true" />
+      <created>1740703319657</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1740703319657</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -457,6 +465,7 @@
     <MESSAGE value="add rating" />
     <MESSAGE value="final commit" />
     <MESSAGE value="redirect after login" />
-    <option name="LAST_COMMIT_MESSAGE" value="redirect after login" />
+    <MESSAGE value="change mode fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="change mode fixes" />
   </component>
 </project>

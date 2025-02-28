@@ -253,6 +253,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         </Box>
         <Grid minHeight={30} container columns={12} sx={{
           p: 0,
+          fontSize: '16px !important',
           // justifyContent: 'center',
           textAlign: 'center',
           maxWidth: '1200px',
