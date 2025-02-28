@@ -94,14 +94,17 @@ export default function AppAppBar() {
             <Sitemark/>
             <Box sx={{display: {xs: 'none', md: 'flex'}}}>
               <Button startIcon={<StarIcon/>} sx={{ mr: '.5rem' }} variant={window.location.pathname.endsWith('clubs-rating') ? 'outlined' : 'text'}
-                      href={'/clubs-rating'} size="small" color="secondary">
+                      onClick={() => navigateWithConfirm('/clubs-rating')}
+                      size="small" color="secondary">
                 Рейтинг клубу
               </Button>
               <Button sx={{mr: '.5rem'}} variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
-                      href={'/new-game'} size="small">
+                      onClick={() => navigateWithConfirm('/new-game')}
+                      size="small">
                 Фан гра
               </Button>
-              <Button sx={{mr: '.5rem'}} href={'members'}
+              <Button sx={{mr: '.5rem'}}
+                      onClick={() => navigateWithConfirm('/members')}
                       variant={window.location.pathname.includes('members') ? 'outlined' : 'text'} color="info"
                       size="small">
                 Учасники
