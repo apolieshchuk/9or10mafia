@@ -166,7 +166,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 columns={12}
                 sx={{ mt: '2rem', mb: (theme) => theme.spacing(2) }}
               >
-                <Grid size={{ xs: 4 }}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <Card sx={{ height: '100%' }}>
                     <CardContent>
                       <Stack direction={'row'} spacing={1}>
@@ -194,7 +194,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                   </Card>
                 </Grid>
                 { user?.authType === 'Клуб' && (
-                  <Grid size={{ xs: 4 }}>
+                  <Grid size={{ xs: 12, md: 4 }}>
                     <Card sx={{ height: '100%' }}>
                       <CardContent>
                         <Stack direction={'row'} spacing={1}>
@@ -222,7 +222,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 {/*    <StatCard {...card} />*/}
                 {/*  </Grid>*/}
                 {/*))}*/}
-                <Grid size={{ xs: 4 }}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   { user?.authType === 'Учасник' && (
                     <Card sx={{ height: '100%' }}>
                       <CardContent>
