@@ -232,14 +232,16 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       }, 0)
     }, 30000);
 
-    window.onbeforeunload = function () {
+    const preventRefresh = function () {
       if (preventSleepMode && confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
-
       } else {
         return false;
       }
-      // return "Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.";
     };
+    window.onbeforeunload = preventRefresh;
+    // For mobile devices
+    // @ts-ignore
+    window.unload = preventRefresh;
     return () => iosSleepPreventInterval && clearInterval(iosSleepPreventInterval);
   }, [])
 

@@ -142,15 +142,7 @@
       <workItem from="1740707430091" duration="5108000" />
       <workItem from="1740712679244" duration="754000" />
       <workItem from="1740730235785" duration="1644000" />
-      <workItem from="1740732445952" duration="1436000" />
-    </task>
-    <task id="LOCAL-00002" summary="init commit">
-      <option name="closed" value="true" />
-      <created>1739748325954</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1739748325954</updated>
+      <workItem from="1740732445952" duration="1670000" />
     </task>
     <task id="LOCAL-00003" summary="init commit">
       <option name="closed" value="true" />
@@ -536,7 +528,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740733405954</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="prevent ios sleep">
+      <option name="closed" value="true" />
+      <created>1740733939321</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1740733939321</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
