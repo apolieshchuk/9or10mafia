@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import {styled} from '@mui/material/styles';
+import {useAuth} from "../AuthProvider";
 
 const StyledBox = styled('div')(({theme}) => ({
   alignSelf: 'center',
@@ -47,6 +48,8 @@ const StyledBox = styled('div')(({theme}) => ({
 }));
 
 export default function Hero() {
+  const { user } = useAuth();
+
   return (
     <Box
       id="hero"
@@ -124,52 +127,52 @@ export default function Hero() {
             useFlexGap
             sx={{pt: 2, width: {xs: '100%', sm: '380px'}}}
           >
-            {/*<InputLabel htmlFor="email-hero" sx={visuallyHidden}>*/}
-            {/*  Email*/}
-            {/*</InputLabel>*/}
-            {/*<TextField*/}
-            {/*  id="email-hero"*/}
-            {/*  hiddenLabel*/}
-            {/*  size="small"*/}
-            {/*  variant="outlined"*/}
-            {/*  aria-label="Enter your email address"*/}
-            {/*  placeholder="Your email address"*/}
-            {/*  fullWidth*/}
-            {/*  slotProps={{*/}
-            {/*    htmlInput: {*/}
-            {/*      autoComplete: 'off',*/}
-            {/*      'aria-label': 'Enter your email address',*/}
-            {/*    },*/}
-            {/*  }}*/}
-            {/*/>*/}
-            <Button
-              href={'login'}
-              variant="contained"
-              color="primary"
-              size="small"
-              sx={{minWidth: 'fit-content'}}
-            >
-              Увійти
-            </Button>
-            <Button
-              href={'register'}
-              variant="contained"
-              color="primary"
-              size="small"
-              sx={{minWidth: 'fit-content'}}
-            >
-              Зареєструватися
-            </Button>
-            <Button
-              disabled
-              variant="outlined"
-              color="primary"
-              href={'register-club'}
-              size="small"
-              sx={{minWidth: 'fit-content'}}
-            >
-              Зареєструвати клуб
-            </Button>
+            {
+              user && <>
+                    <Typography
+                        variant="h2"
+                        sx={{
+                          textAlign: 'center',
+                          color: 'text.secondary',
+                          width: {sm: '100%'},
+                        }}
+                    >
+                        Привіт, {user.authType === 'Клуб' ? user.name : user.nickname }!
+                    </Typography>
+                </>
+            }
+            {
+              !user && <>
+                    <Button
+                        href={'login'}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        sx={{minWidth: 'fit-content'}}
+                    >
+                        Увійти
+                    </Button>
+                    <Button
+                        href={'register'}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        sx={{minWidth: 'fit-content'}}
+                    >
+                        Зареєструватися
+                    </Button>
+                    <Button
+                        disabled
+                        variant="outlined"
+                        color="primary"
+                        href={'register-club'}
+                        size="small"
+                        sx={{minWidth: 'fit-content'}}
+                    >
+                        Зареєструвати клуб
+                    </Button>
+                </>
+            }
           </Stack>
           {/*<Typography*/}
           {/*  variant="caption"*/}

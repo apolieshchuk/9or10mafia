@@ -5,6 +5,7 @@ import axios from "./axios";
 type User = {
   authType: 'Клуб' | 'Учасник';
   name: string;
+  nickname: string;
   email: string;
 } & JwtPayload
 

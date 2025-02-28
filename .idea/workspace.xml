@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="final commit" />
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="redirect after login">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AuthProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/AuthProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hero.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -71,7 +75,7 @@
       <command value="start" />
     </option>
   </component>
-  <component name="RunManager" selected="npm.test">
+  <component name="RunManager" selected="npm.start">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -104,8 +108,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.test" />
         <item itemvalue="npm.start" />
+        <item itemvalue="npm.test" />
         <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
@@ -132,7 +136,7 @@
       <workItem from="1739952607343" duration="11657000" />
       <workItem from="1740542219450" duration="24730000" />
       <workItem from="1740569571605" duration="1421000" />
-      <workItem from="1740628742264" duration="27711000" />
+      <workItem from="1740628742264" duration="28148000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -398,7 +402,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740699921296</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="redirect after login">
+      <option name="closed" value="true" />
+      <created>1740700759390</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1740700759390</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -436,6 +448,7 @@
     <MESSAGE value="add dashboard games" />
     <MESSAGE value="add rating" />
     <MESSAGE value="final commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="final commit" />
+    <MESSAGE value="redirect after login" />
+    <option name="LAST_COMMIT_MESSAGE" value="redirect after login" />
   </component>
 </project>
