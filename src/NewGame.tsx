@@ -218,8 +218,24 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         console.error(e);
       }
     }
-
     fetchData();
+
+    const iosSleepPreventInterval = setInterval(function () {
+      window.location.href = "/new/page";
+      window.setTimeout(function () {
+        window.stop()
+      }, 0);
+    }, 30000);
+
+    window.onbeforeunload = function () {
+      if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
+
+      } else {
+        return false;
+      }
+      // return "Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.";
+    };
+    return () => iosSleepPreventInterval && clearInterval(iosSleepPreventInterval);
   }, [])
 
   // get active players nickname list
@@ -234,10 +250,6 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const killedPool = useMemo(() => {
     return Object.values(players).filter(player => player.killed).map(player => player.killed)
   }, [players]);
-
-  window.onbeforeunload = function () {
-    return "Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.";
-  }
 
   return (
     <AppTheme {...props}>

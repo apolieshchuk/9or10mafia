@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="remove some text">
+    <list default="true" id="cf0e890d-38bf-448e-93ca-6f65a10463a3" name="Changes" comment="add warning about leave the page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NewGame.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewGame.tsx" afterDir="false" />
     </list>
@@ -141,7 +141,8 @@
       <workItem from="1740705996594" duration="356000" />
       <workItem from="1740707430091" duration="5108000" />
       <workItem from="1740712679244" duration="754000" />
-      <workItem from="1740730235785" duration="1614000" />
+      <workItem from="1740730235785" duration="1644000" />
+      <workItem from="1740732445952" duration="259000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -519,7 +520,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740731232391</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="add warning about leave the page">
+      <option name="closed" value="true" />
+      <created>1740731875463</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1740731875463</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,6 +571,7 @@
     <MESSAGE value="add timer" />
     <MESSAGE value="add has 4 warnings -rating" />
     <MESSAGE value="remove some text" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove some text" />
+    <MESSAGE value="add warning about leave the page" />
+    <option name="LAST_COMMIT_MESSAGE" value="add warning about leave the page" />
   </component>
 </project>
