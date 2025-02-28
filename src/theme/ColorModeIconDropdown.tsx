@@ -21,6 +21,9 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
     setMode(targetMode);
     handleClose();
   };
+  const changeMode = () => {
+    return mode === 'light' ? setMode('dark') : setMode('light');
+  }
   if (!mode) {
     return (
       <Box
@@ -46,7 +49,7 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
     <React.Fragment>
       <IconButton
         data-screenshot="toggle-mode"
-        onClick={() => mode === 'light' ? handleMode('dark')() : handleMode('light')()}
+        onClick={changeMode}
         disableRipple
         size="small"
         aria-controls={open ? 'color-scheme-menu' : undefined}
