@@ -144,7 +144,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         >
           Головна
         </Button>
-        <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+        {/*<ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />*/}
         <Card variant="outlined">
           <Typography
             component="h1"

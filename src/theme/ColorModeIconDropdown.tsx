@@ -8,21 +8,10 @@ import MenuItem from '@mui/material/MenuItem';
 import { useColorScheme } from '@mui/material/styles';
 
 export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
-  const { mode, systemMode, setMode } = useColorScheme();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleMode = (targetMode: 'system' | 'light' | 'dark') => () => {
-    setMode(targetMode);
-    handleClose();
-  };
+  const { mode, setMode } = useColorScheme();
+
   const changeMode = () => {
-    return mode === 'light' ? setMode('dark') : setMode('light');
+    return mode === 'light' ? setMode('dark') : setMode('dark');
   }
   if (!mode) {
     return (
@@ -40,11 +29,6 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
       />
     );
   }
-  const resolvedMode = (systemMode || mode) as 'light' | 'dark';
-  const icon = {
-    light: <LightModeIcon />,
-    dark: <DarkModeIcon />,
-  }[resolvedMode];
   return (
     <React.Fragment>
       <IconButton
@@ -52,12 +36,10 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
         onClick={changeMode}
         disableRipple
         size="small"
-        aria-controls={open ? 'color-scheme-menu' : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
         {...props}
       >
-        {icon}
+        {mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
       </IconButton>
       {/*<Menu*/}
       {/*  anchorEl={anchorEl}*/}
