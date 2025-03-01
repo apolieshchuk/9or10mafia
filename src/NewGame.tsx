@@ -74,7 +74,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     acc[c] = {c, title: `День ${c}`, candidates: {}};
     return acc
   }, {} as Record<number, any>));
-  const [activeVoting, setActiveVoting] = React.useState(null as { c: number, candidates: number[] } | null);
+  const [activeVoting, setActiveVoting] = React.useState(null as { c: number, candidates: [] } | null);
 
   const [players, _setPlayers] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, n) => {
     acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: []};
@@ -157,24 +157,27 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     if (!n) return;
     const currentVoting = activeVoting || votings[1];
     // if (!activeVoting) setActiveVoting(() => votings[0]);
-    const activeVotingCandidates = currentVoting?.candidates
-    activeVotingCandidates[n] = 0;
+    const activeVotingCandidates = currentVoting?.candidates || []
+    activeVotingCandidates.push([n, 0]);
+    // activeVotingCandidates[n] = 0;
 
     setVotings(() => ({...votings, [currentVoting?.c]: {...currentVoting, candidates: activeVotingCandidates}}));
     setActiveVoting(() => ({ ...currentVoting }));
   }
 
-  const voteForPlayer = (candidate: number, votes: number) => {
+  const voteForPlayer = (candidateIndex: number, votes: number) => {
     if (winState) {
       alert('Гра закінчена');
       return;
     }
     if (!activeVoting) return;
-    const activeVotingCandidates = activeVoting?.candidates
-    if (activeVotingCandidates[candidate] === votes) {
-      votes = 0;
+    const activeVotingCandidates: Array<[number, number]> = activeVoting?.candidates
+    // const findCandidate = Object.keys(activeVotingCandidates).find(key => Number(key) === candidate);
+    if (activeVotingCandidates && activeVotingCandidates[candidateIndex][1] === votes) {
+      activeVotingCandidates[candidateIndex][1] = 0;
+      return;
     }
-    activeVotingCandidates[candidate] = votes;
+    activeVotingCandidates[candidateIndex][1] = votes;
     setVotings(() => ({...votings, [activeVoting.c]: {...activeVoting, candidates: activeVotingCandidates}}));
   }
 
@@ -414,7 +417,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         </Grid>
 
         {
-          activeVoting && Boolean(Object.keys(activeVoting.candidates)?.length) && <>
+          activeVoting && Boolean(activeVoting.candidates?.length) && <>
                 <Grid minHeight={30} container columns={12} sx={{
                   p: 0,
                   // justifyContent: 'center',
@@ -433,19 +436,19 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                   },
                 }}>
                   {
-                    Object.keys(activeVoting?.candidates).map((candidate: string) => {
+                    activeVoting?.candidates.map(([candidate]: [number, number], i) => {
                       return <>
                         <Grid sx={{cursor: 'pointer', p: '.3rem'}} size={{xs: 1}}> <strong>{candidate}</strong> </Grid>
                         {
-                          [1, 2, 3, 4, 5, 6].map((i) => {
+                          [1, 2, 3, 4, 5, 6].map((j) => {
                             return <Grid sx={{
                               p: '.3rem',
                               fontStyle: 'italic',
-                              backgroundColor: activeVoting?.candidates?.[Number(candidate)] === i ? 'rgb(0, 54, 107)' : 'transparent',
+                              backgroundColor: activeVoting?.candidates?.[i]?.[1] === j ? 'rgb(0, 54, 107)' : 'transparent',
                               // borderColor: 'gray !important',
                               // borderRight: 'var(--Grid-borderWidth) solid',
                               cursor: 'pointer'
-                            }} size={{xs: 11 / 6}} onClick={() => voteForPlayer(Number(candidate), i)}>
+                            }} size={{xs: 11 / 6}} onClick={() => voteForPlayer(i, j)}>
                               {i === 6 ? '6+' : i }
                             </Grid>
                           })
