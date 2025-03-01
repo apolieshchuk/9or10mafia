@@ -61,18 +61,18 @@ export const columns: GridColDef[] = [
     renderCell: (n) => `${n.row.citizenGames}/${n.row.citizenWins} (${n.row.citizenWinsRate}%)`
   },
   {
-    field: 'sheriffGames',
-    headerName: 'Шер',
-    flex: 1,
-    minWidth: 90,
-    renderCell: (n) => `${n.row.sheriffGames}/${n.row.sheriffWins} (${n.row.sheriffWinsRate}%)`
-  },
-  {
     field: 'mafiaGames',
     headerName: 'Маф',
     flex: 1,
     minWidth: 90,
     renderCell: (n) => `${n.row.mafiaGames}/${n.row.mafiaWins} (${n.row.mafiaWinsRate}%)`
+  },
+  {
+    field: 'sheriffGames',
+    headerName: 'Шер',
+    flex: 1,
+    minWidth: 90,
+    renderCell: (n) => `${n.row.sheriffGames}/${n.row.sheriffWins} (${n.row.sheriffWinsRate}%)`
   },
   {
     field: 'donGames',
@@ -123,7 +123,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/rating', {
+        const { data } = await axios.post('http://localhost:3000/club/rating', {
           clubId: '67c0dc3b110964e2fdac7b37' // ToDO
         });
         const mvpPlayer = data.players[0];
