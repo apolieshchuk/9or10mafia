@@ -71,7 +71,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [hideRoles, setHideRoles] = React.useState(false);
   const [preventSleepMode, setPreventSleepMode] = React.useState(true);
   const [votings, setVotings] = React.useState([1, 2, 3, 4].reduce((acc, c) => {
-    acc[c] = {c, title: `День ${c}`, candidates: {}};
+    acc[c] = {c, title: `День ${c}`, candidates: []};
     return acc
   }, {} as Record<number, any>));
   const [activeVoting, setActiveVoting] = React.useState(null as { c: number, candidates: [] } | null);
@@ -449,7 +449,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                               // borderRight: 'var(--Grid-borderWidth) solid',
                               cursor: 'pointer'
                             }} size={{xs: 11 / 6}} onClick={() => voteForPlayer(i, j)}>
-                              {i === 6 ? '6+' : i }
+                              {j === 6 ? '6+' : j }
                             </Grid>
                           })
                         }
