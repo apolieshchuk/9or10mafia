@@ -38,7 +38,7 @@ export const columns: GridColDef[] = [
     field: 'firsDie',
     headerName: 'ПВ',
     flex: 1,
-    minWidth: 10,
+    minWidth: 30,
   },
   {
     field: 'bestTurn2_3',
