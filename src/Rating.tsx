@@ -24,7 +24,7 @@ import GameStatsBarChart from "./components/dashboard/GameStatsBarChart";
 
 
 export const columns: GridColDef[] = [
-  { field: 'rank', headerName: '№', flex: 1, minWidth: 10 },
+  { field: 'rank', headerName: '№', flex: 1, minWidth: 30 },
   { field: 'nickname', headerName: 'Нік', flex: 1, minWidth: 100 },
   { field: 'rating', headerName: 'Рейт', flex: 1, minWidth: 60 },
   {
