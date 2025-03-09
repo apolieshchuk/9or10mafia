@@ -70,7 +70,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [winState, setWinState] = React.useState('');
   const [hideRoles, setHideRoles] = React.useState(false);
   const [preventSleepMode, setPreventSleepMode] = React.useState(true);
-  const [votings, setVotings] = React.useState([1, 2, 3, 4].reduce((acc, c) => {
+  const [votings, setVotings] = React.useState([1, 2, 3, 4, 5, 6].reduce((acc, c) => {
     acc[c] = {c, title: `День ${c}`, candidates: []};
     return acc
   }, {} as Record<number, any>));
@@ -158,6 +158,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     const currentVoting = activeVoting || votings[1];
     // if (!activeVoting) setActiveVoting(() => votings[0]);
     const activeVotingCandidates = currentVoting?.candidates || []
+    const isExists = activeVotingCandidates.find(([candidate]: [number, number]) => candidate === n);
+    if (isExists) {
+      return;
+    }
     activeVotingCandidates.push([n, 0]);
     // activeVotingCandidates[n] = 0;
 
