@@ -10,7 +10,10 @@ import {useEffect, useMemo} from "react";
 
 export default function GameStatsBarChart({
   stats = [],
-}: { stats: any[] }) {
+  avgGames = 0,
+}: { stats: any[], avgGames: number }) {
+  // const stats = useMemo(() => yearStats, [yearStats]);
+  // const avgGames = useMemo(() => avgGames, [avgGames]);
   const theme = useTheme();
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
@@ -58,7 +61,7 @@ export default function GameStatsBarChart({
             <Chip size="small" color={prevMonthChange>0 ? 'success' : 'error'} label={`${prevMonthChange}%`} />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            за останні 12 міс
+            Середня кількість ігор на гравця: {avgGames}
           </Typography>
         </Stack>
         <BarChart

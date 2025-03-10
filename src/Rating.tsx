@@ -126,7 +126,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
     donWinsRate: 0,
     sheriffWinsRate: 0,
   });
-  const [gamesStats, setGamesStats] = React.useState([]);
+  const [gamesStats, setGamesStats] = React.useState({} as any);
 
   useEffect(() => {
     async function fetchData() {
@@ -171,7 +171,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
             {/*  <SessionsChart />*/}
             {/*</Grid>*/}
             <Grid size={{ xs: 12, md: 6 }}>
-              <GameStatsBarChart stats={gamesStats} />
+              <GameStatsBarChart stats={gamesStats.yearStats} avgGames={gamesStats.avgGames}/>
             </Grid>
             <Grid  size={{ xs: 12, md: 6 }}>
               <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column' }}>
