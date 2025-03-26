@@ -32,7 +32,7 @@ export const columns: GridColDef[] = [
     headerName: 'Ігри',
     flex: 1,
     minWidth: 90,
-    renderCell: (n) => `${n.row.totalGames}/${n.row.totalWins} (${n.row.totalWinsRate}%)`
+    renderCell: (n) => `${n.row.totalWins}/${n.row.totalGames} (${n.row.totalWinsRate}%)`
   },
   {
     field: 'firsDie',
@@ -58,28 +58,28 @@ export const columns: GridColDef[] = [
     headerName: 'Мир',
     flex: 1,
     minWidth: 90,
-    renderCell: (n) => `${n.row.citizenGames}/${n.row.citizenWins} (${n.row.citizenWinsRate}%)`
+    renderCell: (n) => `${n.row.citizenWins}/${n.row.citizenGames} (${n.row.citizenWinsRate}%)`
   },
   {
     field: 'mafiaGames',
     headerName: 'Маф',
     flex: 1,
     minWidth: 90,
-    renderCell: (n) => `${n.row.mafiaGames}/${n.row.mafiaWins} (${n.row.mafiaWinsRate}%)`
+    renderCell: (n) => `${n.row.mafiaWins}/${n.row.mafiaGames} (${n.row.mafiaWinsRate}%)`
   },
   {
     field: 'sheriffGames',
     headerName: 'Шер',
     flex: 1,
     minWidth: 90,
-    renderCell: (n) => `${n.row.sheriffGames}/${n.row.sheriffWins} (${n.row.sheriffWinsRate}%)`
+    renderCell: (n) => `${n.row.sheriffWins}/${n.row.sheriffGames} (${n.row.sheriffWinsRate}%)`
   },
   {
     field: 'donGames',
     headerName: 'Дон',
     flex: 1,
     minWidth: 90,
-    renderCell: (n) => `${n.row.donGames}/${n.row.donWins} (${n.row.donWinsRate}%)`
+    renderCell: (n) => `${n.row.donWins}/${n.row.donGames} (${n.row.donWinsRate}%)`
   }
 ];
 
