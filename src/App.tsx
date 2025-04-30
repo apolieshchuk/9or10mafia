@@ -16,6 +16,7 @@ import DashboardRatingPeriods from "./dashboard/DashboardRatingPeriods";
 import NewGame from "./NewGame";
 import DashboardGames from "./dashboard/DashboardGames";
 import Rating from "./Rating";
+import {BudgetRedirect} from "./Budget";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="register-club" element={<SignUpClub />} />
           <Route path="login" element={<SignIn />} />
           <Route path="members" element={<MembersList />} />
+          <Route path="$" element={<BudgetRedirect />} />
           <Route path="clubs-rating" element={<Rating />} />
           <Route path="clubs" element={<ClubsList />} />
           <Route path="new-game" element={<NewGame />} />
