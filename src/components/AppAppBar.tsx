@@ -126,6 +126,11 @@ export default function AppAppBar() {
                       size="small">
                 $$$
               </Button>
+              <Button sx={{mr: '.5rem'}} variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
+                      onClick={() => navigateWithConfirm('/calendar')}
+                      size="small">
+                Події
+              </Button>
             </Box>
           </Box>
           {
@@ -203,8 +208,10 @@ export default function AppAppBar() {
                 {user?.authType === 'Клуб' && <MenuItem selected={window.location.pathname.endsWith('new-game-rating')}
                                                         onClick={() => navigateWithConfirm('/new-game-rating')}>Рейтингова
                     гра</MenuItem>}
-                <MenuItem selected={window.location.pathname.includes('budget')}
+                <MenuItem selected={window.location.pathname.includes('$')}
                           onClick={() => navigateWithConfirm('/$')}>$$$</MenuItem>
+                <MenuItem selected={window.location.pathname.includes('calendar')}
+                          onClick={() => navigateWithConfirm('/calendar')}>Події</MenuItem>
                 <Divider sx={{my: 3}}/>
                 {
                   !user && <>
