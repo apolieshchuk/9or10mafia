@@ -103,6 +103,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
   useEffect(() => {
     if (!isRatingGame) return;
+    const hasRealPlayers = Object.values(players).some(
+      (p: any) => p.id && !p.title?.startsWith('Гість')
+    );
+    if (!hasRealPlayers) return;
     const state = { players, votings, activeVoting, winState, hideRoles };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [players, votings, activeVoting, winState, hideRoles, isRatingGame]);
@@ -280,7 +284,10 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         })
         setClubUsers(() => array || []);
 
-        if (isRatingGame && !saved) {
+        const savedHasRealPlayers = saved && Object.values(saved.players || {}).some(
+          (p: any) => p.id && !p.title?.startsWith('Гість')
+        );
+        if (isRatingGame && !savedHasRealPlayers) {
           try {
             const { data: lastGame } = await axios.get('/club/last-game-players');
             if (lastGame.players?.length) {
