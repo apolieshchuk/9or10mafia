@@ -41,17 +41,13 @@ export const columns: GridColDef[] = [
     minWidth: 30,
   },
   {
-    field: 'bestTurn2_3',
-    headerName: 'КХ2/3',
+    field: 'supportFivePoints',
+    headerName: 'ОП5',
     flex: 1,
     minWidth: 60,
-    // renderCell: (n) => `${n.row.bestTurn2_3}/${n.row.bestTurn3_3}`
-  },
-  {
-    field: 'bestTurn3_3',
-    headerName: 'КХ3/3',
-    flex: 1,
-    minWidth: 60,
+    renderCell: (n) => n.row.supportFiveCount > 0
+      ? `${n.row.supportFivePoints > 0 ? '+' : ''}${n.row.supportFivePoints} (${n.row.supportFiveCount})`
+      : '-'
   },
   {
     field: 'citizenGames',

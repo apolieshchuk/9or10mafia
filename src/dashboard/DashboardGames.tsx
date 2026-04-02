@@ -50,8 +50,8 @@ const columns: GridColDef[] = [
                              label={n.value} color={n.row.winner === 'Маф' ? 'default' : 'error'} variant="outlined"/>,
   },
   {
-    field: 'bestTurnGuess',
-    headerName: 'КХ',
+    field: 'supportFivePoints',
+    headerName: 'ОП5',
     headerAlign: 'left',
     align: 'left',
     flex: 1,

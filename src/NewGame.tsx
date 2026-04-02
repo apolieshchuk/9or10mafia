@@ -77,7 +77,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [activeVoting, setActiveVoting] = React.useState(null as { c: number, candidates: [] } | null);
 
   const [players, _setPlayers] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, n) => {
-    acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: []};
+    acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: {} as Record<number, string>};
     return acc
   }, {} as Record<number, any>));
   const setPlayers = (item: any) => _setPlayers(() => item);
@@ -118,35 +118,35 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       alert('Гра закінчена');
       return;
     }
-    const currentKilledStatus = players[n].killed || 0;
-    const pool = [1, 2, 3].filter(killed => !killedPool.includes(killed));
-    let killed = pool.length ? pool.find((r) => r > currentKilledStatus) : 0;
-    killed = killed || 0;
-    setPlayers({...players, [n]: {...players[n], killed}});
+    const hasFirstKilled = Object.values(players).some((p: any) => p.n !== n && p.killed === 1);
+    if (hasFirstKilled && players[n].killed !== 1) return;
+    setPlayers({...players, [n]: {...players[n], killed: players[n].killed === 1 ? 0 : 1, bestTurn: players[n].killed === 1 ? {} : players[n].bestTurn}});
   }
 
-  const bestTurn = (n: number, i: number) => {
+  const supportFive = (n: number, i: number) => {
     if (winState) {
       alert('Гра закінчена');
       return;
     }
-    const currentBestTurn = [...players[n].bestTurn || []] ;
+    const current = {...(players[n].bestTurn || {})};
 
-    // set all other players bestTurn to default []
     Object.keys(players).forEach((key) => {
       if (Number(key) !== n) {
-        players[Number(key)].bestTurn = [];
+        players[Number(key)].bestTurn = {};
       }
     });
 
-    if (currentBestTurn.includes(i)) {
-      setPlayers({...players, [n]: {...players[n], bestTurn: currentBestTurn.filter((turn: number) => turn !== i)}});
-      return;
+    const currentColor = current[i];
+    if (currentColor === 'black') {
+      current[i] = 'red';
+    } else if (currentColor === 'red') {
+      delete current[i];
+    } else {
+      if (Object.keys(current).length >= 5) return;
+      current[i] = 'black';
     }
-    if (currentBestTurn.length >= 3) {
-      return;
-    }
-    setPlayers({...players, [n]: {...players[n], bestTurn: [...currentBestTurn, i]}});
+
+    setPlayers({...players, [n]: {...players[n], bestTurn: current}});
   }
 
   const promoteVote = (n: number) => {
@@ -202,8 +202,12 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
     user?.authType === 'Клуб' && path.endsWith('new-game-rating') && setTimeout(async () => {
       if (confirm("Відправити результати гри?")) {
+        const playersPayload = Object.values(players).map(p => ({
+          ...p,
+          bestTurn: Object.entries(p.bestTurn || {}).map(([seat, color]) => ({n: Number(seat), color})),
+        }));
         await axios.post('/club/rating-game', {
-          players: Object.values(players),
+          players: playersPayload,
           winState: winner,
           votings
         });
@@ -393,15 +397,20 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                 }
                 {
                   n !== 0 && players[n]?.killed === 1 &&
-                    <Grid container columns={12} sx={{p: '.3rem'}} size={{xs: 10.75, sm: 11.5, lg: 11.5}}>
+                    <Grid container columns={12} sx={{p: '.3rem', backgroundColor: 'rgba(200, 200, 210, 0.25)'}} size={{xs: 10.75, sm: 11.5, lg: 11.5}}>
                       {
                         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
+                          const color = players[n].bestTurn?.[i];
                           return <Grid sx={{
-                            backgroundColor: players[n].bestTurn.includes(i) ? 'rgb(0, 54, 107)' : 'transparent',
+                            backgroundColor: color === 'black' ? 'rgba(0, 0, 0, 1)'
+                              : color === 'red' ? 'rgba(180, 0, 0, 0.6)'
+                              : 'transparent',
+                            color: color ? '#fff' : 'inherit',
                             borderColor: 'gray !important',
                             borderRight: 'var(--Grid-borderWidth) solid',
-                            cursor: 'pointer'
-                          }} size={{xs: 12 / 10}} onClick={() => bestTurn(n, i)}>
+                            cursor: 'pointer',
+                            fontWeight: color ? 700 : 400,
+                          }} size={{xs: 12 / 10}} onClick={() => supportFive(n, i)}>
                             {i}
                           </Grid>
                         })
@@ -410,10 +419,12 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                 }
                 <Grid sx={{
                   fontWeight: n !== 0 ? 800 : '',
-                  cursor: 'pointer',
-                  py: '.4rem'
+                  cursor: n !== 0 && !killedPool.includes(1) || players[n]?.killed === 1 ? 'pointer' : 'default',
+                  py: '.4rem',
+                  opacity: n !== 0 && killedPool.includes(1) && players[n]?.killed !== 1 ? 0.3 : 1,
+                  fontSize: players[n]?.killed === 1 ? '0.7rem' : 'inherit',
                 }} size={{xs: 1.25, sm: 0.5, lg: 0.5}} onClick={() => n && killPlayer(n)}>
-                  {n === 0 ? <HeartBrokenIcon/> : players[n].killed ? `${players[n].killed}` : ''}
+                  {n === 0 ? <HeartBrokenIcon/> : players[n].killed === 1 ? `${Object.keys(players[n].bestTurn || {}).length}/5` : ''}
                 </Grid>
               </>
             ))
