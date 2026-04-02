@@ -7,6 +7,7 @@ type User = {
   name: string;
   nickname: string;
   email: string;
+  avatarUrl?: string;
 } & JwtPayload
 
 // Create Auth Context

@@ -12,6 +12,7 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 type Winner = {
   nickname: string;
   stat: string;
+  avatarUrl?: string;
 };
 
 type PodiumProps = {
@@ -26,20 +27,24 @@ const colors = {
   bronze: '#CD7F32',
 };
 
-function PodiumItem({ icon, color, title, nickname, stat }: {
+function PodiumItem({ icon, color, title, nickname, stat, avatarUrl }: {
   icon: React.ReactNode;
   color: string;
   title: string;
   nickname: string;
   stat: string;
+  avatarUrl?: string;
 }) {
   return (
     <Box sx={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       gap: 1, flex: 1, py: 2, px: 1,
     }}>
-      <Avatar sx={{ bgcolor: color, width: 48, height: 48 }}>
-        {icon}
+      <Avatar
+        src={avatarUrl || undefined}
+        sx={{ bgcolor: color, width: 48, height: 48, border: `2px solid ${color}` }}
+      >
+        {!avatarUrl && icon}
       </Avatar>
       <Typography variant="caption" sx={{ color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }}>
         {title}
@@ -70,6 +75,7 @@ export default function PodiumCard({ champion, mvp, bestMafia }: PodiumProps) {
             title="MVP"
             nickname={mvp?.nickname || ''}
             stat={mvp?.stat || ''}
+            avatarUrl={mvp?.avatarUrl}
           />
           <PodiumItem
             icon={<EmojiEventsIcon />}
@@ -77,6 +83,7 @@ export default function PodiumCard({ champion, mvp, bestMafia }: PodiumProps) {
             title="Чемпіон"
             nickname={champion?.nickname || ''}
             stat={champion?.stat || ''}
+            avatarUrl={champion?.avatarUrl}
           />
           <PodiumItem
             icon={<GpsFixedIcon />}
@@ -84,6 +91,7 @@ export default function PodiumCard({ champion, mvp, bestMafia }: PodiumProps) {
             title="Найкраща мафія"
             nickname={bestMafia?.nickname || ''}
             stat={bestMafia?.stat || ''}
+            avatarUrl={bestMafia?.avatarUrl}
           />
         </Stack>
       </CardContent>

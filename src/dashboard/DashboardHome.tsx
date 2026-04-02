@@ -144,8 +144,24 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
     }
   }
 
-  const handleUploadAvatar = async () => {
-
+  const handleUploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Файл занадто великий (макс. 2MB)');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const { data } = await axios.post('/user/avatar', { image: reader.result });
+        data?.token && setToken(data.token);
+        alert('Аватар оновлено');
+      } catch (e: any) {
+        alert(e?.response?.data?.error || 'Помилка при завантаженні');
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   return (
@@ -191,27 +207,30 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                 <Grid size={{ xs: 12, md: 4 }}>
                   <Card sx={{ height: '100%' }}>
                     <CardContent>
-                      <Stack direction={'row'} spacing={1}>
+                      <Stack direction={'row'} spacing={1} alignItems="center">
                         <AccountBoxIcon />
-                        <InputLabel id="rank-period-label">Встановити Аватар</InputLabel>
+                        <InputLabel>Встановити Аватар</InputLabel>
                       </Stack>
-                      <Button
-                        disabled
-                        sx={{ mt: 2 }}
-                        component="label"
-                        role={undefined}
-                        variant="outlined"
-                        tabIndex={-1}
-                        startIcon={<CloudUploadIcon />}
-                      >
-                        Завантажити
-                        <VisuallyHiddenInput
-                          multiple={false}
-                          accept=".jpg, .jpeg, .png"
-                          type="file"
-                          onChange={(event) => console.log(event.target.files)}
+                      <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: 2 }}>
+                        <img
+                          src={user?.avatarUrl || ''}
+                          alt=""
+                          style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', display: user?.avatarUrl ? 'block' : 'none' }}
                         />
-                      </Button>
+                        <Button
+                          component="label"
+                          variant="outlined"
+                          startIcon={<CloudUploadIcon />}
+                        >
+                          Завантажити
+                          <VisuallyHiddenInput
+                            multiple={false}
+                            accept=".jpg, .jpeg, .png"
+                            type="file"
+                            onChange={handleUploadAvatar}
+                          />
+                        </Button>
+                      </Stack>
                     </CardContent>
                   </Card>
                 </Grid>

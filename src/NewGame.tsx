@@ -273,12 +273,30 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const urlPath = window.location.pathname.endsWith('new-game-rating') ? 'club/users' : 'users'
+        const urlPath = isRatingGame ? 'club/users' : 'users';
         const {data} = await axios.get(`/${urlPath}`);
         const array = (data.items || []).map((item: any, i: number) => {
           return {...item, id: i + 1};
         })
         setClubUsers(() => array || []);
+
+        if (isRatingGame && !saved) {
+          try {
+            const { data: lastGame } = await axios.get('/club/last-game-players');
+            if (lastGame.players?.length) {
+              const restored = createInitialPlayers();
+              lastGame.players.forEach((p: any, i: number) => {
+                const seat = i + 1;
+                if (seat <= 10) {
+                  restored[seat] = { ...restored[seat], title: p.title, id: p.id };
+                }
+              });
+              setPlayers(restored);
+            }
+          } catch (e) {
+            console.error('Failed to load last game players', e);
+          }
+        }
       } catch (e) {
         console.error(e);
       }

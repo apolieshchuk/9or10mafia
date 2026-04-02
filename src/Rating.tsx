@@ -126,10 +126,11 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
           })[0];
 
         setPodium({
-          champion: champion ? { nickname: champion.nickname, stat: `Рейтинг ${champion.rating} | ${champion.totalWins}/${champion.totalGames} (${champion.totalWinsRate}%)` } : null,
-          mvp: mvpPlayer?.bonusPoints ? { nickname: mvpPlayer.nickname, stat: `+${mvpPlayer.bonusPoints} бонусних балів` } : null,
+          champion: champion ? { nickname: champion.nickname, avatarUrl: champion.avatarUrl, stat: `Рейтинг ${champion.rating} | ${champion.totalWins}/${champion.totalGames} (${champion.totalWinsRate}%)` } : null,
+          mvp: mvpPlayer?.bonusPoints ? { nickname: mvpPlayer.nickname, avatarUrl: mvpPlayer.avatarUrl, stat: `+${mvpPlayer.bonusPoints} бонусних балів` } : null,
           bestMafia: bestMafiaPlayer ? {
             nickname: bestMafiaPlayer.nickname,
+            avatarUrl: bestMafiaPlayer.avatarUrl,
             stat: `${bestMafiaPlayer.mafiaWins + bestMafiaPlayer.donWins}/${bestMafiaPlayer.mafiaGames + bestMafiaPlayer.donGames} (${Math.round((bestMafiaPlayer.mafiaWins + bestMafiaPlayer.donWins) / (bestMafiaPlayer.mafiaGames + bestMafiaPlayer.donGames) * 1000) / 10}%)`
           } : null,
         });
