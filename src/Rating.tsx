@@ -16,7 +16,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import LocalPoliceIcon from "@mui/icons-material/LocalPolice";
 import Face5Icon from "@mui/icons-material/Face5";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
-import MvpStatCard from "./components/dashboard/MvpStatCard";
+import PodiumCard from "./components/dashboard/PodiumCard";
 import GameStatsBarChart from "./components/dashboard/GameStatsBarChart";
 
 
@@ -62,15 +62,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
   const [rating, setRating] = React.useState([]);
   const [infoAnchor, setInfoAnchor] = React.useState<null | HTMLElement>(null);
   const [infoPlayer, setInfoPlayer] = React.useState<any>(null);
-  const [mvp, setMvp] = React.useState({
-    title: 'MVP Гравець',
-    value: '',
-    description: '',
-    citizenWinsRate: 0,
-    mafiaWinsRate: 0,
-    donWinsRate: 0,
-    sheriffWinsRate: 0,
-  });
+  const [podium, setPodium] = React.useState<{champion: any; mvp: any; bestMafia: any}>({champion: null, mvp: null, bestMafia: null});
   const [gamesStats, setGamesStats] = React.useState({} as any);
 
   const openInfo = useCallback((e: React.MouseEvent<HTMLElement>, row: any) => {
@@ -120,18 +112,29 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
         const { data } = await axios.post('/club/rating', {
           clubId: '67c0dc3b110964e2fdac7b37' // ToDO
         });
-        const mvpPlayer = data.players[0];
-        setMvp({
-          title: 'MVP Гравець',
-          value: mvpPlayer.nickname,
-          description: `Коефіцієнт перемог - ${mvpPlayer.totalWinsRate}%`,
-          citizenWinsRate: mvpPlayer.citizenWinsRate,
-          mafiaWinsRate: mvpPlayer.mafiaWinsRate,
-          donWinsRate: mvpPlayer.donWinsRate,
-          sheriffWinsRate: mvpPlayer.sheriffWinsRate,
+        const players = data.players || [];
+
+        const champion = players[0];
+        const mvpPlayer = [...players].sort((a: any, b: any) => (b.bonusPoints || 0) - (a.bonusPoints || 0))[0];
+        const avgGames = data.stats?.avgGames || 0;
+        const bestMafiaPlayer = [...players]
+          .filter((p: any) => p.totalGames >= avgGames && (p.mafiaGames + p.donGames) > 0)
+          .sort((a: any, b: any) => {
+            const aWins = a.mafiaWins + a.donWins, aGames = a.mafiaGames + a.donGames;
+            const bWins = b.mafiaWins + b.donWins, bGames = b.mafiaGames + b.donGames;
+            return (bWins * bWins / bGames) - (aWins * aWins / aGames);
+          })[0];
+
+        setPodium({
+          champion: champion ? { nickname: champion.nickname, stat: `Рейтинг ${champion.rating} | ${champion.totalWins}/${champion.totalGames} (${champion.totalWinsRate}%)` } : null,
+          mvp: mvpPlayer?.bonusPoints ? { nickname: mvpPlayer.nickname, stat: `+${mvpPlayer.bonusPoints} бонусних балів` } : null,
+          bestMafia: bestMafiaPlayer ? {
+            nickname: bestMafiaPlayer.nickname,
+            stat: `${bestMafiaPlayer.mafiaWins + bestMafiaPlayer.donWins}/${bestMafiaPlayer.mafiaGames + bestMafiaPlayer.donGames} (${Math.round((bestMafiaPlayer.mafiaWins + bestMafiaPlayer.donWins) / (bestMafiaPlayer.mafiaGames + bestMafiaPlayer.donGames) * 1000) / 10}%)`
+          } : null,
         });
         setGamesStats(data.stats || {});
-        setRating(data.players || []);
+        setRating(players);
       } catch (e) {
         console.error(e);
       }
@@ -159,12 +162,8 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
             <Grid size={{ xs: 12, md: 6 }}>
               <GameStatsBarChart stats={gamesStats.yearStats} avgGames={gamesStats.avgGames}/>
             </Grid>
-            <Grid  size={{ xs: 12, md: 6 }}>
-              <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column' }}>
-                {/*{data.map((card, index) => (*/}
-                  <MvpStatCard {...mvp} />
-                {/*))}*/}
-              </Box>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <PodiumCard {...podium} />
             </Grid>
           </Grid>
           <Grid container spacing={2} columns={12}>
