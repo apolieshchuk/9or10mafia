@@ -26,7 +26,7 @@ export default function GameStatsBarChart({
   const prevMonthChange = useMemo(() => {
     const currentMonth = stats.at(-1)?.[1].totalGames || 0
     const prevMonth = stats.at(-2)?.[1].totalGames || 0
-    return prevMonth ? ((currentMonth - prevMonth) / prevMonth) * 100 : 100
+    return prevMonth ? Math.round(((currentMonth - prevMonth) / prevMonth) * 1000) / 10 : 100
   }, [stats])
   const mnthNames = useMemo(() => {
     return stats.map(([,mnth]: any) => mnth.name)
