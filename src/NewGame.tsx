@@ -73,20 +73,39 @@ const createInitialVotings = () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, 
   return acc
 }, {} as Record<number, any>);
 
+const STORAGE_KEY = 'ratingGameState';
+
+const loadSavedState = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+};
+
 export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const { user } = useAuth();
   const [path, setPath] = React.useState(window.location.pathname);
-  const [clubUsers, setClubUsers] = React.useState([]);
-  const [winState, setWinState] = React.useState('');
-  const [hideRoles, setHideRoles] = React.useState(false);
-  const [preventSleepMode, setPreventSleepMode] = React.useState(true);
-  const [votings, setVotings] = React.useState(createInitialVotings());
-  const [activeVoting, setActiveVoting] = React.useState(null as { c: number, candidates: [] } | null);
+  const isRatingGame = path.endsWith('new-game-rating');
+  const saved = React.useRef(isRatingGame ? loadSavedState() : null).current;
 
-  const [players, _setPlayers] = React.useState(createInitialPlayers());
+  const [clubUsers, setClubUsers] = React.useState([]);
+  const [winState, setWinState] = React.useState(saved?.winState || '');
+  const [hideRoles, setHideRoles] = React.useState(saved?.hideRoles || false);
+  const [preventSleepMode, setPreventSleepMode] = React.useState(true);
+  const [votings, setVotings] = React.useState(saved?.votings || createInitialVotings());
+  const [activeVoting, setActiveVoting] = React.useState(saved?.activeVoting || null as { c: number, candidates: [] } | null);
+
+  const [players, _setPlayers] = React.useState(saved?.players || createInitialPlayers());
   const setPlayers = (item: any) => _setPlayers(() => item);
   const [bonusAnchorEl, setBonusAnchorEl] = React.useState<HTMLElement | null>(null);
   const [bonusPlayerN, setBonusPlayerN] = React.useState<number>(0);
+
+  useEffect(() => {
+    if (!isRatingGame) return;
+    const state = { players, votings, activeVoting, winState, hideRoles };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [players, votings, activeVoting, winState, hideRoles, isRatingGame]);
 
   const resetGame = () => {
     setPlayers(createInitialPlayers());
@@ -96,6 +115,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     setHideRoles(false);
     setBonusAnchorEl(null);
     setBonusPlayerN(0);
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   const setPlayerNickname = (n: number, title: string, id: string) => {
