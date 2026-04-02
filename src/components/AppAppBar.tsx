@@ -73,11 +73,13 @@ export default function AppAppBar() {
   };
 
   const navigateWithConfirm = (path: string)=>  {
-    const isNewGamePath = window.location.pathname.includes('new-game');
-    if (!isNewGamePath) return navigate(path);
-    if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")) {
-      navigate(path);
+    if (path === '/new-game-rating' && window.location.pathname.endsWith('new-game-rating')) {
+      if (!confirm("Ви починаєте нову гру. Дані діючої рейтингової гри не будуть збережені.")) return;
+      localStorage.removeItem('ratingGameState');
+      window.location.reload();
+      return;
     }
+    navigate(path);
   }
 
   return (

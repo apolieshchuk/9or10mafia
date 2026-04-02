@@ -247,7 +247,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       alert('Не всім розподілено ролі');
       return;
     }
-    if (Object.values(players).filter(player => player.title).length < 10) {
+    if (Object.values(players).filter((player: any) => player.title).length < 10) {
       alert('Не всім розподілено нікнейми');
       return
     }
@@ -257,7 +257,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const submitGame = async () => {
     if (!winState) return;
     if (!confirm("Відправити результати гри?")) return;
-    const playersPayload = Object.values(players).map(p => ({
+    const playersPayload = Object.values(players).map((p: any) => ({
       ...p,
       bestTurn: Object.entries(p.bestTurn || {}).map(([seat, color]) => ({n: Number(seat), color})),
     }));
@@ -314,15 +314,15 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
   // get active players nickname list
   const activePlayers = useMemo(() => {
-    return Object.values(players).filter(player => player.title).map(player => player.title)
+    return Object.values(players).filter((player: any) => player.title).map((player: any) => player.title)
   }, [players]);
 
   const rolesPool = useMemo(() => {
-    return Object.values(players).filter(player => player.role).map(player => player.role)
+    return Object.values(players).filter((player: any) => player.role).map((player: any) => player.role)
   }, [players]);
 
   const killedPool = useMemo(() => {
-    return Object.values(players).filter(player => player.killed).map(player => player.killed)
+    return Object.values(players).filter((player: any) => player.killed).map((player: any) => player.killed)
   }, [players]);
 
   return (
@@ -364,8 +364,8 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
           },
         }}>
           {
-            [{n: 0}, ...Object.values(players)].map(({n}) => (
-              <>
+            [{n: 0}, ...Object.values(players)].map(({n}: any) => (
+              <React.Fragment key={n}>
                 {
                   players[n]?.killed !== 1 && <>
                         <Grid onClick={() => promoteVote(n)} sx={{cursor: 'pointer', p: '.2rem'}}
@@ -459,7 +459,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                       {
                         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
                           const color = players[n].bestTurn?.[i];
-                          return <Grid sx={{
+                          return <Grid key={i} sx={{
                             backgroundColor: color === 'black' ? 'rgba(0, 0, 0, 1)'
                               : color === 'red' ? 'rgba(180, 0, 0, 0.6)'
                               : 'transparent',
@@ -503,7 +503,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                         : ''
                   }
                 </Grid>
-              </>
+              </React.Fragment>
             ))
           }
         </Grid>
@@ -549,7 +549,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                   },
                 }}>
                   {
-                    activeVoting?.candidates.map(([candidate]: [number, number], i) => {
+                    activeVoting?.candidates.map(([candidate]: [number, number], i: number) => {
                       return <>
                         <Grid sx={{cursor: 'pointer', p: '.3rem'}} size={{xs: 1}}> <strong>{candidate}</strong> </Grid>
                         {
