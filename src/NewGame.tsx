@@ -285,10 +285,9 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
             const { data: lastGame } = await axios.get('/club/last-game-players');
             if (lastGame.players?.length) {
               const restored = createInitialPlayers();
-              lastGame.players.forEach((p: any, i: number) => {
-                const seat = i + 1;
-                if (seat <= 10) {
-                  restored[seat] = { ...restored[seat], title: p.title, id: p.id };
+              lastGame.players.forEach((p: any) => {
+                if (p.seat >= 1 && p.seat <= 10) {
+                  restored[p.seat] = { ...restored[p.seat], title: p.title, id: p.id };
                 }
               });
               setPlayers(restored);
