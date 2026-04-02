@@ -22,7 +22,7 @@ import ChartUserByCountry from "./components/dashboard/ChartUserByCountry";
 import {DataGrid} from "@mui/x-data-grid";
 import {columns, rows} from "./internals/data/gridDataClubs";
 import {use, useEffect, useMemo} from "react";
-import axios from "axios";
+import axios from "./axios";
 import AppAppBar from "./components/AppAppBar";
 import {Autocomplete, createFilterOptions} from "@mui/material";
 import Box from "@mui/material/Box";
@@ -202,7 +202,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
     user?.authType === 'Клуб' && path.endsWith('new-game-rating') && setTimeout(async () => {
       if (confirm("Відправити результати гри?")) {
-        await axios.post(`https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/rating-game`, {
+        await axios.post('/club/rating-game', {
           players: Object.values(players),
           winState: winner,
           votings
@@ -217,7 +217,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     async function fetchData() {
       try {
         const urlPath = window.location.pathname.endsWith('new-game-rating') ? 'club/users' : 'users'
-        const {data} = await axios.get(`https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/${urlPath}`);
+        const {data} = await axios.get(`/${urlPath}`);
         const array = (data.items || []).map((item: any, i: number) => {
           return {...item, id: i + 1};
         })

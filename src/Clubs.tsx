@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {use, useEffect} from "react";
-import axios from "axios";
+import axios from "./axios";
 import AppAppBar from "./components/AppAppBar";
 
 export const columns: GridColDef[] = [
@@ -67,7 +67,7 @@ export default function ClubsList(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/clubs');
+        const { data } = await axios.get('/clubs');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })

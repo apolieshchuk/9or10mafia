@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import axios from 'axios';
+import axios from './axios';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -153,7 +153,7 @@ export default function SignUpClub(props: { disableCustomTheme?: boolean }) {
     const contact = document.getElementById('contact') as HTMLInputElement;
     const nickname = document.getElementById('nickname') as HTMLInputElement;
     const address = document.getElementById('address') as HTMLInputElement;
-    await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club', {
+    await axios.post('/club', {
       name: name.value,
       nickname: nickname.value,
       address: address.value,

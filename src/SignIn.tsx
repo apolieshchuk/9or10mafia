@@ -20,7 +20,7 @@ import SitemarkIcon from "./components/SitemarkIcon";
 import SelectInput from "@mui/material/Select/SelectInput";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import axios from "axios";
+import axios from "./axios";
 import {useAuth} from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -89,7 +89,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
 
-    await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/auth/login', {
+    await axios.post('/auth/login', {
       email: email.value,
       password: password.value,
       authType,

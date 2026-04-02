@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {useEffect} from "react";
-import axios from "axios";
+import axios from "./axios";
 import Box from "@mui/material/Box";
 import AppAppBar from "./components/AppAppBar";
 
@@ -101,7 +101,7 @@ export default function MembersList(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/users');
+        const { data } = await axios.get('/users');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })

@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {useEffect} from "react";
-import axios from "axios";
+import axios from "./axios";
 import Box from "@mui/material/Box";
 import AppAppBar from "./components/AppAppBar";
 import StatCard, {StatCardProps} from "./components/dashboard/StatCard";
@@ -131,7 +131,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/rating', {
+        const { data } = await axios.post('/club/rating', {
           clubId: '67c0dc3b110964e2fdac7b37' // ToDO
         });
         const mvpPlayer = data.players[0];

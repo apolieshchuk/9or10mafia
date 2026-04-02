@@ -40,7 +40,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import MenuItem from "@mui/material/MenuItem";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import {useEffect} from "react";
-import axios from "axios";
+import axios from "../axios";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import {useAuth} from "../AuthProvider";
@@ -77,7 +77,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/clubs');
+        const { data } = await axios.get('/clubs');
         const array = (data.items || []).map((item: any, i: number) => {
           return { ...item, id: i + 1 };
         })
@@ -93,7 +93,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
   const handleJoinClub = async () => {
     try {
       if (!clubSelectId) return;
-      await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/join', {
+      await axios.post('/club/join', {
         clubId: clubSelectId,
       });
       setClubSelectId(null)
@@ -111,7 +111,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
         alert('Необхідно вказати назву рейтингового періоду');
         return;
       }
-      await axios.post('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/club/rating-period', {
+      await axios.post('/club/rating-period', {
         name: name.value,
       });
       setClubSelectId(null)
@@ -130,7 +130,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
         alert('Необхідно вказати новий нікнейм');
         return;
       }
-      const { data } = await axios.put('https://c5prlhy2nh.execute-api.us-west-2.amazonaws.com/user', {
+      const { data } = await axios.put('/user', {
         nickname: nickname.value,
       });
       const token = data?.token;
