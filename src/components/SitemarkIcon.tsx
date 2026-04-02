@@ -9,20 +9,14 @@ export default function SitemarkIcon() {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const navigateWithConfirm = (path: string)=>  {
-    const isNewGamePath = window.location.pathname.includes('new-game');
-    if (!isNewGamePath) return navigate(path);
-    if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")) {
-      navigate(path);
-    }
-  }
+  const navigateHome = () => navigate('/');
   const logo = theme.palette.mode === 'light' ? darkLogo : whiteLogo;
   return (
     <img
       style={{ cursor: 'pointer' }}
       width={60}
       src={logo}
-      onClick={() => navigateWithConfirm('/')}
+      onClick={navigateHome}
     />
     // <SvgIcon sx={{ height: 21, width: 100, mr: 2 }}>
     //   <svg
