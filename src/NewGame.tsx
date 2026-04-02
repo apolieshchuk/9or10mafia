@@ -296,20 +296,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     //   }, 0)
     // }, 30000);
 
-    const preventRefresh = function () {
-      if (confirm("Якщо ви залишите цю сторінку, ваші зміни не будуть збережені.")){
-      } else {
-        return false;
-      }
-    };
-    window.onbeforeunload = preventRefresh;
-    // @ts-ignore For mobile devices
-    window.unload = preventRefresh;
-    // @ts-ignore For mobile devices
-    window.pagehide = preventRefresh;
-    return () => {
-      window.onbeforeunload = null
-    };
+    return () => {};
   }, [])
 
   // get active players nickname list
