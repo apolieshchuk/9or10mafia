@@ -63,6 +63,16 @@ const RolesPoolMap: Record<number, string> = {
   4: 'Ш'
 }
 
+const createInitialPlayers = () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, n) => {
+  acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: {} as Record<number, string>, bonusPoints: 0};
+  return acc
+}, {} as Record<number, any>);
+
+const createInitialVotings = () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, c) => {
+  acc[c] = {c, title: `День ${c}`, candidates: []};
+  return acc
+}, {} as Record<number, any>);
+
 export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const { user } = useAuth();
   const [path, setPath] = React.useState(window.location.pathname);
@@ -70,19 +80,23 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [winState, setWinState] = React.useState('');
   const [hideRoles, setHideRoles] = React.useState(false);
   const [preventSleepMode, setPreventSleepMode] = React.useState(true);
-  const [votings, setVotings] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, c) => {
-    acc[c] = {c, title: `День ${c}`, candidates: []};
-    return acc
-  }, {} as Record<number, any>));
+  const [votings, setVotings] = React.useState(createInitialVotings());
   const [activeVoting, setActiveVoting] = React.useState(null as { c: number, candidates: [] } | null);
 
-  const [players, _setPlayers] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, n) => {
-    acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: {} as Record<number, string>, bonusPoints: 0};
-    return acc
-  }, {} as Record<number, any>));
+  const [players, _setPlayers] = React.useState(createInitialPlayers());
   const setPlayers = (item: any) => _setPlayers(() => item);
   const [bonusAnchorEl, setBonusAnchorEl] = React.useState<HTMLElement | null>(null);
   const [bonusPlayerN, setBonusPlayerN] = React.useState<number>(0);
+
+  const resetGame = () => {
+    setPlayers(createInitialPlayers());
+    setVotings(createInitialVotings());
+    setActiveVoting(null);
+    setWinState('');
+    setHideRoles(false);
+    setBonusAnchorEl(null);
+    setBonusPlayerN(0);
+  };
 
   const setPlayerNickname = (n: number, title: string, id: string) => {
     if (winState) {
@@ -233,6 +247,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       votings
     });
     alert('Гру збережено');
+    resetGame();
   }
 
   useEffect(() => {
