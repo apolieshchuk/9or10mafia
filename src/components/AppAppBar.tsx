@@ -102,13 +102,22 @@ export default function AppAppBar() {
                 Рейтинг клубу
               </Button>
               {user?.authType === 'Клуб' ? <>
-                <Button
-                  endIcon={<ArrowDropDownIcon/>}
-                  variant={window.location.pathname.includes('new-game') ? 'outlined' : 'text'}
-                  onClick={(e) => setGameMenuAnchor(e.currentTarget)}
-                  size="small">
-                  {window.location.pathname.endsWith('new-game-rating') ? 'Рейтингова гра' : window.location.pathname.endsWith('new-game') ? 'Фан гра' : 'Нова гра'}
-                </Button>
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                  <Button
+                    variant={window.location.pathname.includes('new-game') ? 'outlined' : 'text'}
+                    onClick={() => navigateWithConfirm('/new-game-rating')}
+                    size="small"
+                    sx={{borderTopRightRadius: 0, borderBottomRightRadius: 0, pr: 1}}>
+                    {window.location.pathname.endsWith('new-game-rating') ? 'Рейтингова гра' : window.location.pathname.endsWith('new-game') ? 'Фан гра' : 'Рейтингова гра'}
+                  </Button>
+                  <Button
+                    variant={window.location.pathname.includes('new-game') ? 'outlined' : 'text'}
+                    onClick={(e) => setGameMenuAnchor(e.currentTarget)}
+                    size="small"
+                    sx={{borderTopLeftRadius: 0, borderBottomLeftRadius: 0, minWidth: 'auto', px: 0.3}}>
+                    <ArrowDropDownIcon sx={{fontSize: 20}}/>
+                  </Button>
+                </Box>
                 <Menu anchorEl={gameMenuAnchor} open={Boolean(gameMenuAnchor)} onClose={() => setGameMenuAnchor(null)}>
                   <MenuItem onClick={() => { setGameMenuAnchor(null); navigateWithConfirm('/new-game-rating'); }}>Рейтингова</MenuItem>
                   <MenuItem onClick={() => { setGameMenuAnchor(null); navigateWithConfirm('/new-game'); }}>Фанова</MenuItem>
