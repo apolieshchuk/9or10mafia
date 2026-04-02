@@ -239,6 +239,15 @@ export const inputsCustomizations: Components<Theme> = {
         '&:active': {
           backgroundColor: gray[200],
         },
+        '.MuiAutocomplete-endAdornment &': {
+          border: 'none',
+          backgroundColor: 'transparent',
+          borderRadius: '50%',
+          width: 'auto',
+          height: 'auto',
+          padding: '2px',
+          '&:hover': { backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'transparent' },
+        },
         ...theme.applyStyles('dark', {
           backgroundColor: gray[800],
           borderColor: gray[700],

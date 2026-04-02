@@ -417,7 +417,6 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                                 </li>
                               );
                             }}
-                            // sx={{ width: 300 }}
                             freeSolo
                             renderInput={(params) => (
                               <TextField {...params} />

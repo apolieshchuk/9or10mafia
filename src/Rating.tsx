@@ -105,6 +105,13 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
         ? `${n.row.supportFivePoints > 0 ? '+' : ''}${n.row.supportFivePoints} (${n.row.supportFiveCount})`
         : '-'
     },
+    {
+      field: 'bonusPoints',
+      headerName: 'Бон',
+      flex: 0.6,
+      minWidth: 40,
+      renderCell: (n) => n.row.bonusPoints ? `+${n.row.bonusPoints}` : '-'
+    },
   ];
 
   useEffect(() => {
