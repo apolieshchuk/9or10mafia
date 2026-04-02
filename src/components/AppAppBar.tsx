@@ -139,6 +139,9 @@ export default function AppAppBar() {
               <Button variant="text" onClick={() => navigateWithConfirm('/calendar')} size="small">
                 Події
               </Button>
+              <Button variant="text" onClick={() => navigateWithConfirm('/scoring')} size="small">
+                Правила
+              </Button>
             </Box>
           </Box>
           {
@@ -225,6 +228,8 @@ export default function AppAppBar() {
                           onClick={() => navigateWithConfirm('/$')}>$$$</MenuItem>
                 <MenuItem selected={window.location.pathname.includes('calendar')}
                           onClick={() => navigateWithConfirm('/calendar')}>Події</MenuItem>
+                <MenuItem selected={window.location.pathname.includes('scoring')}
+                          onClick={() => { setOpen(false); navigateWithConfirm('/scoring'); }}>Правила</MenuItem>
                 <Divider sx={{my: 3}}/>
                 {
                   !user && <>

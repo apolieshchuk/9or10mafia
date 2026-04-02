@@ -16,6 +16,7 @@ import DashboardRatingPeriods from "./dashboard/DashboardRatingPeriods";
 import NewGame from "./NewGame";
 import DashboardGames from "./dashboard/DashboardGames";
 import Rating from "./Rating";
+import ScoringRules from "./ScoringRules";
 import {BudgetRedirect} from "./Budget";
 import {CalendarRedirect} from "./Calendar";
 
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="$" element={<BudgetRedirect />} />
           <Route path="calendar" element={<CalendarRedirect />} />
           <Route path="clubs-rating" element={<Rating />} />
+          <Route path="scoring" element={<ScoringRules />} />
           <Route path="clubs" element={<ClubsList />} />
           <Route path="new-game" element={<NewGame />} />
           <Route path="profile" element={<PrivateRoute Component={DashboardHome}/>} />
