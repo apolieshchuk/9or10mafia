@@ -30,21 +30,21 @@ export const columns: GridColDef[] = [
   {
     field: 'totalGames',
     headerName: 'Ігри',
-    flex: 1,
-    minWidth: 90,
+    flex: 1.5,
+    minWidth: 110,
     renderCell: (n) => `${n.row.totalWins}/${n.row.totalGames} (${n.row.totalWinsRate}%)`
   },
   {
     field: 'firsDie',
     headerName: 'ПВ',
-    flex: 1,
+    flex: 0.5,
     minWidth: 30,
   },
   {
     field: 'supportFivePoints',
     headerName: 'ОП5',
-    flex: 1,
-    minWidth: 60,
+    flex: 0.7,
+    minWidth: 50,
     renderCell: (n) => n.row.supportFiveCount > 0
       ? `${n.row.supportFivePoints > 0 ? '+' : ''}${n.row.supportFivePoints} (${n.row.supportFiveCount})`
       : '-'

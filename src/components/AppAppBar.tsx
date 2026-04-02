@@ -8,8 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import StarIcon from '@mui/icons-material/Star';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
@@ -40,6 +42,7 @@ let stopWatchStart = false;
 
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
+  const [gameMenuAnchor, setGameMenuAnchor] = React.useState<null | HTMLElement>(null);
   const {user, logout} = useAuth();
   const navigate = useNavigate();
   const [stopWatch, setStopWatch] = React.useState(60);
@@ -93,36 +96,35 @@ export default function AppAppBar() {
           <Box sx={{flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, gap: 3}}>
             <Sitemark/>
             <Box sx={{display: 'none', '@media (min-width: 940px)': {display: 'flex'}, gap: 0.5, overflow: 'hidden', '& .MuiButton-root': {whiteSpace: 'nowrap', minWidth: 'auto', flexShrink: 1, overflow: 'hidden', textOverflow: 'ellipsis'}}}>
-              <Button startIcon={<StarIcon/>} variant={window.location.pathname.endsWith('clubs-rating') ? 'outlined' : 'text'}
+              <Button startIcon={<StarIcon/>} variant="text"
                       onClick={() => navigateWithConfirm('/clubs-rating')}
                       size="small" color="secondary">
                 Рейтинг клубу
               </Button>
-              <Button variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
+              {user?.authType === 'Клуб' ? <>
+                <Button
+                  endIcon={<ArrowDropDownIcon/>}
+                  variant={window.location.pathname.includes('new-game') ? 'outlined' : 'text'}
+                  onClick={(e) => setGameMenuAnchor(e.currentTarget)}
+                  size="small">
+                  {window.location.pathname.endsWith('new-game-rating') ? 'Рейтингова гра' : window.location.pathname.endsWith('new-game') ? 'Фан гра' : 'Нова гра'}
+                </Button>
+                <Menu anchorEl={gameMenuAnchor} open={Boolean(gameMenuAnchor)} onClose={() => setGameMenuAnchor(null)}>
+                  <MenuItem onClick={() => { setGameMenuAnchor(null); navigateWithConfirm('/new-game-rating'); }}>Рейтингова</MenuItem>
+                  <MenuItem onClick={() => { setGameMenuAnchor(null); navigateWithConfirm('/new-game'); }}>Фанова</MenuItem>
+                </Menu>
+              </> : <Button variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
                       onClick={() => navigateWithConfirm('/new-game')}
                       size="small">
                 Фан гра
-              </Button>
-              <Button onClick={() => navigateWithConfirm('/members')}
-                      variant={window.location.pathname.includes('members') ? 'outlined' : 'text'} color="info"
-                      size="small">
+              </Button>}
+              <Button onClick={() => navigateWithConfirm('/members')} variant="text" color="info" size="small">
                 Учасники
               </Button>
-              {
-                user?.authType === 'Клуб' && <Button href={'/new-game-rating'}
-                                                     variant={window.location.pathname.endsWith('new-game-rating') ? 'outlined' : 'text'}
-                                                     color="secondary" size="small">
-                      Рейтингова гра
-                  </Button>
-              }
-              <Button variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
-                      onClick={() => navigateWithConfirm('/$')}
-                      size="small">
+              <Button variant="text" onClick={() => navigateWithConfirm('/$')} size="small">
                 $$$
               </Button>
-              <Button variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
-                      onClick={() => navigateWithConfirm('/calendar')}
-                      size="small">
+              <Button variant="text" onClick={() => navigateWithConfirm('/calendar')} size="small">
                 Події
               </Button>
             </Box>
@@ -195,15 +197,15 @@ export default function AppAppBar() {
                 </Box>
                 <MenuItem selected={window.location.pathname.endsWith('clubs-rating')}
                           onClick={() => navigateWithConfirm('/clubs-rating')}><StarIcon sx={{ mr: .5 }}/>Рейтинг клубу</MenuItem>
-                <MenuItem selected={window.location.pathname.endsWith('new-game')}
-                          onClick={() => navigateWithConfirm('/new-game')}>Фан гра</MenuItem>
+                {user?.authType === 'Клуб' ? <>
+                  <MenuItem selected={window.location.pathname.endsWith('new-game-rating')}
+                            onClick={() => { setOpen(false); navigateWithConfirm('/new-game-rating'); }}>Рейтингова гра</MenuItem>
+                  <MenuItem selected={window.location.pathname.endsWith('new-game')}
+                            onClick={() => { setOpen(false); navigateWithConfirm('/new-game'); }}>Фан гра</MenuItem>
+                </> : <MenuItem selected={window.location.pathname.endsWith('new-game')}
+                          onClick={() => { setOpen(false); navigateWithConfirm('/new-game'); }}>Фан гра</MenuItem>}
                 <MenuItem selected={window.location.pathname.includes('members')}
                           onClick={() => navigateWithConfirm('/members')}>Учасники</MenuItem>
-                {/*<MenuItem selected={window.location.pathname.includes('clubs')}*/}
-                {/*          onClick={() => navigate('/clubs')}>Клуби</MenuItem>*/}
-                {user?.authType === 'Клуб' && <MenuItem selected={window.location.pathname.endsWith('new-game-rating')}
-                                                        onClick={() => navigateWithConfirm('/new-game-rating')}>Рейтингова
-                    гра</MenuItem>}
                 <MenuItem selected={window.location.pathname.includes('$')}
                           onClick={() => navigateWithConfirm('/$')}>$$$</MenuItem>
                 <MenuItem selected={window.location.pathname.includes('calendar')}
