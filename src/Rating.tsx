@@ -16,6 +16,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import LocalPoliceIcon from "@mui/icons-material/LocalPolice";
 import Face5Icon from "@mui/icons-material/Face5";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import Avatar from "@mui/material/Avatar";
 import PodiumCard from "./components/dashboard/PodiumCard";
 import GameStatsBarChart from "./components/dashboard/GameStatsBarChart";
 
@@ -73,7 +74,20 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
 
   const columns: GridColDef[] = [
     { field: 'rank', headerName: '№', flex: 0.5, minWidth: 35 },
-    { field: 'nickname', headerName: 'Нік', flex: 1.2, minWidth: 100 },
+    {
+      field: 'nickname',
+      headerName: 'Нік',
+      flex: 1.2,
+      minWidth: 130,
+      renderCell: (n) => (
+        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+          <Avatar src={n.row.avatarUrl} sx={{width: 24, height: 24, fontSize: 12}}>
+            {n.row.nickname?.[0]?.toUpperCase()}
+          </Avatar>
+          {n.row.nickname}
+        </Box>
+      )
+    },
     { field: 'rating', headerName: 'Рейт', flex: 0.8, minWidth: 55 },
     {
       field: 'totalGames',
