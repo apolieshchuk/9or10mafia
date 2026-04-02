@@ -99,7 +99,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
     },
     {
       field: 'bonusPoints',
-      headerName: 'Бон',
+      headerName: 'ДБ',
       flex: 0.6,
       minWidth: 40,
       renderCell: (n) => n.row.bonusPoints ? `+${n.row.bonusPoints}` : '-'
