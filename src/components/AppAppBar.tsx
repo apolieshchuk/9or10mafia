@@ -14,6 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import StarIcon from '@mui/icons-material/Star';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import Avatar from '@mui/material/Avatar';
 import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import Sitemark from './SitemarkIcon';
 import {useAuth} from "../AuthProvider";
@@ -155,9 +156,12 @@ export default function AppAppBar() {
             }}
           >
             {
-              user && <Button onClick={() => navigateWithConfirm('/profile')} color="primary" variant="text" size="small" sx={{flexDirection: 'column', lineHeight: 1.2, py: 0.5, maxWidth: 120, overflow: 'hidden'}}>
-                    Мій Профіль
-                    <span style={{fontSize: '0.7em', opacity: 0.7, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>({user?.name})</span>
+              user && <Button onClick={() => navigateWithConfirm('/profile')} color="primary" variant="text" size="small" sx={{gap: 1, lineHeight: 1.2, py: 0.5, maxWidth: 180, overflow: 'hidden'}}>
+                    {user.avatarUrl && <Avatar src={user.avatarUrl} sx={{width: 28, height: 28}}/>}
+                    <Box sx={{display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+                      Мій Профіль
+                      <span style={{fontSize: '0.7em', opacity: 0.7, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>({user?.name})</span>
+                    </Box>
                 </Button>
             }
             {
@@ -239,9 +243,12 @@ export default function AppAppBar() {
                 {
                   user && <>
                         <MenuItem>
-                            <Button href={'profile'} color="primary" variant="outlined" fullWidth sx={{flexDirection: 'column', lineHeight: 1.2, py: 0.5}}>
-                                Мій Профіль
-                                <span style={{fontSize: '0.7em', opacity: 0.7}}>({user?.name})</span>
+                            <Button href={'profile'} color="primary" variant="outlined" fullWidth sx={{gap: 1, lineHeight: 1.2, py: 0.5}}>
+                                {user.avatarUrl && <Avatar src={user.avatarUrl} sx={{width: 28, height: 28}}/>}
+                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                  Мій Профіль
+                                  <span style={{fontSize: '0.7em', opacity: 0.7}}>({user?.name})</span>
+                                </Box>
                             </Button>
                         </MenuItem>
                         <MenuItem>
