@@ -92,41 +92,35 @@ export default function AppAppBar() {
         <StyledToolbar variant="dense" disableGutters>
           <Box sx={{flexGrow: 1, display: 'flex', alignItems: 'center', px: 0, gap: 3}}>
             <Sitemark/>
-            <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-              <Button startIcon={<StarIcon/>} sx={{ mr: '.5rem' }} variant={window.location.pathname.endsWith('clubs-rating') ? 'outlined' : 'text'}
+            <Box sx={{display: 'none', '@media (min-width: 940px)': {display: 'flex'}, gap: 0.5, overflow: 'hidden', '& .MuiButton-root': {whiteSpace: 'nowrap', minWidth: 'auto', flexShrink: 1, overflow: 'hidden', textOverflow: 'ellipsis'}}}>
+              <Button startIcon={<StarIcon/>} variant={window.location.pathname.endsWith('clubs-rating') ? 'outlined' : 'text'}
                       onClick={() => navigateWithConfirm('/clubs-rating')}
                       size="small" color="secondary">
                 Рейтинг клубу
               </Button>
-              <Button sx={{mr: '.5rem'}} variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
+              <Button variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
                       onClick={() => navigateWithConfirm('/new-game')}
                       size="small">
                 Фан гра
               </Button>
-              <Button sx={{mr: '.5rem'}}
-                      onClick={() => navigateWithConfirm('/members')}
+              <Button onClick={() => navigateWithConfirm('/members')}
                       variant={window.location.pathname.includes('members') ? 'outlined' : 'text'} color="info"
                       size="small">
                 Учасники
               </Button>
-              {/*<Button sx={{mr: '.5rem'}} href={'clubs'}*/}
-              {/*        variant={window.location.pathname.includes('clubs') ? 'outlined' : 'text'} color="info"*/}
-              {/*        size="small">*/}
-              {/*  Клуби*/}
-              {/*</Button>*/}
               {
-                user?.authType === 'Клуб' && <Button href={'/new-game-rating'} sx={{mr: '.5rem'}}
+                user?.authType === 'Клуб' && <Button href={'/new-game-rating'}
                                                      variant={window.location.pathname.endsWith('new-game-rating') ? 'outlined' : 'text'}
                                                      color="secondary" size="small">
                       Рейтингова гра
                   </Button>
               }
-              <Button sx={{mr: '.5rem'}} variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
+              <Button variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
                       onClick={() => navigateWithConfirm('/$')}
                       size="small">
                 $$$
               </Button>
-              <Button sx={{mr: '.5rem'}} variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
+              <Button variant={window.location.pathname.endsWith('new-game') ? 'outlined' : 'text'}
                       onClick={() => navigateWithConfirm('/calendar')}
                       size="small">
                 Події
@@ -141,14 +135,16 @@ export default function AppAppBar() {
           }
           <Box
             sx={{
-              display: {xs: 'none', md: 'flex'},
+              display: 'none',
+              '@media (min-width: 940px)': {display: 'flex'},
               gap: 1,
               alignItems: 'center',
             }}
           >
             {
-              user && <Button onClick={() => navigateWithConfirm('/profile')} color="primary" variant="text" size="small">
-                    Мій Профіль ({user?.name})
+              user && <Button onClick={() => navigateWithConfirm('/profile')} color="primary" variant="text" size="small" sx={{flexDirection: 'column', lineHeight: 1.2, py: 0.5, maxWidth: 120, overflow: 'hidden'}}>
+                    Мій Профіль
+                    <span style={{fontSize: '0.7em', opacity: 0.7, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>({user?.name})</span>
                 </Button>
             }
             {
@@ -171,7 +167,7 @@ export default function AppAppBar() {
             }
             {/*<ColorModeIconDropdown/>*/}
           </Box>
-          <Box sx={{display: {xs: 'flex', md: 'none'}, gap: 1}}>
+          <Box sx={{display: 'flex', '@media (min-width: 940px)': {display: 'none'}, gap: 1}}>
             {/*<ColorModeIconDropdown size="medium"/>*/}
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon/>
@@ -230,8 +226,9 @@ export default function AppAppBar() {
                 {
                   user && <>
                         <MenuItem>
-                            <Button href={'profile'} color="primary" variant="outlined" fullWidth>
-                                Мій Профіль ({user?.name})
+                            <Button href={'profile'} color="primary" variant="outlined" fullWidth sx={{flexDirection: 'column', lineHeight: 1.2, py: 0.5}}>
+                                Мій Профіль
+                                <span style={{fontSize: '0.7em', opacity: 0.7}}>({user?.name})</span>
                             </Button>
                         </MenuItem>
                         <MenuItem>

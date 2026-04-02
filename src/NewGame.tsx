@@ -24,7 +24,7 @@ import {columns, rows} from "./internals/data/gridDataClubs";
 import {use, useEffect, useMemo} from "react";
 import axios from "./axios";
 import AppAppBar from "./components/AppAppBar";
-import {Autocomplete, createFilterOptions} from "@mui/material";
+import {Autocomplete, createFilterOptions, Popover} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {useAuth} from "./AuthProvider";
@@ -77,10 +77,12 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const [activeVoting, setActiveVoting] = React.useState(null as { c: number, candidates: [] } | null);
 
   const [players, _setPlayers] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, n) => {
-    acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: {} as Record<number, string>};
+    acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: {} as Record<number, string>, bonusPoints: 0};
     return acc
   }, {} as Record<number, any>));
   const setPlayers = (item: any) => _setPlayers(() => item);
+  const [bonusAnchorEl, setBonusAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [bonusPlayerN, setBonusPlayerN] = React.useState<number>(0);
 
   const setPlayerNickname = (n: number, title: string, id: string) => {
     if (winState) {
@@ -91,6 +93,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const addWarning = (n: number) => {
+    if (!n) return;
     if (winState) {
       alert('Гра закінчена');
       return;
@@ -122,6 +125,22 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     if (hasFirstKilled && players[n].killed !== 1) return;
     setPlayers({...players, [n]: {...players[n], killed: players[n].killed === 1 ? 0 : 1, bestTurn: players[n].killed === 1 ? {} : players[n].bestTurn}});
   }
+
+  const isPlayerWinner = (n: number) => {
+    const role = players[n]?.role;
+    return winState === 'mafia' ? [1, 2, 3].includes(role) : [0, 4].includes(role);
+  };
+
+  const openBonusPopover = (e: React.MouseEvent<HTMLElement>, n: number) => {
+    setBonusAnchorEl(e.currentTarget);
+    setBonusPlayerN(n);
+  };
+
+  const selectBonus = (pts: number) => {
+    const current = players[bonusPlayerN].bonusPoints;
+    setPlayers({...players, [bonusPlayerN]: {...players[bonusPlayerN], bonusPoints: current === pts ? 0 : pts}});
+    setBonusAnchorEl(null);
+  };
 
   const supportFive = (n: number, i: number) => {
     if (winState) {
@@ -198,23 +217,22 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       alert('Не всім розподілено нікнейми');
       return
     }
-    setWinState(() => winner === winState ? '' : winner);
+    setWinState(() => winner);
+  }
 
-    user?.authType === 'Клуб' && path.endsWith('new-game-rating') && setTimeout(async () => {
-      if (confirm("Відправити результати гри?")) {
-        const playersPayload = Object.values(players).map(p => ({
-          ...p,
-          bestTurn: Object.entries(p.bestTurn || {}).map(([seat, color]) => ({n: Number(seat), color})),
-        }));
-        await axios.post('/club/rating-game', {
-          players: playersPayload,
-          winState: winner,
-          votings
-        });
-      } else {
-        setWinState(() => '');
-      }
-    }, 200);
+  const submitGame = async () => {
+    if (!winState) return;
+    if (!confirm("Відправити результати гри?")) return;
+    const playersPayload = Object.values(players).map(p => ({
+      ...p,
+      bestTurn: Object.entries(p.bestTurn || {}).map(([seat, color]) => ({n: Number(seat), color})),
+    }));
+    await axios.post('/club/rating-game', {
+      players: playersPayload,
+      winState,
+      votings
+    });
+    alert('Гру збережено');
   }
 
   useEffect(() => {
@@ -277,8 +295,8 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme/>
       <NewGameContainer direction="column" justifyContent="space-between" alignItems="center">
         <AppAppBar/>
-        <Box sx={{mt: '5.3rem', display: {xs: 'flex', md: 'flex'}, justifyContent: 'space-between', flexGrow: 1}}>
-          <Button onClick={() => !winState && win('mafia')} sx={{mr: '1rem'}} variant="outlined"
+        <Box sx={{mt: '5.3rem', display: 'flex', justifyContent: 'space-between', flexGrow: 1, gap: 1}}>
+          <Button onClick={() => !winState && win('mafia')} variant="outlined"
                   color={winState === 'mafia' ? 'secondary' : 'info'} size="small">
             Перемога мафії
           </Button>
@@ -286,6 +304,11 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                   color={winState === 'citizens' ? 'secondary' : 'info'} size="small">
             Перемога мирних
           </Button>
+          {winState && user?.authType === 'Клуб' && path.endsWith('new-game-rating') && (
+            <Button onClick={submitGame} variant="contained" color="success" size="small">
+              Зберегти гру
+            </Button>
+          )}
         </Box>
         <Grid minHeight={30} container columns={12} sx={{
           p: 0,
@@ -419,17 +442,57 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                 }
                 <Grid sx={{
                   fontWeight: n !== 0 ? 800 : '',
-                  cursor: n !== 0 && !killedPool.includes(1) || players[n]?.killed === 1 ? 'pointer' : 'default',
+                  cursor: winState && n !== 0
+                    ? 'pointer'
+                    : n !== 0 && (!killedPool.includes(1) || players[n]?.killed === 1) ? 'pointer' : 'default',
                   py: '.4rem',
-                  opacity: n !== 0 && killedPool.includes(1) && players[n]?.killed !== 1 ? 0.3 : 1,
-                  fontSize: players[n]?.killed === 1 ? '0.7rem' : 'inherit',
-                }} size={{xs: 1.25, sm: 0.5, lg: 0.5}} onClick={() => n && killPlayer(n)}>
-                  {n === 0 ? <HeartBrokenIcon/> : players[n].killed === 1 ? `${Object.keys(players[n].bestTurn || {}).length}/5` : ''}
+                  opacity: !winState && n !== 0 && killedPool.includes(1) && players[n]?.killed !== 1 ? 0.3 : 1,
+                  fontSize: players[n]?.killed === 1 && !winState ? '0.7rem' : 'inherit',
+                }} size={{xs: 1.25, sm: 0.5, lg: 0.5}}
+                   onClick={(e: any) => {
+                     if (!n) return;
+                     if (winState) {
+                       openBonusPopover(e, n);
+                     } else {
+                       killPlayer(n);
+                     }
+                   }}>
+                  {winState && n !== 0
+                    ? (players[n].bonusPoints
+                      ? <span style={{fontSize: '0.7rem', color: '#4caf50'}}>+{players[n].bonusPoints}</span>
+                      : <ThumbUpIcon sx={{fontSize: '0.9rem', opacity: 0.5}}/>)
+                    : n === 0
+                      ? <HeartBrokenIcon/>
+                      : players[n]?.killed === 1
+                        ? `${Object.keys(players[n].bestTurn || {}).length}/5`
+                        : ''
+                  }
                 </Grid>
               </>
             ))
           }
         </Grid>
+
+        <Popover
+          open={Boolean(bonusAnchorEl)}
+          anchorEl={bonusAnchorEl}
+          onClose={() => setBonusAnchorEl(null)}
+          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+          transformOrigin={{vertical: 'top', horizontal: 'center'}}
+        >
+          <Stack direction="row" spacing={1} sx={{p: 1.5}}>
+            {(isPlayerWinner(bonusPlayerN) ? [0.3, 0.4, 0.5] : [0.1, 0.2, 0.3]).map(p => (
+              <Button
+                key={p}
+                variant={players[bonusPlayerN]?.bonusPoints === p ? 'contained' : 'outlined'}
+                size="small"
+                onClick={() => selectBonus(p)}
+              >
+                +{p}
+              </Button>
+            ))}
+          </Stack>
+        </Popover>
 
         {
           activeVoting && Boolean(activeVoting.candidates?.length) && <>

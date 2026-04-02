@@ -54,7 +54,15 @@ const columns: GridColDef[] = [
     headerName: 'ОП5',
     headerAlign: 'left',
     align: 'left',
-    flex: 1,
+    flex: .5,
+    minWidth: 50,
+  },
+  {
+    field: 'bonus',
+    headerName: 'Бонус',
+    headerAlign: 'left',
+    align: 'left',
+    flex: .5,
     minWidth: 50,
   },
   {
