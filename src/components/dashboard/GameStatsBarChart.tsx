@@ -44,7 +44,7 @@ export default function GameStatsBarChart({
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Всього ігор
+          Всього ігор за рік
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -58,10 +58,10 @@ export default function GameStatsBarChart({
             <Typography variant="h4" component="p">
               {totalGames}
             </Typography>
-            <Chip size="small" color={prevMonthChange>0 ? 'success' : 'error'} label={`${prevMonthChange}%`} />
+            <Chip size="small" color={prevMonthChange>0 ? 'success' : 'error'} label={`${prevMonthChange > 0 ? '+' : ''}${prevMonthChange}% vs мин. місяць`} />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Середня кількість ігор на гравця: {avgGames}
+            Середня кількість ігор на гравця в сезоні: {avgGames}
           </Typography>
         </Stack>
         <BarChart
