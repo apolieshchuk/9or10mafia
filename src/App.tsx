@@ -17,6 +17,7 @@ import NewGame from "./NewGame";
 import DashboardGames from "./dashboard/DashboardGames";
 import Rating from "./Rating";
 import ScoringRules from "./ScoringRules";
+import ResetPassword from "./ResetPassword";
 import {BudgetRedirect} from "./Budget";
 import {CalendarRedirect} from "./Calendar";
 
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="register" element={<SignUp />} />
           <Route path="register-club" element={<SignUpClub />} />
           <Route path="login" element={<SignIn />} />
+          <Route path="reset-password" element={<ResetPassword />} />
           <Route path="members" element={<MembersList />} />
           <Route path="$" element={<BudgetRedirect />} />
           <Route path="calendar" element={<CalendarRedirect />} />
