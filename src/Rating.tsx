@@ -108,7 +108,7 @@ export default function Rating(props: { disableCustomTheme?: boolean }) {
       flex: 0.7,
       minWidth: 50,
       renderCell: (n) => n.row.supportFiveCount > 0
-        ? `${n.row.supportFivePoints > 0 ? '+' : ''}${n.row.supportFivePoints} (${n.row.supportFiveCount})`
+        ? `${n.row.supportFivePoints > 0 ? '+' : ''}${n.row.supportFivePoints}`
         : '-'
     },
     {
