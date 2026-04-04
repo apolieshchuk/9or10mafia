@@ -48,6 +48,19 @@ const statusUa: Record<string, string> = {
 
 type ClubUser = { _id: string; nickname?: string; name?: string; email?: string };
 
+function tournamentToSettingsSnapshot(t: any) {
+  return JSON.stringify({
+    name: t.name || '',
+    numGames: Number(t.numGames) || 1,
+    scheduledDate: dateInputValueFromApi(t.scheduledDate) || null,
+    publicDescription: (t.publicDescription != null ? String(t.publicDescription) : '').trim(),
+    hideResultsAfterHalf: Boolean(t.hideResultsAfterHalf),
+    participants: (t.participants || []).map((p: any) => ({
+      userIds: (p.userIds || []).map(String),
+    })),
+  });
+}
+
 function shuffleInPlace<T>(arr: T[]) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -91,6 +104,10 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   const [publicDescription, setPublicDescription] = React.useState('');
   const [hideHalf, setHideHalf] = React.useState(false);
   const [participantRows, setParticipantRows] = React.useState<{ u1: ClubUser | null; u2: ClubUser | null }[]>([]);
+  const [autosaveState, setAutosaveState] = React.useState<'idle' | 'saving' | 'error'>('idle');
+
+  const lastSentJsonRef = React.useRef('');
+  const loadGenRef = React.useRef(0);
 
   const isClub = user?.authType === 'Клуб';
   const clubIdStr = user?._id != null ? String((user as any)._id) : '';
@@ -102,6 +119,8 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
       axios.get(`/tournament/${id}/games`),
       axios.get(`/tournament/${id}/standings`),
     ]);
+    loadGenRef.current += 1;
+    lastSentJsonRef.current = tournamentToSettingsSnapshot(t);
     setTournament(t);
     setGames(g.items || []);
     setStandings((s.items || []).map((row: any, i: number) => ({ ...row, id: row.userId || i })));
@@ -149,6 +168,56 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
     );
   }, [tournament, clubUsers]);
 
+  const canEdit = isClub && tournament?.clubId === clubIdStr && tournament?.status !== 'completed';
+
+  const buildSettingsPayload = React.useCallback(() => {
+    const participants = participantRows
+      .filter((r) => r.u1)
+      .map((r) => ({
+        userIds: [String(r.u1!._id), ...(r.u2 ? [String(r.u2._id)] : [])],
+      }));
+    return {
+      name,
+      numGames: Number(numGames) || 1,
+      scheduledDate: scheduledDate || null,
+      publicDescription: publicDescription.trim(),
+      hideResultsAfterHalf: hideHalf,
+      participants,
+    };
+  }, [name, numGames, scheduledDate, publicDescription, hideHalf, participantRows]);
+
+  const settingsPayloadJson = React.useMemo(
+    () => JSON.stringify(buildSettingsPayload()),
+    [buildSettingsPayload]
+  );
+
+  React.useEffect(() => {
+    if (!id || !canEdit) return;
+    if (settingsPayloadJson === lastSentJsonRef.current) {
+      setAutosaveState('idle');
+      return;
+    }
+    const gen = loadGenRef.current;
+    const t = window.setTimeout(async () => {
+      if (gen !== loadGenRef.current) return;
+      const body = buildSettingsPayload();
+      const json = JSON.stringify(body);
+      if (json === lastSentJsonRef.current) return;
+      try {
+        setAutosaveState('saving');
+        await axios.put(`/club/tournament/${id}`, body);
+        lastSentJsonRef.current = json;
+        setAutosaveState('idle');
+        await refresh();
+      } catch (e: any) {
+        console.error(e);
+        setAutosaveState('error');
+        alert(e?.response?.data?.error || 'Не вдалося зберегти зміни');
+      }
+    }, 750);
+    return () => window.clearTimeout(t);
+  }, [settingsPayloadJson, id, canEdit, buildSettingsPayload, refresh]);
+
   const nick = (u: ClubUser | null) => u?.nickname || u?.name || u?.email || '';
 
   const seatingLabel = (cell: { userIds: string[] } | undefined) => {
@@ -156,29 +225,6 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
     return cell.userIds
       .map((uid) => nick(clubUsers.find((u) => u._id === uid) || { _id: uid, nickname: uid }))
       .join(' / ');
-  };
-
-  const saveSettings = async () => {
-    if (!id || !isClub) return;
-    const participants = participantRows
-      .filter((r) => r.u1)
-      .map((r) => ({
-        userIds: [r.u1!._id, ...(r.u2 ? [r.u2._id] : [])],
-      }));
-    try {
-      await axios.put(`/club/tournament/${id}`, {
-        name,
-        numGames: Number(numGames),
-        scheduledDate: scheduledDate || null,
-        publicDescription: publicDescription.trim(),
-        hideResultsAfterHalf: hideHalf,
-        participants,
-      });
-      await refresh();
-      alert('Збережено');
-    } catch (e: any) {
-      alert(e?.response?.data?.error || 'Помилка');
-    }
   };
 
   const startTournament = async () => {
@@ -226,8 +272,46 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   const downloadSeatingPng = async () => {
     const el = seatingRef.current;
     if (!el) return;
+    const exportRootClass = 'mafia-seating-png-export';
     try {
-      const dataUrl = await toPng(el, { pixelRatio: 2, backgroundColor: '#ffffff' });
+      const dataUrl = await toPng(el, {
+        pixelRatio: 2,
+        backgroundColor: '#ffffff',
+        cacheBust: true,
+        // Dark theme uses light text; forcing white canvas → invisible text without overrides.
+        onclone: (clonedDoc: Document) => {
+          const style = clonedDoc.createElement('style');
+          style.setAttribute('data-mafia-export', '1');
+          style.textContent = `
+            .${exportRootClass} {
+              background-color: #ffffff !important;
+              color: #0f172a !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            .${exportRootClass} * {
+              color: #0f172a !important;
+              -webkit-text-fill-color: #0f172a !important;
+            }
+            .${exportRootClass} .MuiTableCell-root {
+              border-color: rgba(15, 23, 42, 0.35) !important;
+              background-color: transparent !important;
+            }
+            .${exportRootClass} .MuiTableHead-root .MuiTableCell-root {
+              font-weight: 700 !important;
+              background-color: #e2e8f0 !important;
+            }
+            .${exportRootClass} svg {
+              fill: #0f172a !important;
+              color: #0f172a !important;
+            }
+            .${exportRootClass} table {
+              font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+            }
+          `;
+          clonedDoc.head.appendChild(style);
+        },
+      } as Parameters<typeof toPng>[1] & { onclone?: (doc: Document) => void });
       const a = document.createElement('a');
       a.href = dataUrl;
       a.download = `seating-${id}.png`;
@@ -266,7 +350,6 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   ];
 
   const isClubOwner = isClub && tournament?.clubId === clubIdStr;
-  const canEdit = isClubOwner && tournament?.status !== 'completed';
   const allGamesSaved = tournament && tournament.gamesSaved >= tournament.numGames;
 
   if (!tournament && id) {
@@ -310,9 +393,12 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
 
               {canEdit && (
                 <Paper sx={{ p: 2, mb: 2 }}>
-                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                    Налаштування
-                  </Typography>
+                  <Stack direction="row" flexWrap="wrap" alignItems="baseline" justifyContent="space-between" gap={1} sx={{ mb: 1 }}>
+                    <Typography variant="subtitle1">Налаштування</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {autosaveState === 'saving' ? 'Збереження…' : autosaveState === 'error' ? 'Помилка збереження' : 'Зміни зберігаються автоматично'}
+                    </Typography>
+                  </Stack>
                   <Stack spacing={2}>
                     <TextField label="Назва" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
                     <TextField
@@ -373,9 +459,6 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                       <Button startIcon={<AddIcon />} onClick={addParticipantRow} disabled={participantRows.length >= 10}>
                         Додати учасника
                       </Button>
-                      <Button variant="contained" onClick={saveSettings}>
-                        Зберегти налаштування
-                      </Button>
                       {tournament?.status === 'draft' && (
                         <Button variant="outlined" color="success" onClick={startTournament}>
                           Почати турнір
@@ -391,7 +474,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                 </Paper>
               )}
 
-              {isClubOwner && tournament?.status === 'in_progress' && (
+              {isClubOwner && (tournament?.status === 'draft' || tournament?.status === 'in_progress') && (
                 <Paper sx={{ p: 2, mb: 2 }}>
                   <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
                     <Button variant="outlined" onClick={onGenerateSeating}>
@@ -400,7 +483,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                     <Button variant="outlined" onClick={downloadSeatingPng} disabled={!tournament?.seatingByGame}>
                       Завантажити скріншот розсадки
                     </Button>
-                    {tournament?.nextGameIndex != null && (
+                    {tournament?.status === 'in_progress' && tournament?.nextGameIndex != null && (
                       <Button
                         component={Link}
                         to={`/profile/tournament/${id}/game/${tournament.nextGameIndex}`}
@@ -414,7 +497,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
               )}
 
               {tournament?.seatingByGame && (
-                <Paper sx={{ p: 2, mb: 2 }} ref={seatingRef}>
+                <Paper sx={{ p: 2, mb: 2 }} ref={seatingRef} className="mafia-seating-png-export">
                   <Typography variant="subtitle1" sx={{ mb: 1 }}>
                     Розсадка
                   </Typography>

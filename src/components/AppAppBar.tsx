@@ -17,6 +17,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Avatar from '@mui/material/Avatar';
 import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import Sitemark from './SitemarkIcon';
+import UpcomingTournamentBanner from './UpcomingTournamentBanner';
 import {useAuth} from "../AuthProvider";
 import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -270,6 +271,9 @@ export default function AppAppBar() {
             </Drawer>
           </Box>
         </StyledToolbar>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', px: 0.5 }}>
+          <UpcomingTournamentBanner />
+        </Box>
       </Container>
     </AppBar>
   );
