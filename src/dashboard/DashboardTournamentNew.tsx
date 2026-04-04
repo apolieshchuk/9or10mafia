@@ -34,6 +34,7 @@ export default function DashboardTournamentNew(props: { disableCustomTheme?: boo
   const [name, setName] = React.useState('');
   const [numGames, setNumGames] = React.useState(3);
   const [scheduledDate, setScheduledDate] = React.useState('');
+  const [publicDescription, setPublicDescription] = React.useState('');
   const [hideHalf, setHideHalf] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
 
@@ -54,6 +55,7 @@ export default function DashboardTournamentNew(props: { disableCustomTheme?: boo
         name: name.trim(),
         numGames: Number(numGames) || 1,
         scheduledDate: scheduledDate || null,
+        publicDescription: publicDescription.trim(),
         participants: [],
         hideResultsAfterHalf: hideHalf,
       });
@@ -151,6 +153,17 @@ export default function DashboardTournamentNew(props: { disableCustomTheme?: boo
                   inputProps={{
                     'aria-label': 'Дата турніру',
                   }}
+                />
+                <TextField
+                  label="Публічний опис"
+                  value={publicDescription}
+                  onChange={(e) => setPublicDescription(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  minRows={3}
+                  helperText="Показується на публічній сторінці турніру (посилання з головної)"
+                  InputLabelProps={{ shrink: Boolean(publicDescription) }}
                 />
                 <FormControlLabel
                   sx={{

@@ -15,7 +15,9 @@ axios.interceptors.response.use((response) => {
   return response;
 }, function (error) {
   const authError = error.response?.status === 401;
-  if (authError) {
+  const reqUrl = String(error.config?.url || '');
+  const isPublicApi = reqUrl.includes('/public/');
+  if (authError && !isPublicApi) {
     localStorage.removeItem('jwt_token');
     window.location.href = '/login';
   }

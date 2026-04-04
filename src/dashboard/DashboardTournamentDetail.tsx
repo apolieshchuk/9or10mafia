@@ -88,6 +88,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   const [name, setName] = React.useState('');
   const [numGames, setNumGames] = React.useState(1);
   const [scheduledDate, setScheduledDate] = React.useState('');
+  const [publicDescription, setPublicDescription] = React.useState('');
   const [hideHalf, setHideHalf] = React.useState(false);
   const [participantRows, setParticipantRows] = React.useState<{ u1: ClubUser | null; u2: ClubUser | null }[]>([]);
 
@@ -107,6 +108,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
     setName(t.name || '');
     setNumGames(t.numGames || 1);
     setScheduledDate(dateInputValueFromApi(t.scheduledDate));
+    setPublicDescription(t.publicDescription != null ? String(t.publicDescription) : '');
     setHideHalf(Boolean(t.hideResultsAfterHalf));
   }, [id]);
 
@@ -168,6 +170,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
         name,
         numGames: Number(numGames),
         scheduledDate: scheduledDate || null,
+        publicDescription: publicDescription.trim(),
         hideResultsAfterHalf: hideHalf,
         participants,
       });
@@ -327,6 +330,16 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                       onChange={(e) => setScheduledDate(e.target.value)}
                       fullWidth
                       InputLabelProps={{ shrink: true }}
+                    />
+                    <TextField
+                      label="Публічний опис"
+                      value={publicDescription}
+                      onChange={(e) => setPublicDescription(e.target.value)}
+                      fullWidth
+                      multiline
+                      minRows={3}
+                      helperText={id ? `Публічна сторінка: /tournaments/${id}` : 'Публічна сторінка турніру'}
+                      InputLabelProps={{ shrink: Boolean(publicDescription) }}
                     />
                     <FormControlLabel
                       control={<Checkbox checked={hideHalf} onChange={(e) => setHideHalf(e.target.checked)} />}

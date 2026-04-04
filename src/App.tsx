@@ -23,6 +23,7 @@ import ScoringRules from "./ScoringRules";
 import ResetPassword from "./ResetPassword";
 import {BudgetRedirect} from "./Budget";
 import {CalendarRedirect} from "./Calendar";
+import PublicTournamentPage from "./PublicTournamentPage";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="clubs-rating" element={<Rating />} />
           <Route path="scoring" element={<ScoringRules />} />
           <Route path="clubs" element={<ClubsList />} />
+          <Route path="tournaments/:id" element={<PublicTournamentPage />} />
           <Route path="new-game" element={<NewGame />} />
           <Route path="profile" element={<PrivateRoute Component={DashboardHome}/>} />
           <Route path="profile/users" element={<PrivateRoute Component={DashboardUsers}/>} />
