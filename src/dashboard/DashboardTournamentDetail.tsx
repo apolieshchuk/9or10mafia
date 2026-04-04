@@ -385,11 +385,23 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
               <Typography component="h1" variant="h5">
                 {tournament?.name}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
                 Статус: {statusUa[tournament?.status] || tournament?.status} · Ігор: {tournament?.numGames} ·
                 Зіграно: {tournament?.gamesSaved ?? 0}
                 {tournament?.winnerNickname ? ` · Переможець: ${tournament.winnerNickname}` : ''}
               </Typography>
+              {isClubOwner && tournament?.status === 'in_progress' && tournament?.nextGameIndex != null && (
+                <Button
+                  component={Link}
+                  to={`/profile/tournament/${id}/game/${tournament.nextGameIndex}`}
+                  variant="contained"
+                  color="secondary"
+                  size="medium"
+                  sx={{ mb: 2, alignSelf: 'flex-start' }}
+                >
+                  Діюча гра
+                </Button>
+              )}
 
               {canEdit && (
                 <Paper sx={{ p: 2, mb: 2 }}>
@@ -487,9 +499,10 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                       <Button
                         component={Link}
                         to={`/profile/tournament/${id}/game/${tournament.nextGameIndex}`}
-                        variant="contained"
+                        variant="outlined"
+                        color="secondary"
                       >
-                        Відкрити поточну гру ({tournament.nextGameIndex})
+                        Діюча гра
                       </Button>
                     )}
                   </Stack>
