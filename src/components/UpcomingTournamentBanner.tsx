@@ -11,6 +11,7 @@ import axios from '../axios';
 type UpcomingItem = {
   id: string;
   name: string;
+  status?: string;
 };
 
 /**
@@ -24,9 +25,13 @@ export default function UpcomingTournamentBanner() {
     (async () => {
       try {
         const { data } = await axios.get<{ items: UpcomingItem[] }>('/public/upcoming-tournaments');
-        const list = data.items || [];
+        const list = (data.items || []).filter(
+          (x) => x.status !== 'in_progress' && x.status !== 'completed'
+        );
         if (!cancelled && list.length > 0) {
           setTournament(list[0]);
+        } else if (!cancelled) {
+          setTournament(null);
         }
       } catch {
         /* ignore */
