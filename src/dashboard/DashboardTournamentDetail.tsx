@@ -21,16 +21,12 @@ import axios from '../axios';
 import { useAuth } from '../AuthProvider';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import TournamentSeatingTiles from '../components/TournamentSeatingTiles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { OutlinedActionIconButton } from '../components/OutlinedActionIconButton';
 import AddIcon from '@mui/icons-material/Add';
 import Autocomplete from '@mui/material/Autocomplete';
-import { toPng } from 'html-to-image';
+import { toPng, getFontEmbedCSS } from 'html-to-image';
 import { dateInputValueFromApi } from '../utils/vancouverDate';
 
 const xThemeComponents = {
@@ -272,46 +268,47 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   const downloadSeatingPng = async () => {
     const el = seatingRef.current;
     if (!el) return;
-    const exportRootClass = 'mafia-seating-png-export';
+    // html-to-image copies getComputedStyle from the live DOM; it does NOT support onclone.
+    // With backgroundColor: '#fff' only on the clone root, dark-theme text stays light → invisible.
+    const captureClass = 'mafia-seating-png-capture';
+    const styleEl = document.createElement('style');
+    styleEl.setAttribute('data-mafia-seating-capture', '1');
+    styleEl.textContent = `
+      .${captureClass} {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .${captureClass}, .${captureClass} * {
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+      }
+      .${captureClass} .MuiPaper-root {
+        background-color: #fafafa !important;
+        border-color: rgba(15, 23, 42, 0.28) !important;
+        color: #0f172a !important;
+      }
+      .${captureClass} .MuiDivider-root {
+        border-color: rgba(15, 23, 42, 0.12) !important;
+      }
+      .${captureClass} .MuiBox-root {
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+    el.classList.add(captureClass);
     try {
+      if (document.fonts?.ready) await document.fonts.ready;
+      await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+      const fontEmbedCSS = await getFontEmbedCSS(el, { cacheBust: true });
       const dataUrl = await toPng(el, {
         pixelRatio: 2,
         backgroundColor: '#ffffff',
         cacheBust: true,
-        // Dark theme uses light text; forcing white canvas → invisible text without overrides.
-        onclone: (clonedDoc: Document) => {
-          const style = clonedDoc.createElement('style');
-          style.setAttribute('data-mafia-export', '1');
-          style.textContent = `
-            .${exportRootClass} {
-              background-color: #ffffff !important;
-              color: #0f172a !important;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            .${exportRootClass} * {
-              color: #0f172a !important;
-              -webkit-text-fill-color: #0f172a !important;
-            }
-            .${exportRootClass} .MuiTableCell-root {
-              border-color: rgba(15, 23, 42, 0.35) !important;
-              background-color: transparent !important;
-            }
-            .${exportRootClass} .MuiTableHead-root .MuiTableCell-root {
-              font-weight: 700 !important;
-              background-color: #e2e8f0 !important;
-            }
-            .${exportRootClass} svg {
-              fill: #0f172a !important;
-              color: #0f172a !important;
-            }
-            .${exportRootClass} table {
-              font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-            }
-          `;
-          clonedDoc.head.appendChild(style);
-        },
-      } as Parameters<typeof toPng>[1] & { onclone?: (doc: Document) => void });
+        fontEmbedCSS,
+        preferredFontFormat: 'woff2',
+      });
       const a = document.createElement('a');
       a.href = dataUrl;
       a.download = `seating-${id}.png`;
@@ -319,6 +316,9 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
     } catch (e) {
       console.error(e);
       alert('Не вдалося зробити скріншот');
+    } finally {
+      el.classList.remove(captureClass);
+      styleEl.remove();
     }
   };
 
@@ -498,33 +498,14 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
 
               {tournament?.seatingByGame && (
                 <Paper sx={{ p: 2, mb: 2 }} ref={seatingRef} className="mafia-seating-png-export">
-                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                    Розсадка
-                  </Typography>
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Гра</TableCell>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((s) => (
-                          <TableCell key={s} align="center">
-                            {s}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {Array.from({ length: tournament.numGames }, (_, gi) => gi + 1).map((g) => (
-                        <TableRow key={g}>
-                          <TableCell>{g}</TableCell>
-                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((s) => (
-                            <TableCell key={s} align="center" sx={{ fontSize: '0.75rem', maxWidth: 100 }}>
-                              {seatingLabel(tournament.seatingByGame[String(g)]?.[String(s)])}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                  <TournamentSeatingTiles
+                    numGames={tournament.numGames}
+                    seatingByGame={tournament.seatingByGame}
+                    formatSeat={(userIds) =>
+                      seatingLabel(userIds?.length ? { userIds } : undefined)
+                    }
+                    title="Розсадка"
+                  />
                 </Paper>
               )}
 

@@ -2,8 +2,10 @@ import * as React from 'react';
 import SvgIcon from '@mui/material/SvgIcon';
 import {useTheme} from "@mui/system";
 import {useNavigate} from "react-router-dom";
-const whiteLogo = './images/logo-white-2.png';
-const darkLogo = './images/logo-black-2.png';
+import { publicStaticUrl } from '../utils/mediaUrl';
+
+const whiteLogo = publicStaticUrl('/images/logo-white-2.png');
+const darkLogo = publicStaticUrl('/images/logo-black-2.png');
 
 export default function SitemarkIcon() {
   const theme = useTheme();

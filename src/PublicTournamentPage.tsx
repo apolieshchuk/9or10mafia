@@ -19,6 +19,7 @@ import Divider from '@mui/material/Divider';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { alpha } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import AppTheme from './theme/AppTheme';
@@ -26,6 +27,8 @@ import AppAppBar from './components/AppAppBar';
 import Footer from './components/Footer';
 import axios from './axios';
 import { formatDateUkVancouver } from './utils/vancouverDate';
+import { resolveMediaUrl } from './utils/mediaUrl';
+import TournamentSeatingTiles from './components/TournamentSeatingTiles';
 
 type PublicPlayer = { id: string; nickname: string; avatarUrl: string | null };
 type PublicSlot = { seatIndex: number; players: PublicPlayer[] };
@@ -51,6 +54,7 @@ type PublicPayload = {
   scheduledDate: string | null;
   status: string;
   clubName: string;
+  clubAvatarUrl: string | null;
   publicDescription: string;
   participantSlots: PublicSlot[];
   seatingByGame: SeatingByGame | null;
@@ -80,6 +84,25 @@ function formatSeatingCell(userIds: string[] | undefined, nick: Map<string, stri
   return userIds.map((id) => nick.get(id) || `…${id.slice(-4)}`).join(' / ');
 }
 
+function RemoteAvatar({
+  avatarUrl,
+  nickname,
+  sx,
+}: {
+  avatarUrl: string | null | undefined;
+  nickname: string;
+  sx?: React.ComponentProps<typeof Avatar>['sx'];
+}) {
+  const [failed, setFailed] = React.useState(false);
+  const src = !failed ? resolveMediaUrl(avatarUrl ?? null) : undefined;
+  const initial = nickname.trim().charAt(0).toUpperCase() || '?';
+  return (
+    <Avatar src={src || undefined} alt={nickname} onError={() => setFailed(true)} sx={sx}>
+      {initial}
+    </Avatar>
+  );
+}
+
 function PlayerCell({ players }: { players: PublicPlayer[] }) {
   if (!players.length) {
     return (
@@ -98,9 +121,9 @@ function PlayerCell({ players }: { players: PublicPlayer[] }) {
             </Typography>
           ) : null}
           <Stack direction="row" alignItems="center" gap={0.75} sx={{ minWidth: 0 }}>
-            <Avatar
-              src={p.avatarUrl || undefined}
-              alt={p.nickname}
+            <RemoteAvatar
+              avatarUrl={p.avatarUrl}
+              nickname={p.nickname}
               sx={{
                 width: 44,
                 height: 44,
@@ -108,9 +131,7 @@ function PlayerCell({ players }: { players: PublicPlayer[] }) {
                 flexShrink: 0,
                 border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.4)}`,
               }}
-            >
-              {p.nickname.charAt(0).toUpperCase()}
-            </Avatar>
+            />
             <Typography
               variant="body1"
               component="span"
@@ -134,7 +155,25 @@ function PlayerCell({ players }: { players: PublicPlayer[] }) {
   );
 }
 
-function PublicParticipantsChunk({ rows }: { rows: PublicSlot[] }) {
+const participantsHeadSx = {
+  background: (t: Theme) =>
+    `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
+  '& .MuiTableCell-head': {
+    color: 'primary.contrastText',
+    fontWeight: 700,
+    fontSize: '0.8125rem',
+    borderBottom: 'none',
+    py: 1.1,
+    px: { xs: 0.75, sm: 1.25 },
+  },
+};
+
+function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
+  const half = Math.ceil(slots.length / 2);
+  const leftCol = slots.slice(0, half);
+  const rightCol = slots.slice(half);
+  const rowCount = leftCol.length;
+
   return (
     <TableContainer
       component={Paper}
@@ -144,55 +183,82 @@ function PublicParticipantsChunk({ rows }: { rows: PublicSlot[] }) {
         border: (t) => `1px solid ${t.palette.divider}`,
         boxShadow: (t) => t.shadows[2],
         width: '100%',
+        overflowX: 'auto',
       }}
     >
       <Table
         size="medium"
         sx={{
           width: '100%',
-          '& .MuiTableCell-body': { py: 1.35, px: 1.25, verticalAlign: 'middle' },
+          minWidth: { xs: 520, sm: 640 },
+          tableLayout: 'fixed',
+          '& .MuiTableCell-body': {
+            py: 1.35,
+            px: { xs: 0.75, sm: 1.25 },
+            verticalAlign: 'middle',
+          },
         }}
       >
         <TableHead>
-          <TableRow
-            sx={{
-              background: (t) =>
-                `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
-              '& .MuiTableCell-head': {
-                color: 'primary.contrastText',
-                fontWeight: 700,
-                fontSize: '0.8125rem',
-                borderBottom: 'none',
-                py: 1.1,
-                px: 1.25,
-              },
-            }}
-          >
-            <TableCell width={52} align="center">
+          <TableRow sx={participantsHeadSx}>
+            <TableCell align="center" sx={{ width: 52 }}>
               №
             </TableCell>
-            <TableCell>Гравці</TableCell>
+            <TableCell sx={{ width: '42%' }}>Гравці</TableCell>
+            <TableCell
+              align="center"
+              sx={{
+                width: 52,
+                borderLeft: (t) => `1px solid ${alpha(t.palette.primary.contrastText, 0.22)}`,
+              }}
+            >
+              №
+            </TableCell>
+            <TableCell sx={{ width: '42%' }}>Гравці</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.seatIndex}
-              sx={{
-                '&:nth-of-type(even)': { bgcolor: (t) => alpha(t.palette.action.hover, 0.2) },
-                '&:last-child td': { borderBottom: 0 },
-              }}
-            >
-              <TableCell align="center">
-                <Typography variant="body1" fontWeight={700} color="primary">
-                  {row.seatIndex}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <PlayerCell players={row.players} />
-              </TableCell>
-            </TableRow>
-          ))}
+          {Array.from({ length: rowCount }, (_, i) => {
+            const L = leftCol[i];
+            const R = rightCol[i];
+            return (
+              <TableRow
+                key={`${L.seatIndex}-${R?.seatIndex ?? i}`}
+                sx={{
+                  '&:nth-of-type(even)': { bgcolor: (t) => alpha(t.palette.action.hover, 0.2) },
+                  '&:last-child td': { borderBottom: 0 },
+                }}
+              >
+                <TableCell align="center">
+                  <Typography variant="body1" fontWeight={700} color="primary">
+                    {L.seatIndex}
+                  </Typography>
+                </TableCell>
+                <TableCell sx={{ minWidth: 0 }}>
+                  <PlayerCell players={L.players} />
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    borderLeft: (t) => `1px solid ${alpha(t.palette.divider, 0.85)}`,
+                  }}
+                >
+                  {R ? (
+                    <Typography variant="body1" fontWeight={700} color="primary">
+                      {R.seatIndex}
+                    </Typography>
+                  ) : (
+                    <Typography variant="body2" color="text.disabled">
+                      —
+                    </Typography>
+                  )}
+                </TableCell>
+                <TableCell sx={{ minWidth: 0 }}>
+                  <PlayerCell players={R?.players ?? []} />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
@@ -208,9 +274,11 @@ const standingsColumns: GridColDef<PublicStandingRow>[] = [
     minWidth: 160,
     renderCell: (params) => (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, overflow: 'hidden' }}>
-        <Avatar src={params.row.avatarUrl || undefined} sx={{ width: 28, height: 28, fontSize: 12 }}>
-          {params.row.nickname?.charAt(0)?.toUpperCase()}
-        </Avatar>
+        <RemoteAvatar
+          avatarUrl={params.row.avatarUrl}
+          nickname={params.row.nickname || ''}
+          sx={{ width: 28, height: 28, fontSize: 12 }}
+        />
         <Typography variant="body2" noWrap fontWeight={600}>
           {params.row.nickname}
         </Typography>
@@ -275,6 +343,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
         if (!cancelled) {
           setData({
             ...body,
+            clubAvatarUrl: body.clubAvatarUrl ?? null,
             seatingByGame: body.seatingByGame ?? null,
             standingsRows: body.standingsRows ?? [],
           });
@@ -319,13 +388,64 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
             <Typography variant="body2">Завантаження…</Typography>
           ) : (
             <Stack spacing={1.5}>
-              <Stack spacing={0.5}>
-                <Typography variant="caption" color="text.secondary" sx={{ letterSpacing: 0.4 }}>
-                  {data.clubName ? `Клуб: ${data.clubName}` : 'Турнір'}
-                </Typography>
-                <Typography variant="h5" component="h1" sx={{ fontWeight: 800, fontSize: { xs: '1.15rem', sm: '1.35rem' }, lineHeight: 1.3 }}>
-                  {data.name}
-                </Typography>
+              <Stack spacing={0.75}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  gap={2}
+                  flexWrap="wrap"
+                  sx={{ rowGap: 1.25, columnGap: 2 }}
+                >
+                  <Typography
+                    variant="h5"
+                    component="h1"
+                    sx={{
+                      fontWeight: 800,
+                      fontSize: { xs: '1.15rem', sm: '1.35rem' },
+                      lineHeight: 1.3,
+                      flex: '1 1 200px',
+                      minWidth: 0,
+                    }}
+                  >
+                    {data.name}
+                  </Typography>
+                  {data.clubName ? (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      gap={1.25}
+                      sx={{
+                        flexShrink: 0,
+                        ml: { xs: 0, sm: 'auto' },
+                        maxWidth: { xs: '100%', sm: 340 },
+                      }}
+                    >
+                      <RemoteAvatar
+                        avatarUrl={data.clubAvatarUrl}
+                        nickname={data.clubName}
+                        sx={{
+                          width: 52,
+                          height: 52,
+                          fontSize: '1.2rem',
+                          flexShrink: 0,
+                          border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.35)}`,
+                        }}
+                      />
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{
+                          letterSpacing: 0.4,
+                          lineHeight: 1.35,
+                          textAlign: { xs: 'left', sm: 'right' },
+                        }}
+                      >
+                        Клуб: {data.clubName}
+                      </Typography>
+                    </Stack>
+                  ) : null}
+                </Stack>
                 <Stack direction="row" flexWrap="wrap" gap={0.75} alignItems="center">
                   <Chip
                     label={statusUa[data.status] || data.status}
@@ -398,22 +518,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                       </Table>
                     </TableContainer>
                   ) : (
-                    <Box
-                      sx={{
-                        display: 'grid',
-                        gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                        gap: 2,
-                        width: '100%',
-                        alignItems: 'start',
-                      }}
-                    >
-                      <PublicParticipantsChunk
-                        rows={data.participantSlots.slice(0, Math.ceil(data.participantSlots.length / 2))}
-                      />
-                      <PublicParticipantsChunk
-                        rows={data.participantSlots.slice(Math.ceil(data.participantSlots.length / 2))}
-                      />
-                    </Box>
+                    <PublicParticipantsTable slots={data.participantSlots} />
                   )}
                 </Box>
               )}
@@ -425,60 +530,12 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                       Розсадку ще не згенеровано.
                     </Typography>
                   ) : (
-                    <TableContainer
-                      component={Paper}
-                      elevation={0}
-                      sx={{
-                        borderRadius: 2,
-                        border: (t) => `1px solid ${t.palette.divider}`,
-                        boxShadow: (t) => t.shadows[2],
-                        overflowX: 'auto',
-                        width: '100%',
-                      }}
-                    >
-                      <Table size="small" sx={{ minWidth: 640 }}>
-                        <TableHead>
-                          <TableRow
-                            sx={{
-                              background: (t) =>
-                                `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
-                              '& .MuiTableCell-head': {
-                                color: 'primary.contrastText',
-                                fontWeight: 700,
-                                fontSize: '0.7rem',
-                                borderBottom: 'none',
-                                py: 0.65,
-                                px: 0.5,
-                              },
-                            }}
-                          >
-                            <TableCell width={36}>Гра</TableCell>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((s) => (
-                              <TableCell key={s} align="center" sx={{ minWidth: 72 }}>
-                                {s}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {Array.from({ length: data.numGames }, (_, gi) => gi + 1).map((g) => (
-                            <TableRow
-                              key={g}
-                              sx={{
-                                '&:nth-of-type(even)': { bgcolor: (t) => alpha(t.palette.action.hover, 0.2) },
-                              }}
-                            >
-                              <TableCell sx={{ fontWeight: 700 }}>{g}</TableCell>
-                              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((s) => (
-                                <TableCell key={s} align="center" sx={{ fontSize: '0.7rem', maxWidth: 120, py: 0.5, px: 0.5 }}>
-                                  {formatSeatingCell(data.seatingByGame?.[String(g)]?.[String(s)]?.userIds, nickLookup)}
-                                </TableCell>
-                              ))}
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
+                    <TournamentSeatingTiles
+                      numGames={data.numGames}
+                      seatingByGame={data.seatingByGame}
+                      formatSeat={(userIds) => formatSeatingCell(userIds, nickLookup)}
+                      title="Розсадка"
+                    />
                   )}
                 </Box>
               )}
