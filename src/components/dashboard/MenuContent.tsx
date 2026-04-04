@@ -12,12 +12,13 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import {useAuth} from "../../AuthProvider";
 import {useEffect} from "react";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import AddchartIcon from "@mui/icons-material/Addchart";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 
 
 const mainListItems = [
@@ -36,7 +37,8 @@ const secondaryListItems = [
 
 export default function MenuContent() {
   const navigate = useNavigate();
-  const [path, setPath] = React.useState(window.location.pathname);
+  const location = useLocation();
+  const path = location.pathname;
   const [listItems, setListItems] = React.useState(mainListItems);
   const { user } = useAuth();
   // const [isClub, setIsClub] = React.useState(false);
@@ -49,6 +51,7 @@ export default function MenuContent() {
       items = [...items, { text: 'Клуби', icon: <Diversity3Icon />, path: '/profile/clubs' }];
     }
     items = [...items, { text: 'Рейтинговий період', icon: <AddchartIcon />, path: '/profile/rating-periods' }];
+    items = [...items, { text: 'Турніри', icon: <EventAvailableIcon />, path: '/profile/tournaments' }];
     setListItems(() => items);
 
   }, [user]);
@@ -60,7 +63,14 @@ export default function MenuContent() {
       <List dense>
         {listItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={path === item.path} onClick={() => navigate(item.path)}>
+            <ListItemButton
+              selected={
+                path === item.path ||
+                (item.path === '/profile/tournaments' &&
+                  (path.startsWith('/profile/tournaments') || path.startsWith('/profile/tournament/')))
+              }
+              onClick={() => navigate(item.path)}
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

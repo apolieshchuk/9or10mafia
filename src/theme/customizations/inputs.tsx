@@ -427,8 +427,20 @@ export const inputsCustomizations: Components<Theme> = {
           },
         ],
       }),
+      // Keep a 1px outline so the <legend> notch still sizes correctly for the floating label.
+      // border: 'none' breaks InputLabel position (label sits on the border line).
       notchedOutline: {
-        border: 'none',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: 'transparent',
+      },
+    },
+  },
+  MuiInputLabel: {
+    styleOverrides: {
+      root: {
+        // MuiFormLabel adds marginBottom for standalone labels; InputLabel must not have it.
+        marginBottom: 0,
       },
     },
   },
@@ -446,7 +458,10 @@ export const inputsCustomizations: Components<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         typography: theme.typography.caption,
-        marginBottom: 8,
+        // Do not affect TextField / Autocomplete floating labels (MuiInputLabel-root).
+        '&:not(.MuiInputLabel-root)': {
+          marginBottom: 8,
+        },
       }),
     },
   },

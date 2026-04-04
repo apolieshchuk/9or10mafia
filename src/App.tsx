@@ -13,6 +13,9 @@ import DashboardHome from "./dashboard/DashboardHome";
 import DashboardUsers from "./dashboard/DashboardUsers";
 import DashboardClubs from "./dashboard/DashboardClubs";
 import DashboardRatingPeriods from "./dashboard/DashboardRatingPeriods";
+import DashboardTournaments from "./dashboard/DashboardTournaments";
+import DashboardTournamentNew from "./dashboard/DashboardTournamentNew";
+import DashboardTournamentDetail from "./dashboard/DashboardTournamentDetail";
 import NewGame from "./NewGame";
 import DashboardGames from "./dashboard/DashboardGames";
 import Rating from "./Rating";
@@ -43,6 +46,10 @@ const App = () => {
           <Route path="profile/clubs" element={<PrivateRoute Component={DashboardClubs}/>} />
           <Route path="profile/games" element={<PrivateRoute Component={DashboardGames}/>} />
           <Route path="profile/rating-periods" element={<PrivateRoute Component={DashboardRatingPeriods}/>} />
+          <Route path="profile/tournaments" element={<PrivateRoute Component={DashboardTournaments}/>} />
+          <Route path="profile/tournaments/new" element={<PrivateRoute Component={DashboardTournamentNew}/>} />
+          <Route path="profile/tournaments/:id" element={<PrivateRoute Component={DashboardTournamentDetail}/>} />
+          <Route path="profile/tournament/:tournamentId/game/:gameIndex" element={<PrivateRoute Component={NewGame}/>} />
           <Route path="new-game-rating" element={<PrivateRoute Component={NewGame}/>} />
         </Routes>
       </BrowserRouter>

@@ -3,6 +3,7 @@ import {jwtDecode, JwtPayload } from "jwt-decode";
 import axios from "./axios";
 
 type User = {
+  _id?: string;
   authType: 'Клуб' | 'Учасник';
   name: string;
   nickname: string;

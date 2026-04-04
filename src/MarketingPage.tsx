@@ -11,12 +11,14 @@ import Features from './components/Features';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
+import UpcomingTournamentDialog from './components/UpcomingTournamentDialog';
 
 export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
 
+      <UpcomingTournamentDialog />
       <AppAppBar />
       <Hero />
       <div>

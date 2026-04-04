@@ -21,9 +21,10 @@ import CustomizedTreeView from "./components/dashboard/CustomizedTreeView";
 import ChartUserByCountry from "./components/dashboard/ChartUserByCountry";
 import {DataGrid} from "@mui/x-data-grid";
 import {columns, rows} from "./internals/data/gridDataClubs";
-import {use, useEffect, useMemo} from "react";
+import {useEffect, useMemo} from "react";
 import axios from "./axios";
 import AppAppBar from "./components/AppAppBar";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {Autocomplete, createFilterOptions, Popover} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -75,6 +76,11 @@ const createInitialVotings = () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, 
 
 const STORAGE_KEY = 'ratingGameState';
 
+const BONUS_RATING_WIN = [0.3, 0.4, 0.5];
+const BONUS_RATING_LOSS = [0.1, 0.2, 0.3];
+const BONUS_TOURNAMENT_WIN = [0.4, 0.5, 0.6, 0.7, 0.8];
+const BONUS_TOURNAMENT_LOSS = [0.2, 0.3, 0.4, 0.5, 0.6];
+
 const loadSavedState = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -83,11 +89,64 @@ const loadSavedState = () => {
   } catch { return null; }
 };
 
+const loadTournamentDraft = (key: string) => {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+};
+
+function applySeatingFromTournament(
+  seatMap: Record<string, { userIds: string[] }> | undefined,
+  clubMemberList: any[],
+  setPlayers: (fn: any) => void
+) {
+  if (!seatMap) return;
+  const nick = (oid: string) => {
+    const u = clubMemberList.find((x: any) => String(x._id) === String(oid));
+    return u?.nickname || u?.name || String(oid);
+  };
+  const restored = createInitialPlayers();
+  for (let s = 1; s <= 10; s++) {
+    const cell = seatMap[String(s)];
+    if (!cell?.userIds?.length) continue;
+    if (cell.userIds.length === 1) {
+      const oid = String(cell.userIds[0]);
+      restored[s] = { ...restored[s], title: nick(oid), id: oid, pendingTeamIds: undefined };
+    } else {
+      const [a, b] = cell.userIds.map(String);
+      restored[s] = {
+        ...restored[s],
+        title: `${nick(a)} / ${nick(b)}`,
+        id: '',
+        pendingTeamIds: [a, b],
+      };
+    }
+  }
+  setPlayers(restored);
+}
+
 export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const { user } = useAuth();
-  const [path, setPath] = React.useState(window.location.pathname);
-  const isRatingGame = path.endsWith('new-game-rating');
-  const saved = React.useRef(isRatingGame ? loadSavedState() : null).current;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { tournamentId, gameIndex: gameIndexStr } = useParams<{ tournamentId: string; gameIndex: string }>();
+  const isTournamentGame = Boolean(tournamentId && gameIndexStr);
+  const tournamentStorageKey = isTournamentGame ? `tournamentGame_${tournamentId}_${gameIndexStr}` : '';
+  const isRatingGame = location.pathname.endsWith('new-game-rating');
+  const saved = React.useRef(
+    isTournamentGame
+      ? loadTournamentDraft(tournamentStorageKey)
+      : isRatingGame
+        ? loadSavedState()
+        : null
+  ).current;
+
+  const [readOnlyTournament, setReadOnlyTournament] = React.useState(false);
+  const [tournamentHidden, setTournamentHidden] = React.useState(false);
+  const [tournamentTitle, setTournamentTitle] = React.useState('');
+  const [tournamentNumGames, setTournamentNumGames] = React.useState(0);
 
   const [clubUsers, setClubUsers] = React.useState([]);
   const [winState, setWinState] = React.useState(saved?.winState || '');
@@ -111,6 +170,16 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [players, votings, activeVoting, winState, hideRoles, isRatingGame]);
 
+  useEffect(() => {
+    if (!isTournamentGame || !tournamentStorageKey || readOnlyTournament || tournamentHidden) return;
+    const hasContent = Object.values(players).some(
+      (p: any) => p.title && !String(p.title).startsWith('Гість')
+    );
+    if (!hasContent) return;
+    const state = { players, votings, activeVoting, winState, hideRoles };
+    localStorage.setItem(tournamentStorageKey, JSON.stringify(state));
+  }, [players, votings, activeVoting, winState, hideRoles, isTournamentGame, tournamentStorageKey, readOnlyTournament, tournamentHidden]);
+
   const resetGame = () => {
     setPlayers(createInitialPlayers());
     setVotings(createInitialVotings());
@@ -120,17 +189,22 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     setBonusAnchorEl(null);
     setBonusPlayerN(0);
     localStorage.removeItem(STORAGE_KEY);
+    if (tournamentStorageKey) localStorage.removeItem(tournamentStorageKey);
   };
 
   const setPlayerNickname = (n: number, title: string, id: string) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (winState) {
       alert('Гра закінчена');
       return;
     }
-    setPlayers({...players, [n]: {...players[n], title, id}});
+    const next = {...players[n], title, id};
+    if (id) next.pendingTeamIds = undefined;
+    setPlayers({...players, [n]: next});
   }
 
   const addWarning = (n: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (!n) return;
     if (winState) {
       alert('Гра закінчена');
@@ -140,6 +214,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const addRole = (n: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (n === 0) {
       return setHideRoles(!hideRoles);
     }
@@ -155,6 +230,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const killPlayer = (n: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (winState) {
       alert('Гра закінчена');
       return;
@@ -170,17 +246,20 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   };
 
   const openBonusPopover = (e: React.MouseEvent<HTMLElement>, n: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     setBonusAnchorEl(e.currentTarget);
     setBonusPlayerN(n);
   };
 
   const selectBonus = (pts: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     const current = players[bonusPlayerN].bonusPoints;
     setPlayers({...players, [bonusPlayerN]: {...players[bonusPlayerN], bonusPoints: current === pts ? 0 : pts}});
     setBonusAnchorEl(null);
   };
 
   const supportFive = (n: number, i: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (winState) {
       alert('Гра закінчена');
       return;
@@ -207,6 +286,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const promoteVote = (n: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (winState) {
       alert('Гра закінчена');
       return;
@@ -227,6 +307,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const voteForPlayer = (candidateIndex: number, votes: number) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (winState) {
       alert('Гра закінчена');
       return;
@@ -243,6 +324,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   }
 
   const win = (winner: string) => {
+    if (readOnlyTournament || tournamentHidden) return;
     if (winState) {
       alert('Гра закінчена');
       return;
@@ -255,6 +337,13 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       alert('Не всім розподілено нікнейми');
       return
     }
+    const missingId = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].some(
+      (seat) => players[seat]?.title && !String(players[seat].title).startsWith('Гість') && !players[seat].id
+    );
+    if (missingId) {
+      alert('Для кожного місця з командою оберіть гравця (конкретний акаунт)');
+      return;
+    }
     setWinState(() => winner);
   }
 
@@ -265,6 +354,19 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       ...p,
       bestTurn: Object.entries(p.bestTurn || {}).map(([seat, color]) => ({n: Number(seat), color})),
     }));
+    if (isTournamentGame) {
+      await axios.post('/club/tournament-game', {
+        tournamentId,
+        gameIndex: Number(gameIndexStr),
+        players: playersPayload,
+        winState,
+        votings,
+      });
+      if (tournamentStorageKey) localStorage.removeItem(tournamentStorageKey);
+      alert('Гру збережено');
+      navigate(`/profile/tournaments/${tournamentId}`);
+      return;
+    }
     await axios.post('/club/rating-game', {
       players: playersPayload,
       winState,
@@ -277,6 +379,82 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   useEffect(() => {
     async function fetchData() {
       try {
+        if (isTournamentGame && tournamentId && gameIndexStr) {
+          const { data: tour } = await axios.get(`/tournament/${tournamentId}`);
+          const { data: gamesData } = await axios.get(`/tournament/${tournamentId}/games`);
+          setTournamentTitle(tour.name || '');
+          setTournamentNumGames(tour.numGames || 0);
+          const idx = Number(gameIndexStr);
+          const existing = (gamesData.items || []).find((g: any) => g.gameIndex === idx);
+
+          if (existing?.hidden) {
+            setTournamentHidden(true);
+            setReadOnlyTournament(true);
+            setClubUsers([]);
+            return;
+          }
+          if (existing && !existing.hidden) {
+            setReadOnlyTournament(true);
+            setClubUsers([]);
+            const restored = createInitialPlayers();
+            (existing.players || []).forEach((p: any) => {
+              const n = p.n;
+              if (n >= 1 && n <= 10) {
+                const bt: Record<number, string> = {};
+                (p.bestTurn || []).forEach((x: any) => {
+                  if (x && x.n != null) bt[Number(x.n)] = x.color;
+                });
+                restored[n] = {
+                  ...restored[n],
+                  ...p,
+                  bestTurn: bt,
+                  id: p.id ? String(p.id) : '',
+                  pendingTeamIds: undefined,
+                };
+              }
+            });
+            setPlayers(restored);
+            setWinState(existing.winState || '');
+            setVotings(existing.votings || createInitialVotings());
+            return;
+          }
+
+          if (user?.authType !== 'Клуб') {
+            alert('Проводити гру може лише клуб');
+            navigate(`/profile/tournaments/${tournamentId}`);
+            return;
+          }
+
+          const { data: cu } = await axios.get('/club/users');
+          const members = cu.items || [];
+          const array = members.map((item: any, i: number) => ({ ...item, id: i + 1 }));
+          setClubUsers(() => array);
+
+          if (tour.nextGameIndex != null && idx !== tour.nextGameIndex) {
+            navigate(`/profile/tournament/${tournamentId}/game/${tour.nextGameIndex}`, { replace: true });
+            return;
+          }
+          if (tour.status !== 'in_progress') {
+            alert('Турнір не активний');
+            navigate(`/profile/tournaments/${tournamentId}`);
+            return;
+          }
+
+          const draft = tournamentStorageKey ? loadTournamentDraft(tournamentStorageKey) : null;
+          if (draft?.players) {
+            setPlayers(draft.players);
+            if (draft.votings) setVotings(draft.votings);
+            if (draft.activeVoting !== undefined) setActiveVoting(draft.activeVoting);
+            if (draft.winState) setWinState(draft.winState);
+            if (draft.hideRoles !== undefined) setHideRoles(draft.hideRoles);
+            return;
+          }
+
+          const seatMap = tour.seatingByGame?.[String(idx)];
+          applySeatingFromTournament(seatMap, members, setPlayers);
+          return;
+        }
+
         const urlPath = isRatingGame ? 'club/users' : 'users';
         const {data} = await axios.get(`/${urlPath}`);
         const array = (data.items || []).map((item: any, i: number) => {
@@ -308,20 +486,8 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       }
     }
     fetchData();
-    //
-    // const iosSleepPreventInterval = setInterval(function () {
-    //   setPreventSleepMode(() => false);
-    //   setTimeout(() => {
-    //     window.location.href = "/new/page";
-    //     window.setTimeout(function () {
-    //       window.stop()
-    //       setPreventSleepMode(() => true);
-    //     }, 0);
-    //   }, 0)
-    // }, 30000);
-
     return () => {};
-  }, [])
+  }, [isTournamentGame, tournamentId, gameIndexStr])
 
   // get active players nickname list
   const activePlayers = useMemo(() => {
@@ -336,21 +502,49 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     return Object.values(players).filter((player: any) => player.killed).map((player: any) => player.killed)
   }, [players]);
 
+  const bonusWinnerOpts = isTournamentGame ? BONUS_TOURNAMENT_WIN : BONUS_RATING_WIN;
+  const bonusLoserOpts = isTournamentGame ? BONUS_TOURNAMENT_LOSS : BONUS_RATING_LOSS;
+
+  if (tournamentHidden) {
+    return (
+      <AppTheme {...props}>
+        <CssBaseline enableColorScheme />
+        <NewGameContainer direction="column" justifyContent="flex-start" alignItems="center">
+          <AppAppBar />
+          <Typography sx={{ mt: '6rem', px: 2, textAlign: 'center' }}>
+            Результати цієї гри приховані до завершення турніру.
+          </Typography>
+        </NewGameContainer>
+      </AppTheme>
+    );
+  }
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme/>
       <NewGameContainer direction="column" justifyContent="space-between" alignItems="center">
         <AppAppBar/>
-        <Box sx={{mt: '5.3rem', display: 'flex', justifyContent: 'space-between', flexGrow: 1, gap: 1}}>
-          <Button onClick={() => !winState && win('mafia')} variant="outlined"
-                  color={winState === 'mafia' ? 'secondary' : 'info'} size="small">
+        {isTournamentGame && (
+          <Typography variant="body2" sx={{ mt: '5rem', mb: 0.5, textAlign: 'center', px: 1 }}>
+            Турнір: {tournamentTitle || '…'} · Гра {gameIndexStr} / {tournamentNumGames || '…'}
+            {readOnlyTournament ? ' (перегляд)' : ''}
+          </Typography>
+        )}
+        <Box sx={{mt: isTournamentGame ? '0.5rem' : '5.3rem', display: 'flex', justifyContent: 'space-between', flexGrow: 1, gap: 1, flexWrap: 'wrap'}}>
+          <Button onClick={() => !winState && !readOnlyTournament && win('mafia')} variant="outlined"
+                  color={winState === 'mafia' ? 'secondary' : 'info'} size="small" disabled={readOnlyTournament}>
             Перемога мафії
           </Button>
-          <Button onClick={() => !winState && win('citizens')} variant="outlined"
-                  color={winState === 'citizens' ? 'secondary' : 'info'} size="small">
+          <Button onClick={() => !winState && !readOnlyTournament && win('citizens')} variant="outlined"
+                  color={winState === 'citizens' ? 'secondary' : 'info'} size="small" disabled={readOnlyTournament}>
             Перемога мирних
           </Button>
-          {winState && user?.authType === 'Клуб' && path.endsWith('new-game-rating') && (
+          {winState && user?.authType === 'Клуб' && isRatingGame && (
+            <Button onClick={submitGame} variant="contained" color="success" size="small">
+              Зберегти гру
+            </Button>
+          )}
+          {winState && user?.authType === 'Клуб' && isTournamentGame && !readOnlyTournament && (
             <Button onClick={submitGame} variant="contained" color="success" size="small">
               Зберегти гру
             </Button>
@@ -386,6 +580,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                         <Grid sx={{p: '.3rem'}} size={{xs: 5.5, sm: 7.5, lg: 7.5}}>
                           {n === 0 ? 'Нік' : <Autocomplete
                             size={'small'}
+                            disabled={readOnlyTournament}
                             value={players[n].title}
                             onChange={(event, newValue) => {
                               if (typeof newValue === 'string') {
@@ -416,11 +611,14 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                             clearOnBlur
                             handleHomeEndKeys
                             id="free-solo-with-text-demo"
-                            options={
-                              clubUsers
-                                .filter((user: any) => !activePlayers.includes(user.nickname))
-                                .map((option: { nickname: string }) => ({...option, title: option.nickname}))
-                            }
+                            options={(() => {
+                              const pending = (players[n] as any)?.pendingTeamIds as string[] | undefined;
+                              const base = pending?.length
+                                ? clubUsers.filter((u: any) => pending.includes(String(u._id)))
+                                : clubUsers.filter((u: any) => !activePlayers.includes(u.nickname));
+                              return base.map((option: { nickname: string }) => ({ ...option, title: option.nickname }));
+                            })()}
+                            freeSolo={!readOnlyTournament && !(players[n] as any)?.pendingTeamIds?.length}
                             getOptionLabel={(option) => {
                               // Value selected with enter, right from the input
                               if (typeof option === 'string') {
@@ -441,7 +639,6 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                                 </li>
                               );
                             }}
-                            freeSolo
                             renderInput={(params) => (
                               <TextField {...params} />
                             )}
@@ -526,7 +723,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
         >
           <Stack direction="row" spacing={1} sx={{p: 1.5}}>
-            {(isPlayerWinner(bonusPlayerN) ? [0.3, 0.4, 0.5] : [0.1, 0.2, 0.3]).map(p => (
+            {(isPlayerWinner(bonusPlayerN) ? bonusWinnerOpts : bonusLoserOpts).map(p => (
               <Button
                 key={p}
                 variant={players[bonusPlayerN]?.bonusPoints === p ? 'contained' : 'outlined'}
