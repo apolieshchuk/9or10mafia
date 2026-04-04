@@ -20,7 +20,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { alpha } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import AppTheme from './theme/AppTheme';
 import AppAppBar from './components/AppAppBar';
@@ -29,6 +29,7 @@ import axios from './axios';
 import { formatDateUkVancouver } from './utils/vancouverDate';
 import { resolveMediaUrl } from './utils/mediaUrl';
 import TournamentSeatingTiles from './components/TournamentSeatingTiles';
+import { useAuth } from './AuthProvider';
 
 type PublicPlayer = { id: string; nickname: string; avatarUrl: string | null };
 type PublicSlot = { seatIndex: number; players: PublicPlayer[] };
@@ -53,6 +54,8 @@ type PublicPayload = {
   numGames: number;
   scheduledDate: string | null;
   status: string;
+  clubId: string | null;
+  nextGameIndex: number | null;
   clubName: string;
   clubAvatarUrl: string | null;
   publicDescription: string;
@@ -330,6 +333,7 @@ const standingsColumns: GridColDef<PublicStandingRow>[] = [
 export default function PublicTournamentPage(props: { disableCustomTheme?: boolean }) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [data, setData] = React.useState<PublicPayload | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [tab, setTab] = React.useState(0);
@@ -343,6 +347,8 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
         if (!cancelled) {
           setData({
             ...body,
+            clubId: body.clubId ?? null,
+            nextGameIndex: body.nextGameIndex ?? null,
             clubAvatarUrl: body.clubAvatarUrl ?? null,
             seatingByGame: body.seatingByGame ?? null,
             standingsRows: body.standingsRows ?? [],
@@ -362,6 +368,11 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
   }, [id]);
 
   const nickLookup = React.useMemo(() => nickMapFromData(data), [data]);
+
+  const isClubOwnerPublic = React.useMemo(() => {
+    if (user?.authType !== 'Клуб' || !data?.clubId || user._id == null) return false;
+    return String(user._id) === String(data.clubId);
+  }, [user, data?.clubId]);
 
   return (
     <AppTheme {...props}>
@@ -462,6 +473,21 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                     Ігор: {data.numGames}
                   </Typography>
                 </Stack>
+                {isClubOwnerPublic &&
+                  data.status === 'in_progress' &&
+                  data.nextGameIndex != null &&
+                  id && (
+                    <Button
+                      component={Link}
+                      to={`/profile/tournament/${id}/game/${data.nextGameIndex}`}
+                      variant="contained"
+                      color="secondary"
+                      size="medium"
+                      sx={{ alignSelf: 'flex-start', mt: 0.75 }}
+                    >
+                      Діюча гра
+                    </Button>
+                  )}
               </Stack>
 
               {data.publicDescription?.trim() ? (
