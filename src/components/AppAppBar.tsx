@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {styled, alpha} from '@mui/material/styles';
+import {styled, alpha, keyframes} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,8 +18,11 @@ import Avatar from '@mui/material/Avatar';
 import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import Sitemark from './SitemarkIcon';
 import UpcomingTournamentBanner from './UpcomingTournamentBanner';
+import { OutlinedActionIconButton } from './OutlinedActionIconButton';
 import {useAuth} from "../AuthProvider";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation, Link as RouterLink} from "react-router-dom";
+import axios from "../axios";
+import { brand } from '../theme/themePrimitives';
 import Typography from "@mui/material/Typography";
 import {useEffect, useMemo} from "react";
 
@@ -42,12 +45,19 @@ const StyledToolbar = styled(Toolbar)(({theme}) => ({
 let stopWatchInterval: NodeJS.Timeout;
 let stopWatchStart = false;
 
+const liveDotPulse = keyframes`
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.88); }
+`;
+
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
   const [gameMenuAnchor, setGameMenuAnchor] = React.useState<null | HTMLElement>(null);
   const {user, logout} = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [stopWatch, setStopWatch] = React.useState(60);
+  const [liveTournament, setLiveTournament] = React.useState<{ id: string; name: string } | null>(null);
   // const [stopWatchStart, setStopWatchStart] = React.useState(false);
   // const [stopWatchInterval, setStopWatchInterval] = React.useState(null as NodeJS.Timeout | null);
 
@@ -64,6 +74,31 @@ export default function AppAppBar() {
     }, 1000);
     return () => clearInterval(stopWatchInterval);
   }, []);
+
+  const fetchLiveTournament = React.useCallback(async () => {
+    if (!user || typeof localStorage === 'undefined' || !localStorage.getItem('jwt_token')) {
+      setLiveTournament(null);
+      return;
+    }
+    try {
+      const { data } = await axios.get<{ items: { id: string; name: string; status: string }[] }>('/tournaments');
+      const items = data.items || [];
+      const live = items.find((t) => t.status === 'in_progress');
+      setLiveTournament(live ? { id: live.id, name: live.name } : null);
+    } catch {
+      setLiveTournament(null);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    void fetchLiveTournament();
+  }, [fetchLiveTournament]);
+
+  useEffect(() => {
+    if (!user) return;
+    const t = window.setInterval(() => fetchLiveTournament(), 90_000);
+    return () => window.clearInterval(t);
+  }, [user, fetchLiveTournament]);
 
   const startStopWatch = () => {
     setStopWatch(60);
@@ -143,6 +178,51 @@ export default function AppAppBar() {
               <Button variant="text" onClick={() => navigateWithConfirm('/scoring')} size="small">
                 Правила
               </Button>
+              {liveTournament ? (
+                <Button
+                  component={RouterLink}
+                  to={`/tournaments/${liveTournament.id}`}
+                  size="small"
+                  variant="outlined"
+                  sx={(theme) => {
+                    const isDark = theme.palette.mode === 'dark';
+                    return {
+                      ml: 0.5,
+                      maxWidth: 220,
+                      flexShrink: 0,
+                      color: isDark ? brand[100] : brand[700],
+                      borderColor: alpha(brand[300], isDark ? 0.45 : 0.55),
+                      bgcolor: isDark ? alpha(brand[900], 0.5) : alpha(brand[100], 0.5),
+                      '&:hover': {
+                        borderColor: isDark ? brand[600] : brand[400],
+                        bgcolor: isDark ? alpha(brand[900], 0.65) : alpha(brand[200], 0.7),
+                        color: isDark ? brand[100] : brand[700],
+                      },
+                    };
+                  }}
+                  startIcon={
+                    <Box
+                      aria-hidden
+                      sx={(theme) => {
+                        const isDark = theme.palette.mode === 'dark';
+                        const dot = isDark ? brand[300] : brand[500];
+                        return {
+                          width: 9,
+                          height: 9,
+                          borderRadius: '50%',
+                          bgcolor: dot,
+                          boxShadow: `0 0 10px ${alpha(brand[400], isDark ? 0.55 : 0.45)}`,
+                          animation: `${liveDotPulse} 1.15s ease-in-out infinite`,
+                        };
+                      }}
+                    />
+                  }
+                >
+                  <Typography component="span" variant="caption" noWrap sx={{ fontWeight: 700 }}>
+                    {liveTournament.name}
+                  </Typography>
+                </Button>
+              ) : null}
             </Box>
           </Box>
           {
@@ -210,9 +290,9 @@ export default function AppAppBar() {
                     justifyContent: 'flex-end',
                   }}
                 >
-                  <IconButton onClick={toggleDrawer(false)}>
-                    <CloseRoundedIcon/>
-                  </IconButton>
+                  <OutlinedActionIconButton aria-label="Закрити меню" onClick={toggleDrawer(false)}>
+                    <CloseRoundedIcon />
+                  </OutlinedActionIconButton>
                 </Box>
                 <MenuItem selected={window.location.pathname.endsWith('clubs-rating')}
                           onClick={() => navigateWithConfirm('/clubs-rating')}><StarIcon sx={{ mr: .5 }}/>Рейтинг клубу</MenuItem>
@@ -231,6 +311,45 @@ export default function AppAppBar() {
                           onClick={() => navigateWithConfirm('/calendar')}>Події</MenuItem>
                 <MenuItem selected={window.location.pathname.includes('scoring')}
                           onClick={() => { setOpen(false); navigateWithConfirm('/scoring'); }}>Правила</MenuItem>
+                {liveTournament ? (
+                  <MenuItem
+                    component={RouterLink}
+                    to={`/tournaments/${liveTournament.id}`}
+                    onClick={() => setOpen(false)}
+                    sx={(theme) => {
+                      const isDark = theme.palette.mode === 'dark';
+                      return {
+                        color: isDark ? brand[100] : brand[700],
+                        fontWeight: 700,
+                        bgcolor: isDark ? alpha(brand[900], 0.5) : alpha(brand[100], 0.5),
+                        '&:hover': {
+                          bgcolor: isDark ? alpha(brand[900], 0.65) : alpha(brand[200], 0.7),
+                        },
+                      };
+                    }}
+                  >
+                    <Box
+                      aria-hidden
+                      sx={(theme) => {
+                        const isDark = theme.palette.mode === 'dark';
+                        const dot = isDark ? brand[300] : brand[500];
+                        return {
+                          width: 9,
+                          height: 9,
+                          borderRadius: '50%',
+                          bgcolor: dot,
+                          boxShadow: `0 0 8px ${alpha(brand[400], isDark ? 0.55 : 0.45)}`,
+                          mr: 1,
+                          flexShrink: 0,
+                          animation: `${liveDotPulse} 1.15s ease-in-out infinite`,
+                        };
+                      }}
+                    />
+                    <Typography component="span" variant="body2" noWrap sx={{ fontWeight: 700 }}>
+                      {liveTournament.name}
+                    </Typography>
+                  </MenuItem>
+                ) : null}
                 <Divider sx={{my: 3}}/>
                 {
                   !user && <>
@@ -271,9 +390,11 @@ export default function AppAppBar() {
             </Drawer>
           </Box>
         </StyledToolbar>
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', px: 0.5 }}>
-          <UpcomingTournamentBanner />
-        </Box>
+        {pathname === '/' ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', px: 0.5 }}>
+            <UpcomingTournamentBanner />
+          </Box>
+        ) : null}
       </Container>
     </AppBar>
   );

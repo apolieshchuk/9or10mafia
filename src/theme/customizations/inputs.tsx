@@ -322,50 +322,91 @@ export const inputsCustomizations: Components<Theme> = {
     defaultProps: {
       disableRipple: true,
       icon: (
-        <CheckBoxOutlineBlankRoundedIcon sx={{ color: 'hsla(210, 0%, 0%, 0.0)' }} />
+        <CheckBoxOutlineBlankRoundedIcon sx={{ opacity: 0, fontSize: 15 }} />
       ),
-      checkedIcon: <CheckRoundedIcon sx={{ height: 14, width: 14 }} />,
-      indeterminateIcon: <RemoveRoundedIcon sx={{ height: 14, width: 14 }} />,
+      checkedIcon: (
+        <CheckRoundedIcon sx={{ fontSize: 15, color: 'currentColor' }} />
+      ),
+      indeterminateIcon: (
+        <RemoveRoundedIcon sx={{ fontSize: 15, color: 'currentColor' }} />
+      ),
     },
     styleOverrides: {
       root: ({ theme }) => ({
-        margin: 10,
-        height: 16,
-        width: 16,
-        borderRadius: 5,
-        border: '1px solid ',
-        borderColor: alpha(gray[300], 0.8),
-        boxShadow: '0 0 0 1.5px hsla(210, 0%, 0%, 0.04) inset',
-        backgroundColor: alpha(gray[100], 0.4),
-        transition: 'border-color, background-color, 120ms ease-in',
+        padding: 6,
+        margin: 0,
+        width: 20,
+        height: 20,
+        boxSizing: 'border-box',
+        borderRadius: 6,
+        border: '1.5px solid',
+        borderColor: alpha(gray[400], 0.55),
+        backgroundColor: alpha(gray[50], 0.08),
+        color: gray[600],
+        transition: 'border-color 120ms ease, background-color 120ms ease, color 120ms ease',
         '&:hover': {
-          borderColor: brand[300],
+          borderColor: alpha(brand[400], 0.65),
+          backgroundColor: alpha(gray[100], 0.35),
         },
         '&.Mui-focusVisible': {
-          outline: `3px solid ${alpha(brand[500], 0.5)}`,
-          outlineOffset: '2px',
+          outline: `2px solid ${alpha(brand[500], 0.45)}`,
+          outlineOffset: 2,
           borderColor: brand[400],
         },
+        '& .MuiSvgIcon-root': {
+          fontSize: 15,
+        },
         '&.Mui-checked': {
-          color: 'white',
-          backgroundColor: brand[500],
-          borderColor: brand[500],
-          boxShadow: `none`,
+          color: brand[700],
+          backgroundColor: alpha(brand[500], 0.14),
+          borderColor: alpha(brand[500], 0.85),
           '&:hover': {
-            backgroundColor: brand[600],
+            backgroundColor: alpha(brand[500], 0.22),
+            borderColor: brand[600],
           },
         },
-        ...theme.applyStyles('dark', {
-          borderColor: alpha(gray[700], 0.8),
-          boxShadow: '0 0 0 1.5px hsl(210, 0%, 0%) inset',
-          backgroundColor: alpha(gray[900], 0.8),
+        '&.MuiCheckbox-indeterminate': {
+          color: brand[700],
+          backgroundColor: alpha(brand[500], 0.14),
+          borderColor: alpha(brand[500], 0.85),
           '&:hover': {
-            borderColor: brand[300],
+            backgroundColor: alpha(brand[500], 0.22),
+            borderColor: brand[600],
+          },
+        },
+        '&.Mui-disabled': {
+          opacity: 0.45,
+        },
+        ...theme.applyStyles('dark', {
+          borderColor: alpha(gray[500], 0.55),
+          backgroundColor: alpha(gray[800], 0.4),
+          color: gray[400],
+          '&:hover': {
+            borderColor: alpha(brand[300], 0.55),
+            backgroundColor: alpha(gray[700], 0.35),
           },
           '&.Mui-focusVisible': {
-            borderColor: brand[400],
-            outline: `3px solid ${alpha(brand[500], 0.5)}`,
-            outlineOffset: '2px',
+            borderColor: alpha(brand[300], 0.8),
+            outline: `2px solid ${alpha(brand[400], 0.4)}`,
+            outlineOffset: 2,
+          },
+          '&.Mui-checked': {
+            color: brand[100],
+            backgroundColor: alpha(brand[500], 0.22),
+            borderColor: alpha(brand[300], 0.65),
+            '&:hover': {
+              backgroundColor: alpha(brand[500], 0.32),
+              borderColor: alpha(brand[200], 0.85),
+            },
+          },
+          '&.MuiCheckbox-indeterminate': {
+            color: brand[100],
+            backgroundColor: alpha(brand[500], 0.22),
+            borderColor: alpha(brand[300], 0.65),
+            '&:hover': {
+              backgroundColor: alpha(brand[500], 0.32),
+              borderColor: alpha(brand[200], 0.85),
+            },
           },
         }),
       }),

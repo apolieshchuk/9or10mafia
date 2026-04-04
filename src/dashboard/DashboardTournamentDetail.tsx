@@ -26,8 +26,8 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { OutlinedActionIconButton } from '../components/OutlinedActionIconButton';
 import AddIcon from '@mui/icons-material/Add';
 import Autocomplete from '@mui/material/Autocomplete';
 import { toPng } from 'html-to-image';
@@ -450,9 +450,9 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                           onChange={(_, v) => setRowUser(i, 2, v)}
                           renderInput={(params) => <TextField {...params} label="Партнер (опц.)" />}
                         />
-                        <IconButton aria-label="delete" onClick={() => removeParticipantRow(i)}>
+                        <OutlinedActionIconButton aria-label="Видалити рядок учасника" onClick={() => removeParticipantRow(i)}>
                           <DeleteIcon />
-                        </IconButton>
+                        </OutlinedActionIconButton>
                       </Stack>
                     ))}
                     <Stack direction="row" spacing={1} flexWrap="wrap">

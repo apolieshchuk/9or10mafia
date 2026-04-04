@@ -102,9 +102,9 @@ function PlayerCell({ players }: { players: PublicPlayer[] }) {
               src={p.avatarUrl || undefined}
               alt={p.nickname}
               sx={{
-                width: 32,
-                height: 32,
-                fontSize: '0.85rem',
+                width: 44,
+                height: 44,
+                fontSize: '1rem',
                 flexShrink: 0,
                 border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.4)}`,
               }}
@@ -112,11 +112,12 @@ function PlayerCell({ players }: { players: PublicPlayer[] }) {
               {p.nickname.charAt(0).toUpperCase()}
             </Avatar>
             <Typography
-              variant="body2"
+              variant="body1"
               component="span"
               fontWeight={600}
               sx={{
-                lineHeight: 1.25,
+                lineHeight: 1.35,
+                fontSize: { xs: '0.95rem', sm: '1rem' },
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 display: '-webkit-box',
@@ -130,6 +131,71 @@ function PlayerCell({ players }: { players: PublicPlayer[] }) {
         </React.Fragment>
       ))}
     </Stack>
+  );
+}
+
+function PublicParticipantsChunk({ rows }: { rows: PublicSlot[] }) {
+  return (
+    <TableContainer
+      component={Paper}
+      elevation={0}
+      sx={{
+        borderRadius: 2,
+        border: (t) => `1px solid ${t.palette.divider}`,
+        boxShadow: (t) => t.shadows[2],
+        width: '100%',
+      }}
+    >
+      <Table
+        size="medium"
+        sx={{
+          width: '100%',
+          '& .MuiTableCell-body': { py: 1.35, px: 1.25, verticalAlign: 'middle' },
+        }}
+      >
+        <TableHead>
+          <TableRow
+            sx={{
+              background: (t) =>
+                `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
+              '& .MuiTableCell-head': {
+                color: 'primary.contrastText',
+                fontWeight: 700,
+                fontSize: '0.8125rem',
+                borderBottom: 'none',
+                py: 1.1,
+                px: 1.25,
+              },
+            }}
+          >
+            <TableCell width={52} align="center">
+              №
+            </TableCell>
+            <TableCell>Гравці</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow
+              key={row.seatIndex}
+              sx={{
+                '&:nth-of-type(even)': { bgcolor: (t) => alpha(t.palette.action.hover, 0.2) },
+                '&:last-child td': { borderBottom: 0 },
+              }}
+            >
+              <TableCell align="center">
+                <Typography variant="body1" fontWeight={700} color="primary">
+                  {row.seatIndex}
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <PlayerCell players={row.players} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
@@ -308,73 +374,47 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
 
               {tab === 0 && (
                 <Box sx={{ pt: 1 }}>
-                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
-                    Рядок = місце за столом.
-                  </Typography>
-                  <TableContainer
-                    component={Paper}
-                    elevation={0}
-                    sx={{
-                      borderRadius: 2,
-                      border: (t) => `1px solid ${t.palette.divider}`,
-                      boxShadow: (t) => t.shadows[2],
-                      width: '100%',
-                    }}
-                  >
-                    <Table size="small" sx={{ width: '100%' }}>
-                      <TableHead>
-                        <TableRow
-                          sx={{
-                            background: (t) =>
-                              `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
-                            '& .MuiTableCell-head': {
-                              color: 'primary.contrastText',
-                              fontWeight: 700,
-                              fontSize: '0.75rem',
-                              borderBottom: 'none',
-                              py: 0.75,
-                              px: 1,
-                            },
-                          }}
-                        >
-                          <TableCell width={40} align="center">
-                            №
-                          </TableCell>
-                          <TableCell>Гравці</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {data.participantSlots.length === 0 ? (
+                  {data.participantSlots.length === 0 ? (
+                    <TableContainer
+                      component={Paper}
+                      elevation={0}
+                      sx={{
+                        borderRadius: 2,
+                        border: (t) => `1px solid ${t.palette.divider}`,
+                        boxShadow: (t) => t.shadows[2],
+                        width: '100%',
+                      }}
+                    >
+                      <Table size="medium">
+                        <TableBody>
                           <TableRow>
-                            <TableCell colSpan={2} align="center" sx={{ py: 3 }}>
+                            <TableCell align="center" sx={{ py: 4 }}>
                               <Typography variant="body2" color="text.secondary">
                                 Список учасників ще формується.
                               </Typography>
                             </TableCell>
                           </TableRow>
-                        ) : (
-                          data.participantSlots.map((row, idx) => (
-                            <TableRow
-                              key={`${row.seatIndex}-${idx}`}
-                              sx={{
-                                '&:nth-of-type(even)': { bgcolor: (t) => alpha(t.palette.action.hover, 0.2) },
-                                '&:last-child td': { borderBottom: 0 },
-                              }}
-                            >
-                              <TableCell align="center" sx={{ py: 0.65, px: 0.75 }}>
-                                <Typography variant="body2" fontWeight={700} color="primary">
-                                  {row.seatIndex}
-                                </Typography>
-                              </TableCell>
-                              <TableCell sx={{ py: 0.65, px: 1 }}>
-                                <PlayerCell players={row.players} />
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  ) : (
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                        gap: 2,
+                        width: '100%',
+                        alignItems: 'start',
+                      }}
+                    >
+                      <PublicParticipantsChunk
+                        rows={data.participantSlots.slice(0, Math.ceil(data.participantSlots.length / 2))}
+                      />
+                      <PublicParticipantsChunk
+                        rows={data.participantSlots.slice(Math.ceil(data.participantSlots.length / 2))}
+                      />
+                    </Box>
+                  )}
                 </Box>
               )}
 
