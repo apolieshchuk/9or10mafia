@@ -19,6 +19,8 @@ type TournamentSeatingTilesProps = {
   formatSeat: (userIds: string[] | undefined) => string;
   /** Section heading above the grid */
   title?: string;
+  /** Rendered on the same row as the title (e.g. download PNG). */
+  titleAction?: React.ReactNode;
 };
 
 /**
@@ -29,15 +31,30 @@ export default function TournamentSeatingTiles({
   seatingByGame,
   formatSeat,
   title = 'Розсадка',
+  titleAction,
 }: TournamentSeatingTilesProps) {
   const games = Array.from({ length: Math.max(0, numGames) }, (_, i) => i + 1);
 
   return (
     <Box>
-      {title ? (
-        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 700 }}>
-          {title}
-        </Typography>
+      {title || titleAction ? (
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          gap={1}
+          flexWrap="wrap"
+          sx={{ mb: 2 }}
+        >
+          {title ? (
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {title}
+            </Typography>
+          ) : (
+            <Box />
+          )}
+          {titleAction}
+        </Stack>
       ) : null}
       <Box
         sx={{

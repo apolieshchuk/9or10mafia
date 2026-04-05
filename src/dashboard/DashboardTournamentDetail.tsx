@@ -473,9 +473,6 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                     <Button variant="outlined" onClick={onGenerateSeating}>
                       Згенерувати розсадку
                     </Button>
-                    <Button variant="outlined" onClick={downloadSeatingPng} disabled={!tournament?.seatingByGame}>
-                      Завантажити скріншот розсадки
-                    </Button>
                   </Stack>
                 </Paper>
               )}
@@ -489,6 +486,13 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                       seatingLabel(userIds?.length ? { userIds } : undefined)
                     }
                     title="Розсадка"
+                    titleAction={
+                      isClubOwner ? (
+                        <Button variant="outlined" size="small" onClick={downloadSeatingPng}>
+                          Завантажити скріншот розсадки
+                        </Button>
+                      ) : null
+                    }
                   />
                 </Paper>
               )}

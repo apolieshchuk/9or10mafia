@@ -672,33 +672,31 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                       Розсадку ще не згенеровано.
                     </Typography>
                   ) : (
-                    <Stack spacing={1.5}>
-                      <Stack direction="row" justifyContent="flex-end" alignItems="center" flexWrap="wrap" gap={1}>
-                        <Button
-                          type="button"
-                          variant="outlined"
-                          size="small"
-                          startIcon={<DownloadIcon />}
-                          disabled={seatingDownloadBusy}
-                          onClick={() => void handleDownloadSeatingPng()}
-                        >
-                          {seatingDownloadBusy ? 'Зберігаємо…' : 'Завантажити'}
-                        </Button>
-                      </Stack>
-                      <Paper
-                        ref={publicSeatingExportRef}
-                        elevation={0}
-                        className="mafia-seating-png-export"
-                        sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 2, border: (t) => `1px solid ${t.palette.divider}` }}
-                      >
-                        <TournamentSeatingTiles
-                          numGames={data.numGames}
-                          seatingByGame={data.seatingByGame}
-                          formatSeat={(userIds) => formatSeatingCell(userIds, nickLookup)}
-                          title="Розсадка"
-                        />
-                      </Paper>
-                    </Stack>
+                    <Paper
+                      ref={publicSeatingExportRef}
+                      elevation={0}
+                      className="mafia-seating-png-export"
+                      sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 2, border: (t) => `1px solid ${t.palette.divider}` }}
+                    >
+                      <TournamentSeatingTiles
+                        numGames={data.numGames}
+                        seatingByGame={data.seatingByGame}
+                        formatSeat={(userIds) => formatSeatingCell(userIds, nickLookup)}
+                        title="Розсадка"
+                        titleAction={
+                          <Button
+                            type="button"
+                            variant="outlined"
+                            size="small"
+                            startIcon={<DownloadIcon />}
+                            disabled={seatingDownloadBusy}
+                            onClick={() => void handleDownloadSeatingPng()}
+                          >
+                            {seatingDownloadBusy ? 'Зберігаємо…' : 'Завантажити'}
+                          </Button>
+                        }
+                      />
+                    </Paper>
                   )}
                 </Box>
               )}
