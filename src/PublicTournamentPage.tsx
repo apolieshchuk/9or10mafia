@@ -139,9 +139,9 @@ function PlayerCell({ players }: { players: PublicPlayer[] }) {
               avatarUrl={p.avatarUrl}
               nickname={p.nickname}
               sx={{
-                width: 44,
-                height: 44,
-                fontSize: '1rem',
+                width: { xs: 52, sm: 60 },
+                height: { xs: 52, sm: 60 },
+                fontSize: { xs: '1.15rem', sm: '1.3rem' },
                 flexShrink: 0,
                 border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.4)}`,
               }}
@@ -184,7 +184,7 @@ const participantsHeadSx = {
 
 const participantsTableBodySx = {
   '& .MuiTableCell-body': {
-    py: 1.35,
+    py: { xs: 1.5, sm: 1.75 },
     px: { xs: 0.75, sm: 1.25 },
     verticalAlign: 'middle',
   },
