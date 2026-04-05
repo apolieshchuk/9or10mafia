@@ -98,6 +98,30 @@ function formatSeatingCell(userIds: string[] | undefined, nick: Map<string, stri
   return userIds.map((id) => nick.get(id) || `…${id.slice(-4)}`).join(' / ');
 }
 
+function PublicTournamentYoutubeButton({
+  youtubeUrl,
+  sx,
+}: {
+  youtubeUrl?: string;
+  sx?: React.ComponentProps<typeof Button>['sx'];
+}) {
+  return (
+    <Button
+      component="a"
+      href={resolveTournamentYoutubeHref(youtubeUrl)}
+      target="_blank"
+      rel="noopener noreferrer"
+      variant="outlined"
+      color="error"
+      size="small"
+      startIcon={<YouTubeIcon />}
+      sx={[{ borderColor: 'error.main' }, ...(Array.isArray(sx) ? sx : sx ? [sx] : [])]}
+    >
+      YouTube
+    </Button>
+  );
+}
+
 function RemoteAvatar({
   avatarUrl,
   nickname,
@@ -174,10 +198,11 @@ const participantsHeadSx = {
     `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
   '& .MuiTableCell-head': {
     color: 'primary.contrastText',
-    fontWeight: 700,
-    fontSize: '0.8125rem',
+    fontWeight: 800,
+    fontSize: { xs: '0.98rem', sm: '1.08rem' },
+    letterSpacing: 0.02,
     borderBottom: 'none',
-    py: 1.1,
+    py: { xs: 1.25, sm: 1.4 },
     px: { xs: 0.75, sm: 1.25 },
   },
 };
@@ -188,6 +213,15 @@ const participantsTableBodySx = {
     px: { xs: 0.75, sm: 1.25 },
     verticalAlign: 'middle',
   },
+};
+
+/** Номер місця в таблиці учасників — узгоджено з більшими аватарами */
+const participantSeatNumberSx = {
+  fontWeight: 800,
+  color: 'primary.main',
+  fontSize: { xs: '1.35rem', sm: '1.55rem' },
+  lineHeight: 1.15,
+  fontVariantNumeric: 'tabular-nums' as const,
 };
 
 function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
@@ -215,7 +249,7 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
         >
           <TableHead>
             <TableRow sx={participantsHeadSx}>
-              <TableCell align="center" sx={{ width: 48 }}>
+              <TableCell align="center" sx={{ width: 56 }}>
                 №
               </TableCell>
               <TableCell sx={{ width: 'auto' }}>Гравці</TableCell>
@@ -231,7 +265,7 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
                 }}
               >
                 <TableCell align="center">
-                  <Typography variant="body1" fontWeight={700} color="primary">
+                  <Typography component="span" variant="body1" sx={participantSeatNumberSx}>
                     {slot.seatIndex}
                   </Typography>
                 </TableCell>
@@ -264,14 +298,14 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
       >
         <TableHead>
           <TableRow sx={participantsHeadSx}>
-            <TableCell align="center" sx={{ width: 52 }}>
+            <TableCell align="center" sx={{ width: 64 }}>
               №
             </TableCell>
             <TableCell sx={{ width: '42%' }}>Гравці</TableCell>
             <TableCell
               align="center"
               sx={{
-                width: 52,
+                width: 64,
                 borderLeft: (t) => `1px solid ${alpha(t.palette.primary.contrastText, 0.22)}`,
               }}
             >
@@ -293,7 +327,7 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
                 }}
               >
                 <TableCell align="center">
-                  <Typography variant="body1" fontWeight={700} color="primary">
+                  <Typography component="span" variant="body1" sx={participantSeatNumberSx}>
                     {L.seatIndex}
                   </Typography>
                 </TableCell>
@@ -307,7 +341,7 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
                   }}
                 >
                   {R ? (
-                    <Typography variant="body1" fontWeight={700} color="primary">
+                    <Typography component="span" variant="body1" sx={participantSeatNumberSx}>
                       {R.seatIndex}
                     </Typography>
                   ) : (
@@ -556,39 +590,48 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                       </Button>
                     )}
                   </Stack>
-                  {data.clubName ? (
+                  {data.clubName?.trim() ? (
                     <Stack
-                      direction="row"
-                      alignItems="center"
-                      gap={1.25}
+                      alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
+                      spacing={1}
                       sx={{
                         flexShrink: 0,
                         ml: { xs: 0, sm: 'auto' },
-                        maxWidth: { xs: '100%', sm: 340 },
+                        maxWidth: { xs: '100%', sm: 360 },
                       }}
                     >
-                      <RemoteAvatar
-                        avatarUrl={data.clubAvatarUrl}
-                        nickname={data.clubName}
+                      <Stack direction="row" alignItems="center" gap={1.25} sx={{ width: '100%', justifyContent: { sm: 'flex-end' } }}>
+                        <RemoteAvatar
+                          avatarUrl={data.clubAvatarUrl}
+                          nickname={data.clubName}
+                          sx={{
+                            width: 52,
+                            height: 52,
+                            fontSize: '1.2rem',
+                            flexShrink: 0,
+                            border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.35)}`,
+                          }}
+                        />
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{
+                            letterSpacing: 0.4,
+                            lineHeight: 1.35,
+                            textAlign: { xs: 'left', sm: 'right' },
+                            flex: 1,
+                            minWidth: 0,
+                          }}
+                        >
+                          Клуб: {data.clubName}
+                        </Typography>
+                      </Stack>
+                      <PublicTournamentYoutubeButton
+                        youtubeUrl={data.youtubeUrl}
                         sx={{
-                          width: 52,
-                          height: 52,
-                          fontSize: '1.2rem',
-                          flexShrink: 0,
-                          border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.35)}`,
+                          alignSelf: { xs: 'stretch', sm: 'flex-end' },
                         }}
                       />
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{
-                          letterSpacing: 0.4,
-                          lineHeight: 1.35,
-                          textAlign: { xs: 'left', sm: 'right' },
-                        }}
-                      >
-                        Клуб: {data.clubName}
-                      </Typography>
                     </Stack>
                   ) : null}
                 </Stack>
@@ -637,8 +680,13 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                   sx={{
                     flex: { sm: '1 1 auto' },
                     minWidth: 0,
-                    minHeight: 40,
-                    '& .MuiTab-root': { minHeight: 40, py: 0.5, typography: 'body2', fontWeight: 600 },
+                    minHeight: { xs: 44, sm: 48 },
+                    '& .MuiTab-root': {
+                      minHeight: { xs: 44, sm: 48 },
+                      py: 0.75,
+                      fontSize: { xs: '0.95rem', sm: '1.05rem' },
+                      fontWeight: 700,
+                    },
                   }}
                 >
                   <Tab label="Учасники" />
@@ -646,23 +694,15 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                   <Tab label="Таблиця результатів" />
                   <Tab label="Підтримати учасника" />
                 </Tabs>
-                <Button
-                  component="a"
-                  href={resolveTournamentYoutubeHref(data.youtubeUrl)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="outlined"
-                  color="error"
-                  size="small"
-                  startIcon={<YouTubeIcon />}
-                  sx={{
-                    flexShrink: 0,
-                    alignSelf: { xs: 'flex-start', sm: 'center' },
-                    borderColor: 'error.main',
-                  }}
-                >
-                  YouTube
-                </Button>
+                {!data.clubName?.trim() ? (
+                  <PublicTournamentYoutubeButton
+                    youtubeUrl={data.youtubeUrl}
+                    sx={{
+                      flexShrink: 0,
+                      alignSelf: { xs: 'flex-start', sm: 'center' },
+                    }}
+                  />
+                ) : null}
               </Stack>
 
               {tab === 0 && (
