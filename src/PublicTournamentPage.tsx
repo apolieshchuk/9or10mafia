@@ -456,14 +456,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
     return base && id ? `${base}/public/tournament/${id}/preview` : '';
   }, [id]);
 
-  const copySocialPreviewLink = React.useCallback(() => {
-    if (!socialPreviewUrl) return;
-    void navigator.clipboard.writeText(socialPreviewUrl).then(() => {
-      setSocialLinkCopied(true);
-      window.setTimeout(() => setSocialLinkCopied(false), 2500);
-    });
-  }, [socialPreviewUrl]);
-
   const handleDownloadSeatingPng = async () => {
     const el = publicSeatingExportRef.current;
     if (!el || !id) return;
@@ -647,6 +639,24 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                       </Button>
                     )}
                   </Stack>
+                  {socialPreviewUrl ? (
+                    <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap" sx={{ pt: 0.25 }}>
+                      <Button
+                        type="button"
+                        size="small"
+                        variant="outlined"
+                        startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
+                        onClick={() => {
+                          void navigator.clipboard.writeText(socialPreviewUrl).then(() => {
+                            setSocialLinkCopied(true);
+                            window.setTimeout(() => setSocialLinkCopied(false), 2500);
+                          });
+                        }}
+                      >
+                        {socialLinkCopied ? 'Скопійовано' : 'Копіювати лінк прев’ю'}
+                      </Button>
+                    </Stack>
+                  ) : null}
                   {data.clubName?.trim() ? (
                     <Stack
                       alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
@@ -683,18 +693,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                           Клуб: {data.clubName}
                         </Typography>
                       </Stack>
-                      {socialPreviewUrl ? (
-                        <Button
-                          type="button"
-                          size="small"
-                          variant="outlined"
-                          startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
-                          onClick={copySocialPreviewLink}
-                          sx={{ alignSelf: { xs: 'stretch', sm: 'flex-end' } }}
-                        >
-                          {socialLinkCopied ? 'Скопійовано' : 'Копіювати лінк прев’ю'}
-                        </Button>
-                      ) : null}
                       <PublicTournamentYoutubeButton
                         youtubeUrl={data.youtubeUrl}
                         sx={{
@@ -704,20 +702,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                     </Stack>
                   ) : null}
                 </Stack>
-                {socialPreviewUrl && !data.clubName?.trim() ? (
-                  <Stack direction="row" justifyContent={{ xs: 'stretch', sm: 'flex-end' }}>
-                    <Button
-                      type="button"
-                      size="small"
-                      variant="outlined"
-                      startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
-                      onClick={copySocialPreviewLink}
-                      sx={{ alignSelf: { xs: 'stretch', sm: 'flex-end' } }}
-                    >
-                      {socialLinkCopied ? 'Скопійовано' : 'Копіювати лінк прев’ю'}
-                    </Button>
-                  </Stack>
-                ) : null}
                 <Stack direction="row" flexWrap="wrap" gap={0.75} alignItems="center">
                   <Chip
                     label={statusUa[data.status] || data.status}
