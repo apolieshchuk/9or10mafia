@@ -46,6 +46,7 @@ import InputLabel from "@mui/material/InputLabel";
 import {useAuth} from "../AuthProvider";
 import TextField from "@mui/material/TextField";
 import {useNavigate} from "react-router-dom";
+import { resolveMediaUrl } from '../utils/mediaUrl';
 
 
 const xThemeComponents = {
@@ -156,7 +157,7 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
       try {
         const { data } = await axios.post('/user/avatar', { image: reader.result });
         data?.token && setToken(data.token);
-        alert('Аватар оновлено');
+        alert(user?.authType === 'Клуб' ? 'Логотип клубу збережено' : 'Аватар оновлено');
       } catch (e: any) {
         alert(e?.response?.data?.error || 'Помилка при завантаженні');
       }
@@ -209,13 +210,26 @@ export default function DashboardHome(props: { disableCustomTheme?: boolean }) {
                     <CardContent>
                       <Stack direction={'row'} spacing={1} alignItems="center">
                         <AccountBoxIcon />
-                        <InputLabel>Встановити Аватар</InputLabel>
+                        <InputLabel>
+                          {user?.authType === 'Клуб' ? 'Логотип клубу' : 'Встановити аватар'}
+                        </InputLabel>
                       </Stack>
+                      <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+                        {user?.authType === 'Клуб'
+                          ? 'Зображення збережеться в профілі клубу й відображатиметься в інтерфейсі.'
+                          : 'JPG або PNG, до 2 МБ.'}
+                      </Typography>
                       <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: 2 }}>
                         <img
-                          src={user?.avatarUrl || ''}
+                          src={resolveMediaUrl(user?.avatarUrl) || ''}
                           alt=""
-                          style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', display: user?.avatarUrl ? 'block' : 'none' }}
+                          style={{
+                            width: 56,
+                            height: 56,
+                            borderRadius: user?.authType === 'Клуб' ? 10 : '50%',
+                            objectFit: 'cover',
+                            display: resolveMediaUrl(user?.avatarUrl) ? 'block' : 'none',
+                          }}
                         />
                         <Button
                           component="label"
