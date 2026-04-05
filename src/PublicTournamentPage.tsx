@@ -34,7 +34,9 @@ import TournamentSeatingTiles from './components/TournamentSeatingTiles';
 import TournamentCheerTab from './components/TournamentCheerTab';
 import { useAuth } from './AuthProvider';
 import DownloadIcon from '@mui/icons-material/Download';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 import { downloadSeatingAsPng } from './utils/seatingPngExport';
+import { resolveTournamentYoutubeHref } from './constants/youtube';
 
 type PublicPlayer = { id: string; nickname: string; avatarUrl: string | null };
 type PublicSlot = { seatIndex: number; players: PublicPlayer[] };
@@ -66,6 +68,8 @@ type PublicPayload = {
   clubName: string;
   clubAvatarUrl: string | null;
   publicDescription: string;
+  /** Кастомне посилання на YouTube; порожнє → на публічній сторінці використовується канал за замовчуванням */
+  youtubeUrl?: string;
   participantSlots: PublicSlot[];
   seatingByGame: SeatingByGame | null;
   standingsRows: PublicStandingRow[];
@@ -426,6 +430,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
             seatingByGame: body.seatingByGame ?? null,
             standingsRows: body.standingsRows ?? [],
             hideResultsAfterHalf: Boolean(body.hideResultsAfterHalf),
+            youtubeUrl: body.youtubeUrl != null ? String(body.youtubeUrl) : '',
           });
           setError(null);
         }
@@ -618,21 +623,47 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
 
               <Divider sx={{ my: 0.5 }} />
 
-              <Tabs
-                value={tab}
-                onChange={(_, v) => setTab(v)}
-                variant="scrollable"
-                scrollButtons="auto"
-                sx={{
-                  minHeight: 40,
-                  '& .MuiTab-root': { minHeight: 40, py: 0.5, typography: 'body2', fontWeight: 600 },
-                }}
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                alignItems={{ xs: 'stretch', sm: 'center' }}
+                gap={1}
+                sx={{ flexWrap: 'wrap' }}
               >
-                <Tab label="Учасники" />
-                <Tab label="Розсадка" />
-                <Tab label="Таблиця результатів" />
-                <Tab label="Підтримати учасника" />
-              </Tabs>
+                <Tabs
+                  value={tab}
+                  onChange={(_, v) => setTab(v)}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  sx={{
+                    flex: { sm: '1 1 auto' },
+                    minWidth: 0,
+                    minHeight: 40,
+                    '& .MuiTab-root': { minHeight: 40, py: 0.5, typography: 'body2', fontWeight: 600 },
+                  }}
+                >
+                  <Tab label="Учасники" />
+                  <Tab label="Розсадка" />
+                  <Tab label="Таблиця результатів" />
+                  <Tab label="Підтримати учасника" />
+                </Tabs>
+                <Button
+                  component="a"
+                  href={resolveTournamentYoutubeHref(data.youtubeUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  startIcon={<YouTubeIcon />}
+                  sx={{
+                    flexShrink: 0,
+                    alignSelf: { xs: 'flex-start', sm: 'center' },
+                    borderColor: 'error.main',
+                  }}
+                >
+                  YouTube
+                </Button>
+              </Stack>
 
               {tab === 0 && (
                 <Box sx={{ pt: 1 }}>

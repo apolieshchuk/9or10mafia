@@ -28,6 +28,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Autocomplete from '@mui/material/Autocomplete';
 import { dateInputValueFromApi } from '../utils/vancouverDate';
 import { downloadSeatingAsPng } from '../utils/seatingPngExport';
+import { DEFAULT_TOURNAMENT_YOUTUBE_URL } from '../constants/youtube';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -50,6 +51,7 @@ function tournamentToSettingsSnapshot(t: any) {
     numGames: Number(t.numGames) || 1,
     scheduledDate: dateInputValueFromApi(t.scheduledDate) || null,
     publicDescription: (t.publicDescription != null ? String(t.publicDescription) : '').trim(),
+    youtubeUrl: (t.youtubeUrl != null ? String(t.youtubeUrl) : '').trim(),
     hideResultsAfterHalf: Boolean(t.hideResultsAfterHalf),
     participants: (t.participants || []).map((p: any) => ({
       userIds: (p.userIds || []).map(String),
@@ -98,6 +100,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   const [numGames, setNumGames] = React.useState(1);
   const [scheduledDate, setScheduledDate] = React.useState('');
   const [publicDescription, setPublicDescription] = React.useState('');
+  const [youtubeUrl, setYoutubeUrl] = React.useState('');
   const [hideHalf, setHideHalf] = React.useState(false);
   const [participantRows, setParticipantRows] = React.useState<{ u1: ClubUser | null; u2: ClubUser | null }[]>([]);
   const [autosaveState, setAutosaveState] = React.useState<'idle' | 'saving' | 'error'>('idle');
@@ -124,6 +127,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
     setNumGames(t.numGames || 1);
     setScheduledDate(dateInputValueFromApi(t.scheduledDate));
     setPublicDescription(t.publicDescription != null ? String(t.publicDescription) : '');
+    setYoutubeUrl(t.youtubeUrl != null ? String(t.youtubeUrl) : '');
     setHideHalf(Boolean(t.hideResultsAfterHalf));
   }, [id]);
 
@@ -177,10 +181,11 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
       numGames: Number(numGames) || 1,
       scheduledDate: scheduledDate || null,
       publicDescription: publicDescription.trim(),
+      youtubeUrl: youtubeUrl.trim(),
       hideResultsAfterHalf: hideHalf,
       participants,
     };
-  }, [name, numGames, scheduledDate, publicDescription, hideHalf, participantRows]);
+  }, [name, numGames, scheduledDate, publicDescription, youtubeUrl, hideHalf, participantRows]);
 
   const settingsPayloadJson = React.useMemo(
     () => JSON.stringify(buildSettingsPayload()),
@@ -419,6 +424,15 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                       minRows={3}
                       helperText={id ? `Публічна сторінка: /tournaments/${id}` : 'Публічна сторінка турніру'}
                       InputLabelProps={{ shrink: Boolean(publicDescription) }}
+                    />
+                    <TextField
+                      label="Посилання на YouTube (необовʼязково)"
+                      value={youtubeUrl}
+                      onChange={(e) => setYoutubeUrl(e.target.value)}
+                      fullWidth
+                      placeholder="https://www.youtube.com/@..."
+                      helperText={`Порожнє — кнопка на публічній сторінці веде на ${DEFAULT_TOURNAMENT_YOUTUBE_URL}`}
+                      InputLabelProps={{ shrink: Boolean(youtubeUrl) }}
                     />
                     <FormControlLabel
                       control={<Checkbox checked={hideHalf} onChange={(e) => setHideHalf(e.target.checked)} />}

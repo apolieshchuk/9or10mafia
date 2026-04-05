@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { Copyright } from '../components/Footer';
 import axios from '../axios';
 import { useAuth } from '../AuthProvider';
+import { DEFAULT_TOURNAMENT_YOUTUBE_URL } from '../constants/youtube';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -35,6 +36,7 @@ export default function DashboardTournamentNew(props: { disableCustomTheme?: boo
   const [numGames, setNumGames] = React.useState(3);
   const [scheduledDate, setScheduledDate] = React.useState('');
   const [publicDescription, setPublicDescription] = React.useState('');
+  const [youtubeUrl, setYoutubeUrl] = React.useState('');
   const [hideHalf, setHideHalf] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
 
@@ -56,6 +58,7 @@ export default function DashboardTournamentNew(props: { disableCustomTheme?: boo
         numGames: Number(numGames) || 1,
         scheduledDate: scheduledDate || null,
         publicDescription: publicDescription.trim(),
+        youtubeUrl: youtubeUrl.trim(),
         participants: [],
         hideResultsAfterHalf: hideHalf,
       });
@@ -164,6 +167,16 @@ export default function DashboardTournamentNew(props: { disableCustomTheme?: boo
                   minRows={3}
                   helperText="Показується на публічній сторінці турніру (посилання з головної)"
                   InputLabelProps={{ shrink: Boolean(publicDescription) }}
+                />
+                <TextField
+                  label="Посилання на YouTube (необовʼязково)"
+                  value={youtubeUrl}
+                  onChange={(e) => setYoutubeUrl(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  placeholder="https://www.youtube.com/@..."
+                  helperText={`Якщо порожньо — на публічній сторінці кнопка веде на ${DEFAULT_TOURNAMENT_YOUTUBE_URL}`}
+                  InputLabelProps={{ shrink: Boolean(youtubeUrl) }}
                 />
                 <FormControlLabel
                   sx={{
