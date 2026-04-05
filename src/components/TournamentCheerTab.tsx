@@ -62,40 +62,96 @@ function hashString(s: string): number {
 }
 
 /**
- * Сітка як опора + джитер (хаотичніше розкидання). Центр clamp-иться до меж контейнера.
+ * Позиції в % від розмірів контейнера: сітка + псевдовипадковий джитер у комірці, без перетину
+ * (мінімальна відстань між центрами карток у px).
  */
-function cheerCardLayout(
-  layoutKey: string,
-  index: number,
+function computeCheerFieldPositions(
+  layoutKeys: string[],
   cols: number,
-  rows: number
-): { left: string; top: string } {
-  const row = Math.floor(index / cols);
-  const col = index % cols;
-  const hPos = hashString(`${layoutKey}:${index}:pos`);
-  const jx = ((hPos % 31) / 15 - 1) * 0.38;
-  const jy = (((hPos >> 8) % 31) / 15 - 1) * 0.38;
+  rows: number,
+  w: number,
+  h: number
+): { left: string; top: string }[] {
+  const n = layoutKeys.length;
+  if (n < 1 || w < 48 || h < 48) {
+    return layoutKeys.map(() => ({ left: '50%', top: '50%' }));
+  }
 
-  const marginL = 8;
-  const marginR = 8;
-  const marginT = 14;
-  const marginB = 11;
-  const usableW = 100 - marginL - marginR;
-  const usableH = 100 - marginT - marginB;
-
+  const padX = Math.max(48, w * 0.065);
+  const padY = Math.max(56, h * 0.075);
+  const usableW = Math.max(1, w - 2 * padX);
+  const usableH = Math.max(1, h - 2 * padY);
   const cellW = usableW / cols;
   const cellH = usableH / rows;
+  const cellMin = Math.min(cellW, cellH);
+  const MIN_D = Math.min(108, Math.max(78, cellMin * 0.88));
 
-  let cx = marginL + (col + 0.5 + jx * 0.62) * cellW;
-  let cy = marginT + (row + 0.5 + jy * 0.62) * cellH;
+  const placed: { x: number; y: number }[] = [];
+  const out: { left: string; top: string }[] = [];
 
-  cx = Math.min(84, Math.max(16, cx));
-  cy = Math.min(85, Math.max(19, cy));
+  const fits = (cx: number, cy: number) =>
+    placed.every((p) => Math.hypot(cx - p.x, cy - p.y) >= MIN_D - 0.5);
 
-  return {
-    left: `${cx}%`,
-    top: `${cy}%`,
-  };
+  for (let index = 0; index < n; index++) {
+    const row = Math.floor(index / cols);
+    const col = index % cols;
+    const baseX = padX + (col + 0.5) * cellW;
+    const baseY = padY + (row + 0.5) * cellH;
+    const key = layoutKeys[index];
+
+    let best: { x: number; y: number } | null = null;
+    let bestScore = -1;
+
+    for (let attempt = 0; attempt < 64; attempt++) {
+      const h1 = hashString(`${key}:pl:${attempt}`);
+      const h2 = hashString(`${key}:pl:${attempt}:b`);
+      const u = (h1 % 10001) / 10000 - 0.5;
+      const v = (h2 % 10001) / 10000 - 0.5;
+      const maxJX = cellW * 0.3;
+      const maxJY = cellH * 0.3;
+      let cx = baseX + u * 2 * maxJX;
+      let cy = baseY + v * 2 * maxJY;
+      cx = Math.min(w - padX, Math.max(padX, cx));
+      cy = Math.min(h - padY, Math.max(padY, cy));
+
+      if (!fits(cx, cy)) continue;
+      let minD = Infinity;
+      for (const p of placed) {
+        minD = Math.min(minD, Math.hypot(cx - p.x, cy - p.y));
+      }
+      const score = minD === Infinity ? 1000 : minD;
+      if (score > bestScore) {
+        bestScore = score;
+        best = { x: cx, y: cy };
+      }
+    }
+
+    if (!best) {
+      best = { x: baseX, y: baseY };
+      if (!fits(best.x, best.y)) {
+        let found = false;
+        for (let s = 1; s <= 36 && !found; s++) {
+          const ang = s * 0.9;
+          const r = s * 5;
+          const cx = baseX + Math.cos(ang) * r;
+          const cy = baseY + Math.sin(ang) * r;
+          if (cx < padX || cx > w - padX || cy < padY || cy > h - padY) continue;
+          if (fits(cx, cy)) {
+            best = { x: cx, y: cy };
+            found = true;
+          }
+        }
+      }
+    }
+
+    placed.push(best);
+    out.push({
+      left: `${(best.x / w) * 100}%`,
+      top: `${(best.y / h) * 100}%`,
+    });
+  }
+
+  return out;
 }
 
 function cheerFieldGrid(n: number): { cols: number; rows: number; minHeightPx: number } {
@@ -216,6 +272,43 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
   const [cheerAnonymous, setCheerAnonymous] = React.useState(true);
 
   const alreadyCheered = Boolean(isLoggedIn && viewerHasCheered);
+
+  const fieldLayoutRef = React.useRef<HTMLDivElement | null>(null);
+  const [fieldSize, setFieldSize] = React.useState({ w: 560, h: 400 });
+
+  React.useLayoutEffect(() => {
+    const el = fieldLayoutRef.current;
+    if (!el) return;
+    const update = () => {
+      const { clientWidth, clientHeight } = el;
+      if (clientWidth > 0 && clientHeight > 0) {
+        setFieldSize((prev) =>
+          prev.w === clientWidth && prev.h === clientHeight ? prev : { w: clientWidth, h: clientHeight }
+        );
+      }
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [fieldEntries.length, cheerGrid.minHeightPx]);
+
+  const cheerLayoutKeys = React.useMemo(
+    () => fieldEntries.map((e) => `${e.player.id}-${e.seatIndex}-${e.scatterIndex}`),
+    [fieldEntries]
+  );
+
+  const cardPositions = React.useMemo(
+    () =>
+      computeCheerFieldPositions(
+        cheerLayoutKeys,
+        cheerGrid.cols,
+        cheerGrid.rows,
+        fieldSize.w,
+        fieldSize.h
+      ),
+    [cheerLayoutKeys, cheerGrid.cols, cheerGrid.rows, fieldSize.w, fieldSize.h]
+  );
 
   const load = React.useCallback(async () => {
     setLoading(true);
