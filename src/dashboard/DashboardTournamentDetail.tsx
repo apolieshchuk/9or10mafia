@@ -382,26 +382,36 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
               <Button size="small" onClick={() => navigate('/profile/tournaments')} sx={{ mb: 1 }}>
                 ← До списку
               </Button>
-              <Typography component="h1" variant="h5">
-                {tournament?.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+              <Stack direction="row" alignItems="center" flexWrap="wrap" gap={1.25} sx={{ mb: 1 }}>
+                <Typography component="h1" variant="h5" sx={{ minWidth: 0 }}>
+                  {tournament?.name}
+                </Typography>
+                {isClubOwner && tournament?.status === 'in_progress' && tournament?.nextGameIndex != null && (
+                  <Button
+                    component={Link}
+                    to={`/profile/tournament/${id}/game/${tournament.nextGameIndex}`}
+                    variant="outlined"
+                    color="secondary"
+                    size="small"
+                    sx={{
+                      py: 0.25,
+                      px: 1,
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      minWidth: 'auto',
+                      flexShrink: 0,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    Діюча гра
+                  </Button>
+                )}
+              </Stack>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 Статус: {statusUa[tournament?.status] || tournament?.status} · Ігор: {tournament?.numGames} ·
                 Зіграно: {tournament?.gamesSaved ?? 0}
                 {tournament?.winnerNickname ? ` · Переможець: ${tournament.winnerNickname}` : ''}
               </Typography>
-              {isClubOwner && tournament?.status === 'in_progress' && tournament?.nextGameIndex != null && (
-                <Button
-                  component={Link}
-                  to={`/profile/tournament/${id}/game/${tournament.nextGameIndex}`}
-                  variant="contained"
-                  color="secondary"
-                  size="medium"
-                  sx={{ mb: 2, alignSelf: 'flex-start' }}
-                >
-                  Діюча гра
-                </Button>
-              )}
 
               {canEdit && (
                 <Paper sx={{ p: 2, mb: 2 }}>
@@ -495,16 +505,6 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                     <Button variant="outlined" onClick={downloadSeatingPng} disabled={!tournament?.seatingByGame}>
                       Завантажити скріншот розсадки
                     </Button>
-                    {tournament?.status === 'in_progress' && tournament?.nextGameIndex != null && (
-                      <Button
-                        component={Link}
-                        to={`/profile/tournament/${id}/game/${tournament.nextGameIndex}`}
-                        variant="outlined"
-                        color="secondary"
-                      >
-                        Діюча гра
-                      </Button>
-                    )}
                   </Stack>
                 </Paper>
               )}

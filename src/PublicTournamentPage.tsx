@@ -408,19 +408,49 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                   flexWrap="wrap"
                   sx={{ rowGap: 1.25, columnGap: 2 }}
                 >
-                  <Typography
-                    variant="h5"
-                    component="h1"
-                    sx={{
-                      fontWeight: 800,
-                      fontSize: { xs: '1.15rem', sm: '1.35rem' },
-                      lineHeight: 1.3,
-                      flex: '1 1 200px',
-                      minWidth: 0,
-                    }}
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    flexWrap="wrap"
+                    gap={1.25}
+                    sx={{ flex: '1 1 200px', minWidth: 0 }}
                   >
-                    {data.name}
-                  </Typography>
+                    <Typography
+                      variant="h5"
+                      component="h1"
+                      sx={{
+                        fontWeight: 800,
+                        fontSize: { xs: '1.15rem', sm: '1.35rem' },
+                        lineHeight: 1.3,
+                        minWidth: 0,
+                      }}
+                    >
+                      {data.name}
+                    </Typography>
+                    {isClubOwnerPublic &&
+                      data.status === 'in_progress' &&
+                      data.nextGameIndex != null &&
+                      id && (
+                        <Button
+                          component={Link}
+                          to={`/profile/tournament/${id}/game/${data.nextGameIndex}`}
+                          variant="outlined"
+                          color="secondary"
+                          size="small"
+                          sx={{
+                            py: 0.25,
+                            px: 1,
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            minWidth: 'auto',
+                            flexShrink: 0,
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          Діюча гра
+                        </Button>
+                      )}
+                  </Stack>
                   {data.clubName ? (
                     <Stack
                       direction="row"
@@ -473,21 +503,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                     Ігор: {data.numGames}
                   </Typography>
                 </Stack>
-                {isClubOwnerPublic &&
-                  data.status === 'in_progress' &&
-                  data.nextGameIndex != null &&
-                  id && (
-                    <Button
-                      component={Link}
-                      to={`/profile/tournament/${id}/game/${data.nextGameIndex}`}
-                      variant="contained"
-                      color="secondary"
-                      size="medium"
-                      sx={{ alignSelf: 'flex-start', mt: 0.75 }}
-                    >
-                      Діюча гра
-                    </Button>
-                  )}
               </Stack>
 
               {data.publicDescription?.trim() ? (

@@ -79,7 +79,8 @@ const STORAGE_KEY = 'ratingGameState';
 const BONUS_RATING_WIN = [0.3, 0.4, 0.5];
 const BONUS_RATING_LOSS = [0.1, 0.2, 0.3];
 const BONUS_TOURNAMENT_WIN = [0.4, 0.5, 0.6, 0.7, 0.8];
-const BONUS_TOURNAMENT_LOSS = [0.2, 0.3, 0.4, 0.5, 0.6];
+/** Програвша команда в турнірі — максимум +0.5 */
+const BONUS_TOURNAMENT_LOSS = [0.2, 0.3, 0.4, 0.5];
 
 const loadSavedState = () => {
   try {
@@ -244,6 +245,27 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     const role = players[n]?.role;
     return winState === 'mafia' ? [1, 2, 3].includes(role) : [0, 4].includes(role);
   };
+
+  /** Турнір: програвша команда — бонус не більше 0.5 (після зміни переможця / старої чернетки). */
+  useEffect(() => {
+    if (!isTournamentGame || !winState || readOnlyTournament) return;
+    _setPlayers((prev) => {
+      let changed = false;
+      const out = { ...prev };
+      for (const k of Object.keys(out)) {
+        const n = Number(k);
+        if (!Number.isFinite(n)) continue;
+        const role = out[n]?.role;
+        const won = winState === 'mafia' ? [1, 2, 3].includes(role) : [0, 4].includes(role);
+        const bp = Number(out[n]?.bonusPoints) || 0;
+        if (!won && bp > 0.5) {
+          out[n] = { ...out[n], bonusPoints: 0 };
+          changed = true;
+        }
+      }
+      return changed ? out : prev;
+    });
+  }, [isTournamentGame, winState, readOnlyTournament]);
 
   const openBonusPopover = (e: React.MouseEvent<HTMLElement>, n: number) => {
     if (readOnlyTournament || tournamentHidden) return;
