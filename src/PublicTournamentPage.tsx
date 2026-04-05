@@ -21,6 +21,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { alpha } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import AppTheme from './theme/AppTheme';
@@ -30,7 +31,10 @@ import axios from './axios';
 import { formatDateUkVancouver } from './utils/vancouverDate';
 import { resolveMediaUrl } from './utils/mediaUrl';
 import TournamentSeatingTiles from './components/TournamentSeatingTiles';
+import TournamentCheerTab from './components/TournamentCheerTab';
 import { useAuth } from './AuthProvider';
+import DownloadIcon from '@mui/icons-material/Download';
+import { downloadSeatingAsPng } from './utils/seatingPngExport';
 
 type PublicPlayer = { id: string; nickname: string; avatarUrl: string | null };
 type PublicSlot = { seatIndex: number; players: PublicPlayer[] };
@@ -174,35 +178,84 @@ const participantsHeadSx = {
   },
 };
 
+const participantsTableBodySx = {
+  '& .MuiTableCell-body': {
+    py: 1.35,
+    px: { xs: 0.75, sm: 1.25 },
+    verticalAlign: 'middle',
+  },
+};
+
 function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
+  const twoColumnLayout = useMediaQuery('(min-width:800px)');
+
+  const containerSx = {
+    borderRadius: 2,
+    border: (t: Theme) => `1px solid ${t.palette.divider}`,
+    boxShadow: (t: Theme) => t.shadows[2],
+    width: '100%',
+    overflowX: 'auto',
+  } as const;
+
+  if (!twoColumnLayout) {
+    return (
+      <TableContainer component={Paper} elevation={0} sx={containerSx}>
+        <Table
+          size="medium"
+          sx={{
+            width: '100%',
+            minWidth: 0,
+            tableLayout: 'fixed',
+            ...participantsTableBodySx,
+          }}
+        >
+          <TableHead>
+            <TableRow sx={participantsHeadSx}>
+              <TableCell align="center" sx={{ width: 48 }}>
+                №
+              </TableCell>
+              <TableCell sx={{ width: 'auto' }}>Гравці</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {slots.map((slot) => (
+              <TableRow
+                key={slot.seatIndex}
+                sx={{
+                  '&:nth-of-type(even)': { bgcolor: (t) => alpha(t.palette.action.hover, 0.2) },
+                  '&:last-child td': { borderBottom: 0 },
+                }}
+              >
+                <TableCell align="center">
+                  <Typography variant="body1" fontWeight={700} color="primary">
+                    {slot.seatIndex}
+                  </Typography>
+                </TableCell>
+                <TableCell sx={{ minWidth: 0 }}>
+                  <PlayerCell players={slot.players} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
   const half = Math.ceil(slots.length / 2);
   const leftCol = slots.slice(0, half);
   const rightCol = slots.slice(half);
   const rowCount = leftCol.length;
 
   return (
-    <TableContainer
-      component={Paper}
-      elevation={0}
-      sx={{
-        borderRadius: 2,
-        border: (t) => `1px solid ${t.palette.divider}`,
-        boxShadow: (t) => t.shadows[2],
-        width: '100%',
-        overflowX: 'auto',
-      }}
-    >
+    <TableContainer component={Paper} elevation={0} sx={containerSx}>
       <Table
         size="medium"
         sx={{
           width: '100%',
-          minWidth: { xs: 520, sm: 640 },
+          minWidth: { sm: 640 },
           tableLayout: 'fixed',
-          '& .MuiTableCell-body': {
-            py: 1.35,
-            px: { xs: 0.75, sm: 1.25 },
-            verticalAlign: 'middle',
-          },
+          ...participantsTableBodySx,
         }}
       >
         <TableHead>
@@ -341,6 +394,22 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
   const [error, setError] = React.useState<string | null>(null);
   const [tab, setTab] = React.useState(0);
   const [liveGameLoading, setLiveGameLoading] = React.useState(false);
+  const publicSeatingExportRef = React.useRef<HTMLDivElement>(null);
+  const [seatingDownloadBusy, setSeatingDownloadBusy] = React.useState(false);
+
+  const handleDownloadSeatingPng = async () => {
+    const el = publicSeatingExportRef.current;
+    if (!el || !id) return;
+    setSeatingDownloadBusy(true);
+    try {
+      await downloadSeatingAsPng(el, `rozasadka-${id}.png`);
+    } catch (e) {
+      console.error(e);
+      alert('Не вдалося зберегти картинку розсадки');
+    } finally {
+      setSeatingDownloadBusy(false);
+    }
+  };
 
   React.useEffect(() => {
     if (!id) return;
@@ -562,6 +631,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                 <Tab label="Учасники" />
                 <Tab label="Розсадка" />
                 <Tab label="Таблиця результатів" />
+                <Tab label="Підтримати учасника" />
               </Tabs>
 
               {tab === 0 && (
@@ -602,12 +672,33 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                       Розсадку ще не згенеровано.
                     </Typography>
                   ) : (
-                    <TournamentSeatingTiles
-                      numGames={data.numGames}
-                      seatingByGame={data.seatingByGame}
-                      formatSeat={(userIds) => formatSeatingCell(userIds, nickLookup)}
-                      title="Розсадка"
-                    />
+                    <Stack spacing={1.5}>
+                      <Stack direction="row" justifyContent="flex-end" alignItems="center" flexWrap="wrap" gap={1}>
+                        <Button
+                          type="button"
+                          variant="outlined"
+                          size="small"
+                          startIcon={<DownloadIcon />}
+                          disabled={seatingDownloadBusy}
+                          onClick={() => void handleDownloadSeatingPng()}
+                        >
+                          {seatingDownloadBusy ? 'Зберігаємо…' : 'Завантажити'}
+                        </Button>
+                      </Stack>
+                      <Paper
+                        ref={publicSeatingExportRef}
+                        elevation={0}
+                        className="mafia-seating-png-export"
+                        sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 2, border: (t) => `1px solid ${t.palette.divider}` }}
+                      >
+                        <TournamentSeatingTiles
+                          numGames={data.numGames}
+                          seatingByGame={data.seatingByGame}
+                          formatSeat={(userIds) => formatSeatingCell(userIds, nickLookup)}
+                          title="Розсадка"
+                        />
+                      </Paper>
+                    </Stack>
                   )}
                 </Box>
               )}
@@ -674,6 +765,15 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                     />
                   )}
                 </Box>
+              )}
+
+              {tab === 3 && id && (
+                <TournamentCheerTab
+                  tournamentId={id}
+                  slots={data.participantSlots}
+                  currentUserId={user?._id != null ? String(user._id) : null}
+                  isLoggedIn={Boolean(user)}
+                />
               )}
             </Stack>
           )}

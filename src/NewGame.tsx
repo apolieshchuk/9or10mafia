@@ -29,6 +29,7 @@ import {Autocomplete, createFilterOptions, Popover} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {useAuth} from "./AuthProvider";
+import {vancouverTodayYmd} from "./utils/vancouverDate";
 
 const filter = createFilterOptions();
 
@@ -102,7 +103,13 @@ const loadSavedState = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    const today = vancouverTodayYmd();
+    if (!parsed._vancouverSavedYmd || parsed._vancouverSavedYmd !== today) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return parsed;
   } catch { return null; }
 };
 
@@ -188,7 +195,14 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       (p: any) => p.id && !p.title?.startsWith('Гість')
     );
     if (!hasRealPlayers) return;
-    const state = { players, votings, activeVoting, winState, hideRoles };
+    const state = {
+      players,
+      votings,
+      activeVoting,
+      winState,
+      hideRoles,
+      _vancouverSavedYmd: vancouverTodayYmd(),
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [players, votings, activeVoting, winState, hideRoles, isRatingGame]);
 

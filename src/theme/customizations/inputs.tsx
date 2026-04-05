@@ -466,6 +466,16 @@ export const inputsCustomizations: Components<Theme> = {
               height: '2.5rem',
             },
           },
+          {
+            props: {
+              multiline: true,
+            },
+            style: {
+              height: 'auto',
+              minHeight: 0,
+              alignItems: 'stretch',
+            },
+          },
         ],
       }),
       // Keep a 1px outline so the <legend> notch still sizes correctly for the floating label.

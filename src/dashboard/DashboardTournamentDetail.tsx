@@ -26,8 +26,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { OutlinedActionIconButton } from '../components/OutlinedActionIconButton';
 import AddIcon from '@mui/icons-material/Add';
 import Autocomplete from '@mui/material/Autocomplete';
-import { toPng, getFontEmbedCSS } from 'html-to-image';
 import { dateInputValueFromApi } from '../utils/vancouverDate';
+import { downloadSeatingAsPng } from '../utils/seatingPngExport';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -267,58 +267,12 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
 
   const downloadSeatingPng = async () => {
     const el = seatingRef.current;
-    if (!el) return;
-    // html-to-image copies getComputedStyle from the live DOM; it does NOT support onclone.
-    // With backgroundColor: '#fff' only on the clone root, dark-theme text stays light → invisible.
-    const captureClass = 'mafia-seating-png-capture';
-    const styleEl = document.createElement('style');
-    styleEl.setAttribute('data-mafia-seating-capture', '1');
-    styleEl.textContent = `
-      .${captureClass} {
-        background-color: #ffffff !important;
-        color: #0f172a !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .${captureClass}, .${captureClass} * {
-        color: #0f172a !important;
-        -webkit-text-fill-color: #0f172a !important;
-      }
-      .${captureClass} .MuiPaper-root {
-        background-color: #fafafa !important;
-        border-color: rgba(15, 23, 42, 0.28) !important;
-        color: #0f172a !important;
-      }
-      .${captureClass} .MuiDivider-root {
-        border-color: rgba(15, 23, 42, 0.12) !important;
-      }
-      .${captureClass} .MuiBox-root {
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif !important;
-      }
-    `;
-    document.head.appendChild(styleEl);
-    el.classList.add(captureClass);
+    if (!el || !id) return;
     try {
-      if (document.fonts?.ready) await document.fonts.ready;
-      await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
-      const fontEmbedCSS = await getFontEmbedCSS(el, { cacheBust: true });
-      const dataUrl = await toPng(el, {
-        pixelRatio: 2,
-        backgroundColor: '#ffffff',
-        cacheBust: true,
-        fontEmbedCSS,
-        preferredFontFormat: 'woff2',
-      });
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = `seating-${id}.png`;
-      a.click();
+      await downloadSeatingAsPng(el, `seating-${id}.png`);
     } catch (e) {
       console.error(e);
       alert('Не вдалося зробити скріншот');
-    } finally {
-      el.classList.remove(captureClass);
-      styleEl.remove();
     }
   };
 
