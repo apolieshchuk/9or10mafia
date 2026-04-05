@@ -34,7 +34,6 @@ import TournamentSeatingTiles from './components/TournamentSeatingTiles';
 import TournamentCheerTab from './components/TournamentCheerTab';
 import { useAuth } from './AuthProvider';
 import DownloadIcon from '@mui/icons-material/Download';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import { downloadSeatingAsPng } from './utils/seatingPngExport';
 import { resolveTournamentYoutubeHref } from './constants/youtube';
@@ -81,20 +80,6 @@ const statusUa: Record<string, string> = {
   in_progress: 'Триває',
   completed: 'Завершено',
 };
-
-const DEFAULT_DOC_TITLE = 'Nine or Ten';
-
-function upsertMetaTag(attr: 'property' | 'name', key: string, content: string) {
-  const sel = `meta[${attr}="${key}"]`;
-  let el = document.querySelector(sel) as HTMLMetaElement | null;
-  if (!el) {
-    el = document.createElement('meta');
-    el.setAttribute(attr, key);
-    el.setAttribute('data-tournament-og', '1');
-    document.head.appendChild(el);
-  }
-  el.setAttribute('content', content);
-}
 
 function nickMapFromData(data: PublicPayload | null) {
   const m = new Map<string, string>();
@@ -449,12 +434,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
   const [liveGameLoading, setLiveGameLoading] = React.useState(false);
   const publicSeatingExportRef = React.useRef<HTMLDivElement>(null);
   const [seatingDownloadBusy, setSeatingDownloadBusy] = React.useState(false);
-  const [socialLinkCopied, setSocialLinkCopied] = React.useState(false);
-
-  const socialPreviewUrl = React.useMemo(() => {
-    const base = String(axios.defaults.baseURL || '').replace(/\/$/, '');
-    return base && id ? `${base}/public/tournament/${id}/preview` : '';
-  }, [id]);
 
   const handleDownloadSeatingPng = async () => {
     const el = publicSeatingExportRef.current;
@@ -500,34 +479,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
       cancelled = true;
     };
   }, [id]);
-
-  React.useEffect(() => {
-    if (!data || !id) return;
-    const api = String(axios.defaults.baseURL || '').replace(/\/$/, '');
-    const ogImage = api ? `${api}/public/tournament/${id}/og.png` : '';
-    const desc =
-      (data.publicDescription && data.publicDescription.trim()) ||
-      [data.clubName, 'Nine or Ten'].filter(Boolean).join(' · ');
-    const canonical =
-      typeof window !== 'undefined' ? `${window.location.origin}/tournaments/${id}` : '';
-    const prevTitle = document.title;
-    document.title = `${data.name} · ${DEFAULT_DOC_TITLE}`;
-    if (ogImage) {
-      upsertMetaTag('property', 'og:title', data.name);
-      upsertMetaTag('property', 'og:description', desc.slice(0, 280));
-      upsertMetaTag('property', 'og:image', ogImage);
-      upsertMetaTag('property', 'og:url', canonical);
-      upsertMetaTag('property', 'og:type', 'website');
-      upsertMetaTag('name', 'twitter:card', 'summary_large_image');
-      upsertMetaTag('name', 'twitter:title', data.name);
-      upsertMetaTag('name', 'twitter:description', desc.slice(0, 280));
-      upsertMetaTag('name', 'twitter:image', ogImage);
-    }
-    return () => {
-      document.title = prevTitle;
-      document.querySelectorAll('meta[data-tournament-og]').forEach((n) => n.remove());
-    };
-  }, [data, id]);
 
   const nickLookup = React.useMemo(() => nickMapFromData(data), [data]);
 
@@ -639,28 +590,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                       </Button>
                     )}
                   </Stack>
-                  {socialPreviewUrl ? (
-                    <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap" sx={{ pt: 0.25 }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.4 }}>
-                        Для прев’ю в Telegram / Facebook скопіюйте посилання на сторінку-прев’ю (краулери не бачать
-                        мета-теги звичайного SPA):
-                      </Typography>
-                      <Button
-                        type="button"
-                        size="small"
-                        variant="outlined"
-                        startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
-                        onClick={() => {
-                          void navigator.clipboard.writeText(socialPreviewUrl).then(() => {
-                            setSocialLinkCopied(true);
-                            window.setTimeout(() => setSocialLinkCopied(false), 2500);
-                          });
-                        }}
-                      >
-                        {socialLinkCopied ? 'Скопійовано' : 'Копіювати лінк прев’ю'}
-                      </Button>
-                    </Stack>
-                  ) : null}
                   {data.clubName?.trim() ? (
                     <Stack
                       alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
