@@ -13,7 +13,8 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Alert from '@mui/material/Alert';
-import { alpha } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { alpha, useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import axios from '../axios';
 import { resolveMediaUrl } from '../utils/mediaUrl';
@@ -70,21 +71,31 @@ function computeCheerFieldPositions(
   cols: number,
   rows: number,
   w: number,
-  h: number
+  h: number,
+  compact: boolean
 ): { left: string; top: string }[] {
   const n = layoutKeys.length;
   if (n < 1 || w < 48 || h < 48) {
     return layoutKeys.map(() => ({ left: '50%', top: '50%' }));
   }
 
-  const padX = Math.max(48, w * 0.065);
-  const padY = Math.max(56, h * 0.075);
+  const padX = compact ? Math.max(28, w * 0.032) : Math.max(48, w * 0.065);
+  const padY = compact ? Math.max(40, h * 0.055) : Math.max(56, h * 0.075);
   const usableW = Math.max(1, w - 2 * padX);
   const usableH = Math.max(1, h - 2 * padY);
   const cellW = usableW / cols;
   const cellH = usableH / rows;
   const cellMin = Math.min(cellW, cellH);
-  const MIN_D = Math.min(108, Math.max(78, cellMin * 0.88));
+
+  /** На mobile — мало джитеру, щоб після зсуву відстань між сусідами не падала нижче MIN_D. */
+  const jmul = compact ? 0.08 : 0.3;
+  const maxJX = cellW * jmul;
+  const maxJY = cellH * jmul;
+
+  const worstCaseSep = Math.min(cellW, cellH) * (1 - 2 * jmul);
+  const MIN_D = compact
+    ? Math.min(100, Math.max(68, Math.min(worstCaseSep * 0.995, cellMin * 0.96)))
+    : Math.min(108, Math.max(78, cellMin * 0.88));
 
   const placed: { x: number; y: number }[] = [];
   const out: { left: string; top: string }[] = [];
@@ -107,8 +118,6 @@ function computeCheerFieldPositions(
       const h2 = hashString(`${key}:pl:${attempt}:b`);
       const u = (h1 % 10001) / 10000 - 0.5;
       const v = (h2 % 10001) / 10000 - 0.5;
-      const maxJX = cellW * 0.3;
-      const maxJY = cellH * 0.3;
       let cx = baseX + u * 2 * maxJX;
       let cy = baseY + v * 2 * maxJY;
       cx = Math.min(w - padX, Math.max(padX, cx));
@@ -154,11 +163,16 @@ function computeCheerFieldPositions(
   return out;
 }
 
-function cheerFieldGrid(n: number): { cols: number; rows: number; minHeightPx: number } {
+function cheerFieldGrid(n: number, compact: boolean): { cols: number; rows: number; minHeightPx: number } {
   if (n < 1) return { cols: 1, rows: 0, minHeightPx: 140 };
-  const cols = n === 1 ? 1 : Math.min(5, Math.max(2, Math.ceil(Math.sqrt(n))));
+  let cols = n === 1 ? 1 : Math.min(5, Math.max(2, Math.ceil(Math.sqrt(n))));
+  if (compact && n >= 6) {
+    cols = Math.max(2, Math.min(cols, 3));
+  }
   const rows = Math.ceil(n / cols);
-  const minHeightPx = Math.max(300, 72 + rows * 148);
+  const minHeightPx = compact
+    ? Math.max(440, 48 + rows * 138)
+    : Math.max(300, 72 + rows * 148);
   return { cols, rows, minHeightPx };
 }
 
@@ -252,13 +266,18 @@ type Props = {
   isLoggedIn: boolean;
 };
 
-const FIELD_AVATAR_SIZE = 80;
-const FEED_AVATAR_TO = 40;
-const FEED_AVATAR_FROM = 34;
-
 export default function TournamentCheerTab({ tournamentId, slots, currentUserId, isLoggedIn }: Props) {
+  const theme = useTheme();
+  const isCheerCompact = useMediaQuery(theme.breakpoints.down('sm'));
+  const fieldAvatarPx = isCheerCompact ? 56 : 80;
+  const feedAvatarToPx = isCheerCompact ? 32 : 40;
+  const feedAvatarFromPx = isCheerCompact ? 28 : 34;
+
   const fieldEntries = React.useMemo(() => slotFieldEntries(slots), [slots]);
-  const cheerGrid = React.useMemo(() => cheerFieldGrid(fieldEntries.length), [fieldEntries.length]);
+  const cheerGrid = React.useMemo(
+    () => cheerFieldGrid(fieldEntries.length, isCheerCompact),
+    [fieldEntries.length, isCheerCompact]
+  );
   const [items, setItems] = React.useState<CheerItem[]>([]);
   const [countsByUserId, setCountsByUserId] = React.useState<Record<string, number>>({});
   const [loading, setLoading] = React.useState(true);
@@ -305,9 +324,10 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
         cheerGrid.cols,
         cheerGrid.rows,
         fieldSize.w,
-        fieldSize.h
+        fieldSize.h,
+        isCheerCompact
       ),
-    [cheerLayoutKeys, cheerGrid.cols, cheerGrid.rows, fieldSize.w, fieldSize.h]
+    [cheerLayoutKeys, cheerGrid.cols, cheerGrid.rows, fieldSize.w, fieldSize.h, isCheerCompact]
   );
 
   const load = React.useCallback(async () => {
@@ -448,11 +468,11 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
                   }}
                 >
                   <MuscleBadge count={count} />
-                  <FeedAvatar avatarUrl={p.avatarUrl} nickname={p.nickname} size={FIELD_AVATAR_SIZE} />
+                  <FeedAvatar avatarUrl={p.avatarUrl} nickname={p.nickname} size={fieldAvatarPx} />
                   <Box
                     sx={{
                       mt: 0.5,
-                      maxWidth: 140,
+                      maxWidth: isCheerCompact ? 108 : 140,
                       textAlign: 'center',
                     }}
                   >
@@ -461,7 +481,7 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
                       fontWeight={800}
                       sx={{
                         lineHeight: 1.2,
-                        fontSize: '0.9rem',
+                        fontSize: isCheerCompact ? '0.78rem' : '0.9rem',
                         textShadow: (t) => `0 0 10px ${t.palette.background.paper}`,
                       }}
                     >
@@ -511,7 +531,7 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
                     <Typography variant="body2" fontWeight={800} component="span">
                       Підтримали
                     </Typography>
-                    <FeedAvatar avatarUrl={c.toUser.avatarUrl} nickname={c.toUser.nickname} size={FEED_AVATAR_TO} />
+                    <FeedAvatar avatarUrl={c.toUser.avatarUrl} nickname={c.toUser.nickname} size={feedAvatarToPx} />
                     <Typography variant="body2" fontWeight={700} component="span">
                       {c.toUser.nickname}:
                     </Typography>
@@ -524,7 +544,7 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
                       <Typography variant="caption" color="text.secondary">
                         від
                       </Typography>
-                      <FeedAvatar avatarUrl={c.fromUser.avatarUrl} nickname={c.fromUser.nickname} size={FEED_AVATAR_FROM} />
+                      <FeedAvatar avatarUrl={c.fromUser.avatarUrl} nickname={c.fromUser.nickname} size={feedAvatarFromPx} />
                       <Typography variant="caption" color="text.secondary">
                         {c.fromUser.nickname}
                       </Typography>
@@ -566,7 +586,7 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
           color="text.secondary"
           sx={{ mb: 2, maxWidth: 640, lineHeight: 1.45, fontStyle: 'italic' }}
         >
-          Маленьке правило: обери ОДНОГО за кого тримаєш кулаки ✊
+          Обери ОДНОГО за кого тримаєш кулаки ✊
         </Typography>
       ) : null}
 
