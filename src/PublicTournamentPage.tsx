@@ -683,24 +683,34 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                           Клуб: {data.clubName}
                         </Typography>
                       </Stack>
-                      {socialPreviewUrl ? (
-                        <Button
-                          type="button"
-                          size="small"
-                          variant="outlined"
-                          startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
-                          onClick={copySocialPreviewLink}
-                          sx={{ alignSelf: { xs: 'stretch', sm: 'flex-end' } }}
-                        >
-                          {socialLinkCopied ? 'Скопійовано' : 'Копіювати лінк прев’ю'}
-                        </Button>
-                      ) : null}
-                      <PublicTournamentYoutubeButton
-                        youtubeUrl={data.youtubeUrl}
+                      <Stack
+                        direction="row"
+                        flexWrap="wrap"
+                        alignItems="center"
+                        gap={1}
                         sx={{
                           alignSelf: { xs: 'stretch', sm: 'flex-end' },
+                          justifyContent: { xs: 'flex-start', sm: 'flex-end' },
+                          width: { xs: '100%', sm: 'auto' },
                         }}
-                      />
+                      >
+                        {socialPreviewUrl ? (
+                          <Button
+                            type="button"
+                            size="small"
+                            variant="outlined"
+                            startIcon={<ContentCopyIcon sx={{ fontSize: 16 }} />}
+                            onClick={copySocialPreviewLink}
+                            sx={{ flexShrink: 0, minWidth: 0 }}
+                          >
+                            {socialLinkCopied ? 'Скопійовано' : 'Копіювати лінк прев’ю'}
+                          </Button>
+                        ) : null}
+                        <PublicTournamentYoutubeButton
+                          youtubeUrl={data.youtubeUrl}
+                          sx={{ flexShrink: 0 }}
+                        />
+                      </Stack>
                     </Stack>
                   ) : null}
                 </Stack>
