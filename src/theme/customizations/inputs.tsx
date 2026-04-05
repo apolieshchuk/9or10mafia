@@ -62,9 +62,9 @@ export const inputsCustomizations: Components<Theme> = {
               boxShadow: `inset 0 1px 0 ${gray[600]}, inset 0 -1px 0 1px hsl(220, 0%, 0%)`,
               border: `1px solid ${gray[700]}`,
               '&:hover': {
-                backgroundImage: 'none',
-                backgroundColor: gray[700],
-                boxShadow: 'none',
+                backgroundImage: `linear-gradient(to bottom, ${gray[700]}, ${gray[800]})`,
+                backgroundColor: gray[900],
+                boxShadow: `inset 0 1px 0 ${gray[600]}, inset 0 -1px 0 1px hsl(220, 0%, 0%)`,
               },
               '&:active': {
                 backgroundColor: gray[800],
@@ -76,9 +76,9 @@ export const inputsCustomizations: Components<Theme> = {
                 boxShadow: 'inset 0 -1px 0  hsl(220, 30%, 80%)',
                 border: `1px solid ${gray[50]}`,
                 '&:hover': {
-                  backgroundImage: 'none',
-                  backgroundColor: gray[300],
-                  boxShadow: 'none',
+                  backgroundImage: `linear-gradient(to bottom, ${gray[100]}, ${gray[50]})`,
+                  backgroundColor: gray[50],
+                  boxShadow: `inset 0 -1px 0  hsl(220, 30%, 80%)`,
                 },
                 '&:active': {
                   backgroundColor: gray[400],
@@ -98,8 +98,9 @@ export const inputsCustomizations: Components<Theme> = {
               boxShadow: `inset 0 2px 0 ${alpha(brand[200], 0.2)}, inset 0 -2px 0 ${alpha(brand[700], 0.4)}`,
               border: `1px solid ${brand[500]}`,
               '&:hover': {
-                backgroundColor: brand[700],
-                boxShadow: 'none',
+                backgroundColor: brand[300],
+                backgroundImage: `linear-gradient(to bottom, ${alpha(brand[400], 0.8)}, ${brand[500]})`,
+                boxShadow: `inset 0 2px 0 ${alpha(brand[200], 0.2)}, inset 0 -2px 0 ${alpha(brand[700], 0.4)}`,
               },
               '&:active': {
                 backgroundColor: brand[700],
@@ -117,8 +118,8 @@ export const inputsCustomizations: Components<Theme> = {
               borderColor: gray[200],
               backgroundColor: alpha(gray[50], 0.3),
               '&:hover': {
-                backgroundColor: gray[100],
-                borderColor: gray[300],
+                backgroundColor: alpha(gray[50], 0.3),
+                borderColor: gray[200],
               },
               '&:active': {
                 backgroundColor: gray[200],
@@ -128,8 +129,8 @@ export const inputsCustomizations: Components<Theme> = {
                 borderColor: gray[700],
 
                 '&:hover': {
-                  backgroundColor: gray[900],
-                  borderColor: gray[600],
+                  backgroundColor: gray[800],
+                  borderColor: gray[700],
                 },
                 '&:active': {
                   backgroundColor: gray[900],
@@ -148,8 +149,8 @@ export const inputsCustomizations: Components<Theme> = {
               borderColor: brand[200],
               backgroundColor: brand[50],
               '&:hover': {
-                backgroundColor: brand[100],
-                borderColor: brand[400],
+                backgroundColor: brand[50],
+                borderColor: brand[200],
               },
               '&:active': {
                 backgroundColor: alpha(brand[200], 0.7),
@@ -160,8 +161,8 @@ export const inputsCustomizations: Components<Theme> = {
                 borderColor: brand[900],
                 backgroundColor: alpha(brand[900], 0.3),
                 '&:hover': {
-                  borderColor: brand[700],
-                  backgroundColor: alpha(brand[900], 0.6),
+                  borderColor: brand[900],
+                  backgroundColor: alpha(brand[900], 0.3),
                 },
                 '&:active': {
                   backgroundColor: alpha(brand[900], 0.5),
@@ -176,7 +177,7 @@ export const inputsCustomizations: Components<Theme> = {
             style: {
               color: gray[600],
               '&:hover': {
-                backgroundColor: gray[100],
+                backgroundColor: 'transparent',
               },
               '&:active': {
                 backgroundColor: gray[200],
@@ -184,7 +185,7 @@ export const inputsCustomizations: Components<Theme> = {
               ...theme.applyStyles('dark', {
                 color: gray[50],
                 '&:hover': {
-                  backgroundColor: gray[700],
+                  backgroundColor: 'transparent',
                 },
                 '&:active': {
                   backgroundColor: alpha(gray[700], 0.7),
@@ -200,7 +201,7 @@ export const inputsCustomizations: Components<Theme> = {
             style: {
               color: brand[700],
               '&:hover': {
-                backgroundColor: alpha(brand[100], 0.5),
+                backgroundColor: 'transparent',
               },
               '&:active': {
                 backgroundColor: alpha(brand[200], 0.7),
@@ -208,7 +209,7 @@ export const inputsCustomizations: Components<Theme> = {
               ...theme.applyStyles('dark', {
                 color: brand[100],
                 '&:hover': {
-                  backgroundColor: alpha(brand[900], 0.5),
+                  backgroundColor: 'transparent',
                 },
                 '&:active': {
                   backgroundColor: alpha(brand[900], 0.3),

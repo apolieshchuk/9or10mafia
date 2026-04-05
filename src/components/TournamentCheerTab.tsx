@@ -660,7 +660,7 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
               bgcolor: th.palette.primary.main,
               color: th.palette.primary.contrastText,
               '&:hover': {
-                bgcolor: th.palette.primary.dark,
+                bgcolor: th.palette.primary.main,
                 boxShadow: 'none',
                 backgroundImage: 'none',
               },
