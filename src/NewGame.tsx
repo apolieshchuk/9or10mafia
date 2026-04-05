@@ -249,7 +249,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   /** Турнір: програвша команда — бонус не більше 0.5 (після зміни переможця / старої чернетки). */
   useEffect(() => {
     if (!isTournamentGame || !winState || readOnlyTournament) return;
-    _setPlayers((prev) => {
+    _setPlayers((prev: Record<number, any>) => {
       let changed = false;
       const out = { ...prev };
       for (const k of Object.keys(out)) {
