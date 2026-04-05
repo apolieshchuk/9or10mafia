@@ -109,7 +109,9 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   const loadGenRef = React.useRef(0);
 
   const isClub = user?.authType === 'Клуб';
+  const isParticipantViewer = user?.authType === 'Учасник';
   const clubIdStr = user?._id != null ? String((user as any)._id) : '';
+  const myUserIdStr = user?._id != null ? String((user as any)._id) : '';
 
   const refresh = React.useCallback(async () => {
     if (!id) return;
@@ -389,6 +391,39 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                 {tournament?.winnerNickname ? ` · Переможець: ${tournament.winnerNickname}` : ''}
               </Typography>
 
+              {isParticipantViewer ? (
+                <>
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    Рейтинг турніру
+                  </Typography>
+                  <Box
+                    sx={{
+                      height: Math.max(320, 56 + standings.length * 52),
+                      width: '100%',
+                      maxWidth: '100%',
+                      mb: 3,
+                      '& .MuiDataGrid-row.tournament-standings--me': {
+                        backgroundColor: (t) => alpha(t.palette.primary.main, t.palette.mode === 'dark' ? 0.22 : 0.14),
+                        fontWeight: 700,
+                      },
+                    }}
+                  >
+                    <DataGrid
+                      rows={standings}
+                      columns={standingsColumns}
+                      density="compact"
+                      disableRowSelectionOnClick
+                      hideFooter={standings.length <= 25}
+                      getRowClassName={(params) =>
+                        String(params.row.userId) === myUserIdStr ? 'tournament-standings--me' : ''
+                      }
+                      initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+                      pageSizeOptions={[10, 25, 50]}
+                    />
+                  </Box>
+                </>
+              ) : null}
+
               {canEdit && (
                 <Paper sx={{ p: 2, mb: 2 }}>
                   <Stack direction="row" flexWrap="wrap" alignItems="baseline" justifyContent="space-between" gap={1} sx={{ mb: 1 }}>
@@ -481,7 +516,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                 </Paper>
               )}
 
-              {isClubOwner && (tournament?.status === 'draft' || tournament?.status === 'in_progress') && (
+              {!isParticipantViewer && isClubOwner && (tournament?.status === 'draft' || tournament?.status === 'in_progress') && (
                 <Paper sx={{ p: 2, mb: 2 }}>
                   <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
                     <Button variant="outlined" onClick={onGenerateSeating}>
@@ -491,7 +526,7 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                 </Paper>
               )}
 
-              {tournament?.seatingByGame && (
+              {!isParticipantViewer && tournament?.seatingByGame && (
                 <Paper sx={{ p: 2, mb: 2 }} ref={seatingRef} className="mafia-seating-png-export">
                   <TournamentSeatingTiles
                     numGames={tournament.numGames}
@@ -511,9 +546,12 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                 </Paper>
               )}
 
-              <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-                Ігри
-              </Typography>
+              {!isParticipantViewer ? (
+                <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                  Ігри
+                </Typography>
+              ) : null}
+              {!isParticipantViewer ? (
               <Stack spacing={1} sx={{ mb: 2 }}>
                 {Array.from({ length: tournament?.numGames || 0 }, (_, i) => i + 1).map((k) => {
                   const g = games.find((x) => Number(x.gameIndex) === k);
@@ -549,13 +587,18 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                   );
                 })}
               </Stack>
+              ) : null}
 
-              <Typography variant="h6" sx={{ mb: 1 }}>
-                Рейтинг турніру
-              </Typography>
-              <Box sx={{ height: 360, width: '100%', mb: 2 }}>
-                <DataGrid rows={standings} columns={standingsColumns} density="compact" disableRowSelectionOnClick />
-              </Box>
+              {!isParticipantViewer ? (
+                <>
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    Рейтинг турніру
+                  </Typography>
+                  <Box sx={{ height: 360, width: '100%', mb: 2 }}>
+                    <DataGrid rows={standings} columns={standingsColumns} density="compact" disableRowSelectionOnClick />
+                  </Box>
+                </>
+              ) : null}
 
               <Copyright />
             </Box>

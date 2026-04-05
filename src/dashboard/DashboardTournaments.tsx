@@ -110,6 +110,11 @@ export default function DashboardTournaments(props: { disableCustomTheme?: boole
                   </Button>
                 )}
               </Stack>
+              {user?.authType === 'Учасник' ? (
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                  Показано турніри, де ви в списку учасників або в розсадці.
+                </Typography>
+              ) : null}
               <Grid size={{ xs: 12, lg: 9 }}>
                 <DataGrid
                   rows={rows}
