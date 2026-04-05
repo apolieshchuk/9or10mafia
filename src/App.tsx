@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
+import {BrowserRouter, Routes, Route, Navigate, useParams} from "react-router-dom";
 import MarketingPage from "./MarketingPage";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
@@ -24,6 +24,12 @@ import ResetPassword from "./ResetPassword";
 import {BudgetRedirect} from "./Budget";
 import {CalendarRedirect} from "./Calendar";
 import PublicTournamentPage from "./PublicTournamentPage";
+
+/** Окремий інстанс NewGame на кожну гру турніру — після збереження / зміни URL форма не тягне стан попередньої гри. */
+function DashboardTournamentGame() {
+  const { tournamentId, gameIndex } = useParams<{ tournamentId: string; gameIndex: string }>();
+  return <NewGame key={`tournament-${tournamentId}-${gameIndex}`} />;
+}
 
 const App = () => {
   return (
@@ -51,7 +57,7 @@ const App = () => {
           <Route path="profile/tournaments" element={<PrivateRoute Component={DashboardTournaments}/>} />
           <Route path="profile/tournaments/new" element={<PrivateRoute Component={DashboardTournamentNew}/>} />
           <Route path="profile/tournaments/:id" element={<PrivateRoute Component={DashboardTournamentDetail}/>} />
-          <Route path="profile/tournament/:tournamentId/game/:gameIndex" element={<PrivateRoute Component={NewGame}/>} />
+          <Route path="profile/tournament/:tournamentId/game/:gameIndex" element={<PrivateRoute Component={DashboardTournamentGame}/>} />
           <Route path="new-game-rating" element={<PrivateRoute Component={NewGame}/>} />
         </Routes>
       </BrowserRouter>

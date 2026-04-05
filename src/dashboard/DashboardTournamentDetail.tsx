@@ -352,6 +352,23 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
   const isClubOwner = isClub && tournament?.clubId === clubIdStr;
   const allGamesSaved = tournament && tournament.gamesSaved >= tournament.numGames;
 
+  /** Найближча гра без збереженого результату (те саме, що nextGameIndex з API, але з актуального списку games після refresh). */
+  const nextUnsavedGameIndex = React.useMemo(() => {
+    if (!tournament || tournament.status !== 'in_progress') return null;
+    const numGames = Number(tournament.numGames) || 0;
+    if (numGames < 1) return null;
+    const saved = new Set(
+      (games || [])
+        .map((g: { gameIndex?: number }) => Number(g.gameIndex))
+        .filter((i: number) => Number.isFinite(i) && i >= 1)
+    );
+    if (saved.size >= numGames) return null;
+    for (let i = 1; i <= numGames; i++) {
+      if (!saved.has(i)) return i;
+    }
+    return null;
+  }, [tournament, games]);
+
   if (!tournament && id) {
     return (
       <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -386,10 +403,10 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
                 <Typography component="h1" variant="h5" sx={{ minWidth: 0 }}>
                   {tournament?.name}
                 </Typography>
-                {isClubOwner && tournament?.status === 'in_progress' && tournament?.nextGameIndex != null && (
+                {isClubOwner && tournament?.status === 'in_progress' && nextUnsavedGameIndex != null && (
                   <Button
                     component={Link}
-                    to={`/profile/tournament/${id}/game/${tournament.nextGameIndex}`}
+                    to={`/profile/tournament/${id}/game/${nextUnsavedGameIndex}`}
                     variant="outlined"
                     color="secondary"
                     size="small"
@@ -527,13 +544,13 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
               </Typography>
               <Stack spacing={1} sx={{ mb: 2 }}>
                 {Array.from({ length: tournament?.numGames || 0 }, (_, i) => i + 1).map((k) => {
-                  const g = games.find((x) => x.gameIndex === k);
+                  const g = games.find((x) => Number(x.gameIndex) === k);
                   const saved = Boolean(g && !g.hidden);
                   const hidden = g?.hidden;
                   const canPlay =
                     tournament?.status === 'in_progress' &&
                     isClubOwner &&
-                    tournament?.nextGameIndex === k;
+                    nextUnsavedGameIndex === k;
                   return (
                     <Stack key={k} direction="row" alignItems="center" spacing={1}>
                       <Typography sx={{ width: 80 }}>Гра {k}</Typography>

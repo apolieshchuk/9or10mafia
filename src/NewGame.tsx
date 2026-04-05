@@ -64,6 +64,22 @@ const RolesPoolMap: Record<number, string> = {
   4: 'Ш'
 }
 
+/** Бекенд зберігає ролі рядками (normalizeRole); у формі потрібні числа 0–4 для RolesPoolMap. */
+function apiRoleToUiRole(raw: unknown, mafiaSlot: { n: number }): number {
+  if (typeof raw === 'number' && raw >= 0 && raw <= 4 && Number.isFinite(raw)) {
+    return raw;
+  }
+  const s = String(raw ?? '').toLowerCase();
+  if (s === 'cit' || s === 'citizen') return 0;
+  if (s === 'don') return 3;
+  if (s === 'sher' || s === 'sheriff') return 4;
+  if (s === 'maf' || s === 'mafia') {
+    mafiaSlot.n += 1;
+    return mafiaSlot.n <= 1 ? 1 : 2;
+  }
+  return 0;
+}
+
 const createInitialPlayers = () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((acc, n) => {
   acc[n] = {n, title: `Гість ${n}`, warnings: 0, role: 0, killed: 0, bestTurn: {} as Record<number, string>, bonusPoints: 0};
   return acc
@@ -103,26 +119,27 @@ function applySeatingFromTournament(
   clubMemberList: any[],
   setPlayers: (fn: any) => void
 ) {
-  if (!seatMap) return;
   const nick = (oid: string) => {
     const u = clubMemberList.find((x: any) => String(x._id) === String(oid));
     return u?.nickname || u?.name || String(oid);
   };
   const restored = createInitialPlayers();
-  for (let s = 1; s <= 10; s++) {
-    const cell = seatMap[String(s)];
-    if (!cell?.userIds?.length) continue;
-    if (cell.userIds.length === 1) {
-      const oid = String(cell.userIds[0]);
-      restored[s] = { ...restored[s], title: nick(oid), id: oid, pendingTeamIds: undefined };
-    } else {
-      const [a, b] = cell.userIds.map(String);
-      restored[s] = {
-        ...restored[s],
-        title: `${nick(a)} / ${nick(b)}`,
-        id: '',
-        pendingTeamIds: [a, b],
-      };
+  if (seatMap && typeof seatMap === 'object') {
+    for (let s = 1; s <= 10; s++) {
+      const cell = seatMap[String(s)];
+      if (!cell?.userIds?.length) continue;
+      if (cell.userIds.length === 1) {
+        const oid = String(cell.userIds[0]);
+        restored[s] = { ...restored[s], title: nick(oid), id: oid, pendingTeamIds: undefined };
+      } else {
+        const [a, b] = cell.userIds.map(String);
+        restored[s] = {
+          ...restored[s],
+          title: `${nick(a)} / ${nick(b)}`,
+          id: '',
+          pendingTeamIds: [a, b],
+        };
+      }
     }
   }
   setPlayers(restored);
@@ -386,7 +403,16 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       });
       if (tournamentStorageKey) localStorage.removeItem(tournamentStorageKey);
       alert('Гру збережено');
-      navigate(`/profile/tournaments/${tournamentId}`);
+      try {
+        const { data: tour } = await axios.get(`/tournament/${tournamentId}`);
+        if (tour.nextGameIndex != null) {
+          navigate(`/profile/tournament/${tournamentId}/game/${tour.nextGameIndex}`, { replace: true });
+        } else {
+          navigate(`/profile/tournaments/${tournamentId}`);
+        }
+      } catch {
+        navigate(`/profile/tournaments/${tournamentId}`);
+      }
       return;
     }
     await axios.post('/club/rating-game', {
@@ -419,22 +445,24 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
             setReadOnlyTournament(true);
             setClubUsers([]);
             const restored = createInitialPlayers();
-            (existing.players || []).forEach((p: any) => {
-              const n = p.n;
-              if (n >= 1 && n <= 10) {
-                const bt: Record<number, string> = {};
-                (p.bestTurn || []).forEach((x: any) => {
-                  if (x && x.n != null) bt[Number(x.n)] = x.color;
-                });
-                restored[n] = {
-                  ...restored[n],
-                  ...p,
-                  bestTurn: bt,
-                  id: p.id ? String(p.id) : '',
-                  pendingTeamIds: undefined,
-                };
-              }
-            });
+            const mafiaSlot = { n: 0 };
+            for (let seat = 1; seat <= 10; seat++) {
+              const p = (existing.players || []).find((x: any) => Number(x.n) === seat);
+              if (!p) continue;
+              const bt: Record<number, string> = {};
+              (p.bestTurn || []).forEach((x: any) => {
+                if (x && x.n != null) bt[Number(x.n)] = x.color;
+              });
+              restored[seat] = {
+                ...restored[seat],
+                ...p,
+                n: seat,
+                role: apiRoleToUiRole(p.role, mafiaSlot),
+                bestTurn: bt,
+                id: p.id ? String(p.id) : '',
+                pendingTeamIds: undefined,
+              };
+            }
             setPlayers(restored);
             setWinState(existing.winState || '');
             setVotings(existing.votings || createInitialVotings());
@@ -472,6 +500,12 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
             return;
           }
 
+          setVotings(createInitialVotings());
+          setActiveVoting(null);
+          setWinState('');
+          setHideRoles(false);
+          setBonusAnchorEl(null);
+          setBonusPlayerN(0);
           const seatMap = tour.seatingByGame?.[String(idx)];
           applySeatingFromTournament(seatMap, members, setPlayers);
           return;
@@ -678,7 +712,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                           fontWeight: n !== 0 ? 800 : '',
                           cursor: 'pointer',
                         }} size={{xs: 2, sm: 1, lg: 1.5}} onClick={() => addRole(n)}>
-                          {n === 0 ? 'Р' : hideRoles ? '?' : `${RolesPoolMap[players[n].role]} `}
+                          {n === 0 ? 'Р' : hideRoles ? '?' : `${RolesPoolMap[Number(players[n].role)] ?? ''} `}
                         </Grid>
                     </>
                 }

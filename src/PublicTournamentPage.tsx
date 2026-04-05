@@ -20,7 +20,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { alpha } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import AppTheme from './theme/AppTheme';
 import AppAppBar from './components/AppAppBar';
@@ -337,6 +337,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
   const [data, setData] = React.useState<PublicPayload | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [tab, setTab] = React.useState(0);
+  const [liveGameLoading, setLiveGameLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (!id) return;
@@ -373,6 +374,25 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
     if (user?.authType !== 'Клуб' || !data?.clubId || user._id == null) return false;
     return String(user._id) === String(data.clubId);
   }, [user, data?.clubId]);
+
+  const goToLiveTournamentGame = React.useCallback(async () => {
+    if (!id) return;
+    setLiveGameLoading(true);
+    try {
+      const { data: body } = await axios.get<PublicPayload>(`/public/tournament/${id}`);
+      setData((prev) => (prev ? { ...prev, nextGameIndex: body.nextGameIndex ?? null, status: body.status } : prev));
+      const next = body.nextGameIndex;
+      if (next != null && body.status === 'in_progress') {
+        navigate(`/profile/tournament/${id}/game/${next}`);
+      } else {
+        alert('Немає гри без збереженого результату (перевірте статус турніру).');
+      }
+    } catch {
+      alert('Не вдалося отримати актуальні дані турніру.');
+    } finally {
+      setLiveGameLoading(false);
+    }
+  }, [id, navigate]);
 
   return (
     <AppTheme {...props}>
@@ -427,29 +447,27 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                     >
                       {data.name}
                     </Typography>
-                    {isClubOwnerPublic &&
-                      data.status === 'in_progress' &&
-                      data.nextGameIndex != null &&
-                      id && (
-                        <Button
-                          component={Link}
-                          to={`/profile/tournament/${id}/game/${data.nextGameIndex}`}
-                          variant="outlined"
-                          color="secondary"
-                          size="small"
-                          sx={{
-                            py: 0.25,
-                            px: 1,
-                            fontSize: '0.75rem',
-                            fontWeight: 600,
-                            minWidth: 'auto',
-                            flexShrink: 0,
-                            lineHeight: 1.5,
-                          }}
-                        >
-                          Діюча гра
-                        </Button>
-                      )}
+                    {isClubOwnerPublic && data.status === 'in_progress' && id && (
+                      <Button
+                        type="button"
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        disabled={liveGameLoading}
+                        onClick={() => void goToLiveTournamentGame()}
+                        sx={{
+                          py: 0.25,
+                          px: 1,
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          minWidth: 'auto',
+                          flexShrink: 0,
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {liveGameLoading ? '…' : 'Діюча гра'}
+                      </Button>
+                    )}
                   </Stack>
                   {data.clubName ? (
                     <Stack
