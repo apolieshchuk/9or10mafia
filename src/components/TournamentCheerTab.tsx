@@ -400,6 +400,7 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
         </Typography>
       ) : (
         <Box
+          ref={fieldLayoutRef}
           sx={{
             position: 'relative',
             zIndex: 1,
@@ -415,7 +416,7 @@ export default function TournamentCheerTab({ tournamentId, slots, currentUserId,
             const isSelf = currentUserId && p.id === String(currentUserId);
             const canClick = isLoggedIn && !alreadyCheered && !isSelf;
             const scatterKey = `${p.id}-${seatIndex}-${scatterIndex}`;
-            const { left, top } = cheerCardLayout(scatterKey, scatterIndex, cheerGrid.cols, cheerGrid.rows);
+            const { left, top } = cardPositions[scatterIndex] ?? { left: '50%', top: '50%' };
             return (
               <Box
                 key={scatterKey}
