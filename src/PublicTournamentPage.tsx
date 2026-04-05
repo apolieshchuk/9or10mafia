@@ -641,10 +641,6 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                   </Stack>
                   {socialPreviewUrl ? (
                     <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap" sx={{ pt: 0.25 }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.4 }}>
-                        Для прев’ю в Telegram / Facebook скопіюйте посилання на сторінку-прев’ю (краулери не бачать
-                        мета-теги звичайного SPA):
-                      </Typography>
                       <Button
                         type="button"
                         size="small"
