@@ -15,6 +15,7 @@ import TableRow from '@mui/material/TableRow';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -54,6 +55,8 @@ type PublicPayload = {
   numGames: number;
   scheduledDate: string | null;
   status: string;
+  /** Доки турнір не завершено — у рейтингу лише перші floor(numGames/2) ігор */
+  hideResultsAfterHalf?: boolean;
   clubId: string | null;
   nextGameIndex: number | null;
   clubName: string;
@@ -353,6 +356,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
             clubAvatarUrl: body.clubAvatarUrl ?? null,
             seatingByGame: body.seatingByGame ?? null,
             standingsRows: body.standingsRows ?? [],
+            hideResultsAfterHalf: Boolean(body.hideResultsAfterHalf),
           });
           setError(null);
         }
@@ -380,7 +384,16 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
     setLiveGameLoading(true);
     try {
       const { data: body } = await axios.get<PublicPayload>(`/public/tournament/${id}`);
-      setData((prev) => (prev ? { ...prev, nextGameIndex: body.nextGameIndex ?? null, status: body.status } : prev));
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              nextGameIndex: body.nextGameIndex ?? null,
+              status: body.status,
+              hideResultsAfterHalf: Boolean(body.hideResultsAfterHalf),
+            }
+          : prev
+      );
       const next = body.nextGameIndex;
       if (next != null && body.status === 'in_progress') {
         navigate(`/profile/tournament/${id}/game/${next}`);
@@ -601,6 +614,34 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
 
               {tab === 2 && (
                 <Box sx={{ pt: 1, width: '100%' }}>
+                  {data.hideResultsAfterHalf && data.status !== 'completed' ? (
+                    <Alert severity="info" sx={{ mb: 2 }}>
+                      <Typography variant="body2" component="span" sx={{ lineHeight: 1.5 }}>
+                        {(() => {
+                          const n = Number(data.numGames) || 0;
+                          const firstBlock = Math.floor(n / 2);
+                          if (firstBlock > 0 && n > 0) {
+                            return (
+                              <>
+                                До завершення турніру тут показано рейтинг лише за{' '}
+                                <strong>
+                                  іграми 1–{firstBlock} з {n}
+                                </strong>
+                                . Результати наступних ігор у публічну таблицю не входять; після завершення турніру
+                                з’явиться повний залік.
+                              </>
+                            );
+                          }
+                          return (
+                            <>
+                              За налаштуванням організатора частина ігор не відображається в публічному рейтингу, доки
+                              турнір не завершено. Після завершення тут з’явиться повна таблиця результатів.
+                            </>
+                          );
+                        })()}
+                      </Typography>
+                    </Alert>
+                  ) : null}
                   {data.standingsRows.length === 0 ? (
                     <Typography variant="body2" color="text.secondary">
                       Таблиця результатів з’явиться після збережених ігор турніру.
