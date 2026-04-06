@@ -19,7 +19,7 @@ import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -35,6 +35,10 @@ import TournamentCheerTab from './components/TournamentCheerTab';
 import { useAuth } from './AuthProvider';
 import DownloadIcon from '@mui/icons-material/Download';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import EventSeatOutlinedIcon from '@mui/icons-material/EventSeatOutlined';
+import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
+import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivismOutlined';
 import { downloadSeatingAsPng } from './utils/seatingPngExport';
 import { resolveTournamentYoutubeHref } from './constants/youtube';
 
@@ -442,9 +446,8 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
   const [liveGameLoading, setLiveGameLoading] = React.useState(false);
   const publicSeatingExportRef = React.useRef<HTMLDivElement>(null);
   const [seatingDownloadBusy, setSeatingDownloadBusy] = React.useState(false);
-  const theme = useTheme();
-  /** Кнопки прокрутки Tabs на touch-пристроях часто з’їдають перший тап після свайпу; лишаємо лише горизонтальний свайп. */
-  const tabScrollButtonsMobileOff = useMediaQuery(theme.breakpoints.down('sm'));
+  /** На широких екранах — підписи + scrollable; на вузьких — лише іконки + fullWidth без горизонтального скролу. */
+  const showTabLabels = useMediaQuery('(min-width:600px)');
 
   const handleDownloadSeatingPng = async () => {
     const el = publicSeatingExportRef.current;
@@ -701,32 +704,59 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                 <Tabs
                   value={tab}
                   onChange={(_, v) => setTab(v)}
-                  variant="scrollable"
-                  scrollButtons={tabScrollButtonsMobileOff ? false : 'auto'}
+                  variant={showTabLabels ? 'scrollable' : 'fullWidth'}
+                  scrollButtons={showTabLabels ? 'auto' : false}
                   allowScrollButtonsMobile={false}
                   sx={{
                     flex: { sm: '1 1 auto' },
                     minWidth: 0,
-                    minHeight: { xs: 44, sm: 48 },
-                    touchAction: 'manipulation',
-                    '& .MuiTabs-scroller': {
-                      touchAction: 'pan-x pinch-zoom',
-                      overscrollBehaviorX: 'contain',
-                    },
+                    minHeight: showTabLabels ? { xs: 44, sm: 48 } : { xs: 40, sm: 48 },
+                    ...(showTabLabels
+                      ? {}
+                      : { '& .MuiTabs-flexContainer': { alignItems: 'center', minHeight: 40 } }),
                     '& .MuiTab-root': {
-                      touchAction: 'manipulation',
-                      WebkitTapHighlightColor: 'transparent',
-                      minHeight: { xs: 44, sm: 48 },
-                      py: 0.75,
+                      minHeight: showTabLabels ? { xs: 44, sm: 48 } : { xs: 40, sm: 48 },
+                      py: showTabLabels ? 0.75 : 0.25,
                       fontSize: { xs: '0.95rem', sm: '1.05rem' },
                       fontWeight: 700,
+                      justifyContent: 'center',
+                      minWidth: { xs: 0, sm: 90 },
+                      px: { xs: 0.5, sm: 1 },
+                    },
+                    '& .MuiTab-iconWrapper': {
+                      ...(showTabLabels ? { mr: 1, mb: 0 } : { mr: 0, mb: 0 }),
+                    },
+                    '& .MuiTab-iconWrapper .MuiSvgIcon-root': {
+                      fontSize: showTabLabels ? '1.25rem' : '2.125rem',
+                      width: '1em',
+                      height: '1em',
                     },
                   }}
                 >
-                  <Tab label="Учасники" />
-                  <Tab label="Розсадка" />
-                  <Tab label="Результати" />
-                  <Tab label="Підтримати учасника" />
+                  <Tab
+                    icon={<GroupsOutlinedIcon />}
+                    label={showTabLabels ? 'Учасники' : undefined}
+                    iconPosition={showTabLabels ? 'start' : 'top'}
+                    aria-label="Учасники"
+                  />
+                  <Tab
+                    icon={<EventSeatOutlinedIcon />}
+                    label={showTabLabels ? 'Розсадка' : undefined}
+                    iconPosition={showTabLabels ? 'start' : 'top'}
+                    aria-label="Розсадка"
+                  />
+                  <Tab
+                    icon={<LeaderboardOutlinedIcon />}
+                    label={showTabLabels ? 'Результати' : undefined}
+                    iconPosition={showTabLabels ? 'start' : 'top'}
+                    aria-label="Результати"
+                  />
+                  <Tab
+                    icon={<VolunteerActivismOutlinedIcon />}
+                    label={showTabLabels ? 'Підтримати учасника' : undefined}
+                    iconPosition={showTabLabels ? 'start' : 'top'}
+                    aria-label="Підтримати учасника"
+                  />
                 </Tabs>
                 {!data.clubName?.trim() ? (
                   <PublicTournamentYoutubeButton
