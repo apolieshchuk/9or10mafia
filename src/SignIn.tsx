@@ -21,6 +21,7 @@ import SelectInput from "@mui/material/Select/SelectInput";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "./axios";
+import { normalizeAuthEmail } from './utils/email';
 import {useAuth} from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -90,7 +91,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     const password = document.getElementById('password') as HTMLInputElement;
 
     await axios.post('/auth/login', {
-      email: email.value,
+      email: normalizeAuthEmail(email.value),
       password: password.value,
       authType,
     }).then(({ data }) => {
@@ -109,7 +110,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    const emailNorm = normalizeAuthEmail(email.value);
+    if (!emailNorm || !/\S+@\S+\.\S+/.test(emailNorm)) {
       setEmailError(true);
       setEmailErrorMessage('Введіть коректну електронну адресу');
       isValid = false;

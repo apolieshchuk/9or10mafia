@@ -9,6 +9,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from '../axios';
+import { normalizeAuthEmail } from '../utils/email';
 
 interface ForgotPasswordProps {
   open: boolean;
@@ -23,7 +24,8 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const email = formData.get('email') as string;
+    const raw = formData.get('email') as string;
+    const email = normalizeAuthEmail(raw ?? '');
     if (!email) return;
 
     setLoading(true);
