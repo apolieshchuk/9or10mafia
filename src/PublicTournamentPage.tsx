@@ -16,6 +16,7 @@ import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -442,7 +443,10 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
   const { user } = useAuth();
   const [data, setData] = React.useState<PublicPayload | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [, startTabContentTransition] = React.useTransition();
+  /** Відразу для MUI Tabs (`value`); контент рендериться з `contentTab` після transition. */
   const [tab, setTab] = React.useState(0);
+  const [contentTab, setContentTab] = React.useState(0);
   const [liveGameLoading, setLiveGameLoading] = React.useState(false);
   const publicSeatingExportRef = React.useRef<HTMLDivElement>(null);
   const [seatingDownloadBusy, setSeatingDownloadBusy] = React.useState(false);
@@ -704,7 +708,10 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                 <Tabs
                   value={tab}
                   onChange={(_, v) => {
-                    React.startTransition(() => setTab(v));
+                    setTab(v);
+                    startTabContentTransition(() => {
+                      setContentTab(v);
+                    });
                   }}
                   variant={showTabLabels ? 'scrollable' : 'fullWidth'}
                   scrollButtons={showTabLabels ? 'auto' : false}
@@ -774,146 +781,164 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                 ) : null}
               </Stack>
 
-              {tab === 0 && (
-                <Box sx={{ pt: 1, width: '100%', minWidth: 0, alignSelf: 'stretch' }}>
-                  {data.participantSlots.length === 0 ? (
-                    <TableContainer
-                      component={Paper}
-                      elevation={0}
-                      sx={{
-                        borderRadius: 2,
-                        border: (t) => `1px solid ${t.palette.divider}`,
-                        boxShadow: (t) => t.shadows[2],
-                        width: '100%',
-                        maxWidth: '100%',
-                        boxSizing: 'border-box',
-                      }}
-                    >
-                      <Table size="medium">
-                        <TableBody>
-                          <TableRow>
-                            <TableCell align="center" sx={{ py: 4 }}>
-                              <Typography variant="body2" color="text.secondary">
-                                Список учасників ще формується.
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  ) : (
-                    <PublicParticipantsTable slots={data.participantSlots} />
-                  )}
+              {tab !== contentTab ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    py: 6,
+                    minHeight: 200,
+                  }}
+                  aria-busy="true"
+                  aria-live="polite"
+                >
+                  <CircularProgress />
                 </Box>
-              )}
-
-              {tab === 1 && (
-                <Box sx={{ pt: 1 }}>
-                  {!data.seatingByGame ? (
-                    <Typography variant="body2" color="text.secondary">
-                      Розсадку ще не згенеровано.
-                    </Typography>
-                  ) : (
-                    <Paper
-                      ref={publicSeatingExportRef}
-                      elevation={0}
-                      className="mafia-seating-png-export"
-                      sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 2, border: (t) => `1px solid ${t.palette.divider}` }}
-                    >
-                      <TournamentSeatingTiles
-                        numGames={data.numGames}
-                        seatingByGame={data.seatingByGame}
-                        formatSeat={(userIds) => formatSeatingCell(userIds, nickLookup)}
-                        title="Розсадка"
-                        titleAction={
-                          <Button
-                            type="button"
-                            variant="outlined"
-                            size="small"
-                            startIcon={<DownloadIcon />}
-                            disabled={seatingDownloadBusy}
-                            onClick={() => void handleDownloadSeatingPng()}
-                          >
-                            {seatingDownloadBusy ? 'Зберігаємо…' : 'Завантажити'}
-                          </Button>
-                        }
-                      />
-                    </Paper>
-                  )}
-                </Box>
-              )}
-
-              {tab === 2 && (
-                <Box sx={{ pt: 1, width: '100%' }}>
-                  {data.hideResultsAfterHalf && data.status !== 'completed' ? (
-                    <Alert severity="info" sx={{ mb: 2 }}>
-                      <Typography variant="body2" component="span" sx={{ lineHeight: 1.5 }}>
-                        {(() => {
-                          const n = Number(data.numGames) || 0;
-                          const firstBlock = Math.floor(n / 2);
-                          if (firstBlock > 0 && n > 0) {
-                            return (
-                              <>
-                                До завершення турніру тут показано рейтинг лише за{' '}
-                                <strong>
-                                  іграми 1–{firstBlock} з {n}
-                                </strong>
-                                . Результати наступних ігор у публічну таблицю не входять; після завершення турніру
-                                з’явиться повний залік.
-                              </>
-                            );
-                          }
-                          return (
-                            <>
-                              За налаштуванням організатора частина ігор не відображається в публічному рейтингу, доки
-                              турнір не завершено. Після завершення тут з’явиться повна таблиця результатів.
-                            </>
-                          );
-                        })()}
-                      </Typography>
-                    </Alert>
+              ) : (
+                <>
+                  {contentTab === 0 ? (
+                    <Box sx={{ pt: 1, width: '100%', minWidth: 0, alignSelf: 'stretch' }}>
+                      {data.participantSlots.length === 0 ? (
+                        <TableContainer
+                          component={Paper}
+                          elevation={0}
+                          sx={{
+                            borderRadius: 2,
+                            border: (t) => `1px solid ${t.palette.divider}`,
+                            boxShadow: (t) => t.shadows[2],
+                            width: '100%',
+                            maxWidth: '100%',
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <Table size="medium">
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="center" sx={{ py: 4 }}>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Список учасників ще формується.
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      ) : (
+                        <PublicParticipantsTable slots={data.participantSlots} />
+                      )}
+                    </Box>
                   ) : null}
-                  {data.standingsRows.length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">
-                      Таблиця результатів з’явиться після збережених ігор турніру.
-                    </Typography>
-                  ) : (
-                    <DataGrid
-                      rows={data.standingsRows}
-                      columns={standingsColumns}
-                      getRowId={(r) => r.userId}
-                      disableColumnMenu
-                      disableColumnResize
-                      disableColumnSorting
-                      density="compact"
-                      initialState={{
-                        pagination: { paginationModel: { pageSize: 15 } },
-                      }}
-                      pageSizeOptions={[15]}
-                      getRowClassName={(params) =>
-                        params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
-                      }
-                      sx={{
-                        border: (t) => `1px solid ${t.palette.divider}`,
-                        borderRadius: 2,
-                        '& .MuiDataGrid-columnHeaders': {
-                          background: (t) =>
-                            `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
-                        },
-                        '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 700, fontSize: '0.75rem' },
-                      }}
-                    />
-                  )}
-                </Box>
-              )}
 
-              {tab === 3 && id && (
-                <TournamentCheerTab
-                  tournamentId={id}
-                  slots={data.participantSlots}
-                  currentUserId={user?._id != null ? String(user._id) : null}
-                  isLoggedIn={Boolean(user)}
-                />
+                  {contentTab === 1 ? (
+                    <Box sx={{ pt: 1 }}>
+                      {!data.seatingByGame ? (
+                        <Typography variant="body2" color="text.secondary">
+                          Розсадку ще не згенеровано.
+                        </Typography>
+                      ) : (
+                        <Paper
+                          ref={publicSeatingExportRef}
+                          elevation={0}
+                          className="mafia-seating-png-export"
+                          sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 2, border: (t) => `1px solid ${t.palette.divider}` }}
+                        >
+                          <TournamentSeatingTiles
+                            numGames={data.numGames}
+                            seatingByGame={data.seatingByGame}
+                            formatSeat={(userIds) => formatSeatingCell(userIds, nickLookup)}
+                            title="Розсадка"
+                            titleAction={
+                              <Button
+                                type="button"
+                                variant="outlined"
+                                size="small"
+                                startIcon={<DownloadIcon />}
+                                disabled={seatingDownloadBusy}
+                                onClick={() => void handleDownloadSeatingPng()}
+                              >
+                                {seatingDownloadBusy ? 'Зберігаємо…' : 'Завантажити'}
+                              </Button>
+                            }
+                          />
+                        </Paper>
+                      )}
+                    </Box>
+                  ) : null}
+
+                  {contentTab === 2 ? (
+                    <Box sx={{ pt: 1, width: '100%' }}>
+                      {data.hideResultsAfterHalf && data.status !== 'completed' ? (
+                        <Alert severity="info" sx={{ mb: 2 }}>
+                          <Typography variant="body2" component="span" sx={{ lineHeight: 1.5 }}>
+                            {(() => {
+                              const n = Number(data.numGames) || 0;
+                              const firstBlock = Math.floor(n / 2);
+                              if (firstBlock > 0 && n > 0) {
+                                return (
+                                  <>
+                                    До завершення турніру тут показано рейтинг лише за{' '}
+                                    <strong>
+                                      іграми 1–{firstBlock} з {n}
+                                    </strong>
+                                    . Результати наступних ігор у публічну таблицю не входять; після завершення турніру
+                                    з’явиться повний залік.
+                                  </>
+                                );
+                              }
+                              return (
+                                <>
+                                  За налаштуванням організатора частина ігор не відображається в публічному рейтингу, доки
+                                  турнір не завершено. Після завершення тут з’явиться повна таблиця результатів.
+                                </>
+                              );
+                            })()}
+                          </Typography>
+                        </Alert>
+                      ) : null}
+                      {data.standingsRows.length === 0 ? (
+                        <Typography variant="body2" color="text.secondary">
+                          Таблиця результатів з’явиться після збережених ігор турніру.
+                        </Typography>
+                      ) : (
+                        <DataGrid
+                          rows={data.standingsRows}
+                          columns={standingsColumns}
+                          getRowId={(r) => r.userId}
+                          disableColumnMenu
+                          disableColumnResize
+                          disableColumnSorting
+                          density="compact"
+                          initialState={{
+                            pagination: { paginationModel: { pageSize: 15 } },
+                          }}
+                          pageSizeOptions={[15]}
+                          getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                          }
+                          sx={{
+                            border: (t) => `1px solid ${t.palette.divider}`,
+                            borderRadius: 2,
+                            '& .MuiDataGrid-columnHeaders': {
+                              background: (t) =>
+                                `linear-gradient(90deg, ${alpha(t.palette.primary.main, 0.88)} 0%, ${alpha(t.palette.primary.dark, 0.82)} 100%)`,
+                            },
+                            '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 700, fontSize: '0.75rem' },
+                          }}
+                        />
+                      )}
+                    </Box>
+                  ) : null}
+
+                  {contentTab === 3 && id ? (
+                    <TournamentCheerTab
+                      tournamentId={id}
+                      slots={data.participantSlots}
+                      currentUserId={user?._id != null ? String(user._id) : null}
+                      isLoggedIn={Boolean(user)}
+                    />
+                  ) : null}
+                </>
               )}
             </Stack>
           )}
