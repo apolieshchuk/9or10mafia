@@ -703,7 +703,9 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
               >
                 <Tabs
                   value={tab}
-                  onChange={(_, v) => setTab(v)}
+                  onChange={(_, v) => {
+                    React.startTransition(() => setTab(v));
+                  }}
                   variant={showTabLabels ? 'scrollable' : 'fullWidth'}
                   scrollButtons={showTabLabels ? 'auto' : false}
                   allowScrollButtonsMobile={false}
