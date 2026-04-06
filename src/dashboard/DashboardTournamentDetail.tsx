@@ -69,6 +69,12 @@ function shuffleInPlace<T>(arr: T[]) {
 
 type Slot = { userIds: string[] };
 
+function normalizeSlots(participants: { userIds: string[] }[]): Slot[] {
+  return participants.map((p) => ({
+    userIds: p.userIds.map((id) => String(id)),
+  }));
+}
+
 /** Бієкція слот → місце (1..10), щоб ніхто з учасників слота не сидів на вже використаному для нього номері місця. */
 function findPermutationAvoidingRepeatedSeats(
   slots: Slot[],
@@ -84,14 +90,14 @@ function findPermutationAvoidingRepeatedSeats(
     return true;
   };
 
-  for (let attempt = 0; attempt < 160; attempt++) {
+  const dfsSolve = (randomizeCandidates: boolean): number[] | null => {
     const result: number[] = new Array(n);
     const taken = new Set<number>();
 
     const dfs = (i: number): boolean => {
       if (i === n) return true;
       const candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((s) => !taken.has(s));
-      shuffleInPlace(candidates);
+      if (randomizeCandidates) shuffleInPlace(candidates);
       for (const seat of candidates) {
         if (!seatAllowedForSlot(i, seat)) continue;
         taken.add(seat);
@@ -102,8 +108,29 @@ function findPermutationAvoidingRepeatedSeats(
       return false;
     };
 
-    if (dfs(0)) return result;
+    return dfs(0) ? result : null;
+  };
+
+  for (let attempt = 0; attempt < 400; attempt++) {
+    const r = dfsSolve(true);
+    if (r) return r;
   }
+
+  const det = dfsSolve(false);
+  if (det) return det;
+
+  for (let t = 0; t < 25_000; t++) {
+    const order = shuffleInPlace([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    let ok = true;
+    for (let i = 0; i < n; i++) {
+      if (!seatAllowedForSlot(i, order[i])) {
+        ok = false;
+        break;
+      }
+    }
+    if (ok) return [...order];
+  }
+
   return null;
 }
 
@@ -132,7 +159,7 @@ export function generateSeatingByGame(
   seatingByGame: Record<string, Record<string, { userIds: string[] }>>;
   relaxedConstraints: boolean;
 } {
-  const slots: Slot[] = participants.map((p) => ({ userIds: [...p.userIds] }));
+  const slots: Slot[] = normalizeSlots(participants);
   const out: Record<string, Record<string, { userIds: string[] }>> = {};
   const usedSeatsByUser = new Map<string, Set<number>>();
   let relaxedConstraints = false;
