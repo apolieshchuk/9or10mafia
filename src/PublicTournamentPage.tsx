@@ -523,7 +523,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
         component="main"
         sx={{
           minHeight: '60vh',
-          pt: { xs: 10, sm: 12 },
+          pt: { xs: 14, sm: 13 },
           pb: 4,
           px: { xs: 1.5, sm: 2 },
         }}
@@ -706,7 +706,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                 >
                   <Tab label="Учасники" />
                   <Tab label="Розсадка" />
-                  <Tab label="Таблиця результатів" />
+                  <Tab label="Результати" />
                   <Tab label="Підтримати учасника" />
                 </Tabs>
                 {!data.clubName?.trim() ? (
