@@ -592,44 +592,59 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                   </Stack>
                   {data.clubName?.trim() ? (
                     <Stack
-                      alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
-                      spacing={1}
+                      direction="row"
+                      alignItems="center"
+                      gap={{ xs: 1, sm: 1.25 }}
                       sx={{
                         flexShrink: 0,
                         ml: { xs: 0, sm: 'auto' },
-                        maxWidth: { xs: '100%', sm: 360 },
+                        maxWidth: { xs: '100%', sm: 400 },
+                        width: { xs: '100%', sm: 'auto' },
+                        justifyContent: { xs: 'flex-start', sm: 'flex-end' },
                       }}
                     >
-                      <Stack direction="row" alignItems="center" gap={1.25} sx={{ width: '100%', justifyContent: { sm: 'flex-end' } }}>
-                        <RemoteAvatar
-                          avatarUrl={data.clubAvatarUrl}
-                          nickname={data.clubName}
-                          sx={{
-                            width: 52,
-                            height: 52,
-                            fontSize: '1.2rem',
-                            flexShrink: 0,
-                            border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.35)}`,
-                          }}
-                        />
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{
-                            letterSpacing: 0.4,
-                            lineHeight: 1.35,
-                            textAlign: { xs: 'left', sm: 'right' },
-                            flex: 1,
-                            minWidth: 0,
-                          }}
-                        >
-                          Клуб: {data.clubName}
-                        </Typography>
-                      </Stack>
+                      <RemoteAvatar
+                        avatarUrl={data.clubAvatarUrl}
+                        nickname={data.clubName}
+                        sx={{
+                          width: { xs: 44, sm: 52 },
+                          height: { xs: 44, sm: 52 },
+                          fontSize: { xs: '1rem', sm: '1.2rem' },
+                          flexShrink: 0,
+                          border: (t) => `2px solid ${alpha(t.palette.primary.main, 0.35)}`,
+                        }}
+                      />
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{
+                          letterSpacing: 0.4,
+                          lineHeight: 1.35,
+                          textAlign: { xs: 'left', sm: 'right' },
+                          flex: 1,
+                          minWidth: 0,
+                        }}
+                      >
+                        Клуб: {data.clubName}
+                      </Typography>
                       <PublicTournamentYoutubeButton
                         youtubeUrl={data.youtubeUrl}
                         sx={{
-                          alignSelf: { xs: 'stretch', sm: 'flex-end' },
+                          flexShrink: 0,
+                          alignSelf: 'center',
+                          minWidth: 'auto',
+                          py: { xs: 0.25, sm: 0.5 },
+                          px: { xs: 0.65, sm: 1 },
+                          fontSize: { xs: '0.68rem', sm: undefined },
+                          fontWeight: 700,
+                          lineHeight: 1.2,
+                          '& .MuiButton-startIcon': {
+                            marginRight: { xs: '4px', sm: '8px' },
+                            marginLeft: { xs: '-2px', sm: 0 },
+                          },
+                          '& .MuiButton-startIcon .MuiSvgIcon-root': {
+                            fontSize: { xs: 16, sm: 20 },
+                          },
                         }}
                       />
                     </Stack>
