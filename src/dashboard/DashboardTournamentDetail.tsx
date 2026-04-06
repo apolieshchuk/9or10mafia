@@ -119,18 +119,6 @@ function findPermutationAvoidingRepeatedSeats(
   const det = dfsSolve(false);
   if (det) return det;
 
-  for (let t = 0; t < 25_000; t++) {
-    const order = shuffleInPlace([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    let ok = true;
-    for (let i = 0; i < n; i++) {
-      if (!seatAllowedForSlot(i, order[i])) {
-        ok = false;
-        break;
-      }
-    }
-    if (ok) return [...order];
-  }
-
   return null;
 }
 
