@@ -59,132 +59,6 @@ function tournamentToSettingsSnapshot(t: any) {
   });
 }
 
-function shuffleInPlace<T>(arr: T[]) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-type Slot = { userIds: string[] };
-
-function normalizeSlots(participants: { userIds: string[] }[]): Slot[] {
-  return participants.map((p) => ({
-    userIds: p.userIds.map((id) => String(id)),
-  }));
-}
-
-/** Бієкція слот → місце (1..10), щоб ніхто з учасників слота не сидів на вже використаному для нього номері місця. */
-function findPermutationAvoidingRepeatedSeats(
-  slots: Slot[],
-  usedSeatsByUser: Map<string, Set<number>>
-): number[] | null {
-  const n = slots.length;
-  if (n !== 10) return null;
-
-  const seatAllowedForSlot = (slotIdx: number, seat: number) => {
-    for (const uid of slots[slotIdx].userIds) {
-      if (usedSeatsByUser.get(uid)?.has(seat)) return false;
-    }
-    return true;
-  };
-
-  const dfsSolve = (randomizeCandidates: boolean): number[] | null => {
-    const result: number[] = new Array(n);
-    const taken = new Set<number>();
-
-    const dfs = (i: number): boolean => {
-      if (i === n) return true;
-      const candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((s) => !taken.has(s));
-      if (randomizeCandidates) shuffleInPlace(candidates);
-      for (const seat of candidates) {
-        if (!seatAllowedForSlot(i, seat)) continue;
-        taken.add(seat);
-        result[i] = seat;
-        if (dfs(i + 1)) return true;
-        taken.delete(seat);
-      }
-      return false;
-    };
-
-    return dfs(0) ? result : null;
-  };
-
-  for (let attempt = 0; attempt < 400; attempt++) {
-    const r = dfsSolve(true);
-    if (r) return r;
-  }
-
-  const det = dfsSolve(false);
-  if (det) return det;
-
-  return null;
-}
-
-function recordSeatsForGame(slots: Slot[], seatBySlot: number[], usedSeatsByUser: Map<string, Set<number>>) {
-  for (let i = 0; i < slots.length; i++) {
-    const seat = seatBySlot[i];
-    for (const uid of slots[i].userIds) {
-      let set = usedSeatsByUser.get(uid);
-      if (!set) {
-        set = new Set<number>();
-        usedSeatsByUser.set(uid, set);
-      }
-      set.add(seat);
-    }
-  }
-}
-
-/**
- * participants: { userIds: string[] }[] length 10, each 1 or 2 ids.
- * Для кожної гри намагається не ставити ту саму людину на той самий номер місця (1–10), що вже був у неї в попередніх іграх.
- */
-export function generateSeatingByGame(
-  participants: { userIds: string[] }[],
-  numGames: number
-): {
-  seatingByGame: Record<string, Record<string, { userIds: string[] }>>;
-  relaxedConstraints: boolean;
-} {
-  const slots: Slot[] = normalizeSlots(participants);
-  const out: Record<string, Record<string, { userIds: string[] }>> = {};
-  const usedSeatsByUser = new Map<string, Set<number>>();
-  let relaxedConstraints = false;
-
-  for (let g = 1; g <= numGames; g++) {
-    const perm = findPermutationAvoidingRepeatedSeats(slots, usedSeatsByUser);
-    if (perm) {
-      const gameSeats: Record<string, { userIds: string[] }> = {};
-      for (let i = 0; i < 10; i++) {
-        gameSeats[String(perm[i])] = { userIds: [...slots[i].userIds] };
-      }
-      out[String(g)] = gameSeats;
-      recordSeatsForGame(slots, perm, usedSeatsByUser);
-    } else {
-      relaxedConstraints = true;
-      const shuffled = shuffleInPlace([...slots]);
-      const gameSeats: Record<string, { userIds: string[] }> = {};
-      for (let s = 1; s <= 10; s++) {
-        gameSeats[String(s)] = { userIds: [...shuffled[s - 1].userIds] };
-      }
-      out[String(g)] = gameSeats;
-      for (let s = 1; s <= 10; s++) {
-        for (const uid of shuffled[s - 1].userIds) {
-          let set = usedSeatsByUser.get(uid);
-          if (!set) {
-            set = new Set<number>();
-            usedSeatsByUser.set(uid, set);
-          }
-          set.add(s);
-        }
-      }
-    }
-  }
-
-  return { seatingByGame: out, relaxedConstraints };
-}
-
 export default function DashboardTournamentDetail(props: { disableCustomTheme?: boolean }) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -360,19 +234,19 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
     const participants = participantRows
       .filter((r) => r.u1)
       .map((r) => ({
-        userIds: [r.u1!._id, ...(r.u2 ? [r.u2._id] : [])],
+        userIds: [String(r.u1!._id), ...(r.u2 ? [String(r.u2._id)] : [])],
       }));
-    const { seatingByGame, relaxedConstraints } = generateSeatingByGame(
-      participants,
-      tournament.numGames
-    );
     try {
-      await axios.put(`/club/tournament/${id}/seating`, { seatingByGame });
+      const { data } = await axios.post<{
+        data?: string;
+        relaxedConstraints?: boolean;
+        error?: string;
+      }>(`/club/tournament/${id}/seating/generate`, { participants });
       await refresh();
       alert(
-        relaxedConstraints
-          ? 'Розсадку збережено. Для однієї або кількох ігор не вдалося уникнути повтору того ж місця (занадто багато ігор або обмеження пар) — там використано випадкову перестановку.'
-          : 'Розсадку згенеровано та збережено'
+        data.relaxedConstraints
+          ? 'Розсадку збережено на сервері. Для однієї або кількох ігор не вдалося уникнути повтору того ж місця — там використано випадкову перестановку.'
+          : 'Розсадку згенеровано на сервері та збережено'
       );
     } catch (e: any) {
       alert(e?.response?.data?.error || 'Помилка');
