@@ -67,22 +67,107 @@ function shuffleInPlace<T>(arr: T[]) {
   return arr;
 }
 
-/** participants: { userIds: string[] }[] length 10, each 1 or 2 ids */
+type Slot = { userIds: string[] };
+
+/** Бієкція слот → місце (1..10), щоб ніхто з учасників слота не сидів на вже використаному для нього номері місця. */
+function findPermutationAvoidingRepeatedSeats(
+  slots: Slot[],
+  usedSeatsByUser: Map<string, Set<number>>
+): number[] | null {
+  const n = slots.length;
+  if (n !== 10) return null;
+
+  const seatAllowedForSlot = (slotIdx: number, seat: number) => {
+    for (const uid of slots[slotIdx].userIds) {
+      if (usedSeatsByUser.get(uid)?.has(seat)) return false;
+    }
+    return true;
+  };
+
+  for (let attempt = 0; attempt < 160; attempt++) {
+    const result: number[] = new Array(n);
+    const taken = new Set<number>();
+
+    const dfs = (i: number): boolean => {
+      if (i === n) return true;
+      const candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((s) => !taken.has(s));
+      shuffleInPlace(candidates);
+      for (const seat of candidates) {
+        if (!seatAllowedForSlot(i, seat)) continue;
+        taken.add(seat);
+        result[i] = seat;
+        if (dfs(i + 1)) return true;
+        taken.delete(seat);
+      }
+      return false;
+    };
+
+    if (dfs(0)) return result;
+  }
+  return null;
+}
+
+function recordSeatsForGame(slots: Slot[], seatBySlot: number[], usedSeatsByUser: Map<string, Set<number>>) {
+  for (let i = 0; i < slots.length; i++) {
+    const seat = seatBySlot[i];
+    for (const uid of slots[i].userIds) {
+      let set = usedSeatsByUser.get(uid);
+      if (!set) {
+        set = new Set<number>();
+        usedSeatsByUser.set(uid, set);
+      }
+      set.add(seat);
+    }
+  }
+}
+
+/**
+ * participants: { userIds: string[] }[] length 10, each 1 or 2 ids.
+ * Для кожної гри намагається не ставити ту саму людину на той самий номер місця (1–10), що вже був у неї в попередніх іграх.
+ */
 export function generateSeatingByGame(
   participants: { userIds: string[] }[],
   numGames: number
-): Record<string, Record<string, { userIds: string[] }>> {
-  const slots = participants.map((p) => ({ userIds: [...p.userIds] }));
+): {
+  seatingByGame: Record<string, Record<string, { userIds: string[] }>>;
+  relaxedConstraints: boolean;
+} {
+  const slots: Slot[] = participants.map((p) => ({ userIds: [...p.userIds] }));
   const out: Record<string, Record<string, { userIds: string[] }>> = {};
+  const usedSeatsByUser = new Map<string, Set<number>>();
+  let relaxedConstraints = false;
+
   for (let g = 1; g <= numGames; g++) {
-    const shuffled = shuffleInPlace([...slots]);
-    const gameSeats: Record<string, { userIds: string[] }> = {};
-    for (let s = 1; s <= 10; s++) {
-      gameSeats[String(s)] = { userIds: [...shuffled[s - 1].userIds] };
+    const perm = findPermutationAvoidingRepeatedSeats(slots, usedSeatsByUser);
+    if (perm) {
+      const gameSeats: Record<string, { userIds: string[] }> = {};
+      for (let i = 0; i < 10; i++) {
+        gameSeats[String(perm[i])] = { userIds: [...slots[i].userIds] };
+      }
+      out[String(g)] = gameSeats;
+      recordSeatsForGame(slots, perm, usedSeatsByUser);
+    } else {
+      relaxedConstraints = true;
+      const shuffled = shuffleInPlace([...slots]);
+      const gameSeats: Record<string, { userIds: string[] }> = {};
+      for (let s = 1; s <= 10; s++) {
+        gameSeats[String(s)] = { userIds: [...shuffled[s - 1].userIds] };
+      }
+      out[String(g)] = gameSeats;
+      for (let s = 1; s <= 10; s++) {
+        for (const uid of shuffled[s - 1].userIds) {
+          let set = usedSeatsByUser.get(uid);
+          if (!set) {
+            set = new Set<number>();
+            usedSeatsByUser.set(uid, set);
+          }
+          set.add(s);
+        }
+      }
     }
-    out[String(g)] = gameSeats;
   }
-  return out;
+
+  return { seatingByGame: out, relaxedConstraints };
 }
 
 export default function DashboardTournamentDetail(props: { disableCustomTheme?: boolean }) {
@@ -262,11 +347,18 @@ export default function DashboardTournamentDetail(props: { disableCustomTheme?: 
       .map((r) => ({
         userIds: [r.u1!._id, ...(r.u2 ? [r.u2._id] : [])],
       }));
-    const seatingByGame = generateSeatingByGame(participants, tournament.numGames);
+    const { seatingByGame, relaxedConstraints } = generateSeatingByGame(
+      participants,
+      tournament.numGames
+    );
     try {
       await axios.put(`/club/tournament/${id}/seating`, { seatingByGame });
       await refresh();
-      alert('Розсадку згенеровано та збережено');
+      alert(
+        relaxedConstraints
+          ? 'Розсадку збережено. Для однієї або кількох ігор не вдалося уникнути повтору того ж місця (занадто багато ігор або обмеження пар) — там використано випадкову перестановку.'
+          : 'Розсадку згенеровано та збережено'
+      );
     } catch (e: any) {
       alert(e?.response?.data?.error || 'Помилка');
     }
