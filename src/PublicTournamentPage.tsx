@@ -710,24 +710,27 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                   sx={{
                     flex: { sm: '1 1 auto' },
                     minWidth: 0,
-                    minHeight: showTabLabels ? { xs: 44, sm: 48 } : { xs: 40, sm: 48 },
+                    minHeight: showTabLabels ? { xs: 36, sm: 38 } : { xs: 40, sm: 48 },
                     ...(showTabLabels
                       ? {}
                       : { '& .MuiTabs-flexContainer': { alignItems: 'center', minHeight: 40 } }),
                     '& .MuiTab-root': {
-                      minHeight: showTabLabels ? { xs: 44, sm: 48 } : { xs: 40, sm: 48 },
-                      py: showTabLabels ? 0.75 : 0.25,
-                      fontSize: { xs: '0.95rem', sm: '1.05rem' },
+                      minHeight: showTabLabels ? { xs: 36, sm: 38 } : { xs: 40, sm: 48 },
+                      py: showTabLabels ? 0.35 : 0.25,
+                      fontSize: '0.8125rem',
                       fontWeight: 700,
+                      lineHeight: 1.2,
+                      textTransform: 'none',
+                      letterSpacing: 0.01,
                       justifyContent: 'center',
-                      minWidth: { xs: 0, sm: 90 },
-                      px: { xs: 0.5, sm: 1 },
+                      minWidth: { xs: 0, sm: showTabLabels ? 72 : 0 },
+                      px: showTabLabels ? { xs: 0.65, sm: 0.85 } : { xs: 0.5, sm: 1 },
                     },
                     '& .MuiTab-iconWrapper': {
-                      ...(showTabLabels ? { mr: 1, mb: 0 } : { mr: 0, mb: 0 }),
+                      ...(showTabLabels ? { mr: 0.5, mb: 0 } : { mr: 0, mb: 0 }),
                     },
                     '& .MuiTab-iconWrapper .MuiSvgIcon-root': {
-                      fontSize: showTabLabels ? '1.25rem' : '2.125rem',
+                      fontSize: showTabLabels ? '1rem' : '2.125rem',
                       width: '1em',
                       height: '1em',
                     },
