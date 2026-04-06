@@ -19,7 +19,7 @@ import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -232,6 +232,8 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
     border: (t: Theme) => `1px solid ${t.palette.divider}`,
     boxShadow: (t: Theme) => t.shadows[2],
     width: '100%',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
     overflowX: 'auto',
   } as const;
 
@@ -243,16 +245,21 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
           sx={{
             width: '100%',
             minWidth: 0,
+            maxWidth: '100%',
             tableLayout: 'fixed',
             ...participantsTableBodySx,
           }}
         >
+          <colgroup>
+            <col style={{ width: '56px' }} />
+            <col style={{ width: 'auto' }} />
+          </colgroup>
           <TableHead>
             <TableRow sx={participantsHeadSx}>
-              <TableCell align="center" sx={{ width: 56 }}>
+              <TableCell align="center" sx={{ width: '56px', maxWidth: '56px', boxSizing: 'border-box' }}>
                 №
               </TableCell>
-              <TableCell sx={{ width: 'auto' }}>Гравці</TableCell>
+              <TableCell sx={{ minWidth: 0 }}>Гравці</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -264,12 +271,12 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
                   '&:last-child td': { borderBottom: 0 },
                 }}
               >
-                <TableCell align="center">
+                <TableCell align="center" sx={{ width: '56px', maxWidth: '56px', boxSizing: 'border-box' }}>
                   <Typography component="span" variant="body1" sx={participantSeatNumberSx}>
                     {slot.seatIndex}
                   </Typography>
                 </TableCell>
-                <TableCell sx={{ minWidth: 0 }}>
+                <TableCell sx={{ minWidth: 0, width: '100%' }}>
                   <PlayerCell players={slot.players} />
                 </TableCell>
               </TableRow>
@@ -291,21 +298,22 @@ function PublicParticipantsTable({ slots }: { slots: PublicSlot[] }) {
         size="medium"
         sx={{
           width: '100%',
-          minWidth: { sm: 640 },
+          minWidth: { sm: '640px' },
           tableLayout: 'fixed',
           ...participantsTableBodySx,
         }}
       >
         <TableHead>
           <TableRow sx={participantsHeadSx}>
-            <TableCell align="center" sx={{ width: 64 }}>
+            <TableCell align="center" sx={{ width: '64px', maxWidth: '64px' }}>
               №
             </TableCell>
             <TableCell sx={{ width: '42%' }}>Гравці</TableCell>
             <TableCell
               align="center"
               sx={{
-                width: 64,
+                width: '64px',
+                maxWidth: '64px',
                 borderLeft: (t) => `1px solid ${alpha(t.palette.primary.contrastText, 0.22)}`,
               }}
             >
@@ -434,6 +442,9 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
   const [liveGameLoading, setLiveGameLoading] = React.useState(false);
   const publicSeatingExportRef = React.useRef<HTMLDivElement>(null);
   const [seatingDownloadBusy, setSeatingDownloadBusy] = React.useState(false);
+  const theme = useTheme();
+  /** Кнопки прокрутки Tabs на touch-пристроях часто з’їдають перший тап після свайпу; лишаємо лише горизонтальний свайп. */
+  const tabScrollButtonsMobileOff = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDownloadSeatingPng = async () => {
     const el = publicSeatingExportRef.current;
@@ -691,12 +702,20 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                   value={tab}
                   onChange={(_, v) => setTab(v)}
                   variant="scrollable"
-                  scrollButtons="auto"
+                  scrollButtons={tabScrollButtonsMobileOff ? false : 'auto'}
+                  allowScrollButtonsMobile={false}
                   sx={{
                     flex: { sm: '1 1 auto' },
                     minWidth: 0,
                     minHeight: { xs: 44, sm: 48 },
+                    touchAction: 'manipulation',
+                    '& .MuiTabs-scroller': {
+                      touchAction: 'pan-x pinch-zoom',
+                      overscrollBehaviorX: 'contain',
+                    },
                     '& .MuiTab-root': {
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent',
                       minHeight: { xs: 44, sm: 48 },
                       py: 0.75,
                       fontSize: { xs: '0.95rem', sm: '1.05rem' },
@@ -721,7 +740,7 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
               </Stack>
 
               {tab === 0 && (
-                <Box sx={{ pt: 1 }}>
+                <Box sx={{ pt: 1, width: '100%', minWidth: 0, alignSelf: 'stretch' }}>
                   {data.participantSlots.length === 0 ? (
                     <TableContainer
                       component={Paper}
@@ -731,6 +750,8 @@ export default function PublicTournamentPage(props: { disableCustomTheme?: boole
                         border: (t) => `1px solid ${t.palette.divider}`,
                         boxShadow: (t) => t.shadows[2],
                         width: '100%',
+                        maxWidth: '100%',
+                        boxSizing: 'border-box',
                       }}
                     >
                       <Table size="medium">
