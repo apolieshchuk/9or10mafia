@@ -98,6 +98,8 @@ const BONUS_RATING_LOSS = [0.1, 0.2, 0.3];
 const BONUS_TOURNAMENT_WIN = [0.4, 0.5, 0.6, 0.7, 0.8];
 /** Програвша команда в турнірі — максимум +0.5 */
 const BONUS_TOURNAMENT_LOSS = [0.2, 0.3, 0.4, 0.5];
+const PENALTY_TOURNAMENT_WIN = [-0.4, -0.5, -0.6, -0.7, -0.8];
+const PENALTY_TOURNAMENT_LOSS = [-0.2, -0.3, -0.4, -0.5];
 
 const loadSavedState = () => {
   try {
@@ -293,7 +295,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
         const role = out[n]?.role;
         const won = winState === 'mafia' ? [1, 2, 3].includes(role) : [0, 4].includes(role);
         const bp = Number(out[n]?.bonusPoints) || 0;
-        if (!won && bp > 0.5) {
+        if (!won && (bp > 0.5 || bp < -0.5)) {
           out[n] = { ...out[n], bonusPoints: 0 };
           changed = true;
         }
@@ -608,6 +610,8 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
   const bonusWinnerOpts = isTournamentGame ? BONUS_TOURNAMENT_WIN : BONUS_RATING_WIN;
   const bonusLoserOpts = isTournamentGame ? BONUS_TOURNAMENT_LOSS : BONUS_RATING_LOSS;
+  const penaltyWinnerOpts = isTournamentGame ? PENALTY_TOURNAMENT_WIN : [];
+  const penaltyLoserOpts = isTournamentGame ? PENALTY_TOURNAMENT_LOSS : [];
 
   if (tournamentHidden) {
     return (
@@ -830,7 +834,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                    }}>
                   {winState && n !== 0
                     ? (players[n].bonusPoints
-                      ? <span style={{fontSize: '0.7rem', color: '#4caf50'}}>+{players[n].bonusPoints}</span>
+                      ? <span style={{fontSize: '0.7rem', color: players[n].bonusPoints > 0 ? '#4caf50' : '#f44336'}}>{players[n].bonusPoints > 0 ? '+' : ''}{players[n].bonusPoints}</span>
                       : <ThumbUpIcon sx={{fontSize: '0.9rem', opacity: 0.5}}/>)
                     : n === 0
                       ? <HeartBrokenIcon/>
@@ -851,17 +855,35 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
           anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
         >
-          <Stack direction="row" spacing={1} sx={{p: 1.5}}>
-            {(isPlayerWinner(bonusPlayerN) ? bonusWinnerOpts : bonusLoserOpts).map(p => (
-              <Button
-                key={p}
-                variant={players[bonusPlayerN]?.bonusPoints === p ? 'contained' : 'outlined'}
-                size="small"
-                onClick={() => selectBonus(p)}
-              >
-                +{p}
-              </Button>
-            ))}
+          <Stack spacing={1} sx={{p: 1.5}}>
+            <Stack direction="row" spacing={1}>
+              {(isPlayerWinner(bonusPlayerN) ? bonusWinnerOpts : bonusLoserOpts).map(p => (
+                <Button
+                  key={p}
+                  variant={players[bonusPlayerN]?.bonusPoints === p ? 'contained' : 'outlined'}
+                  size="small"
+                  color="success"
+                  onClick={() => selectBonus(p)}
+                >
+                  +{p}
+                </Button>
+              ))}
+            </Stack>
+            {(isPlayerWinner(bonusPlayerN) ? penaltyWinnerOpts : penaltyLoserOpts).length > 0 && (
+              <Stack direction="row" spacing={1}>
+                {(isPlayerWinner(bonusPlayerN) ? penaltyWinnerOpts : penaltyLoserOpts).map(p => (
+                  <Button
+                    key={p}
+                    variant={players[bonusPlayerN]?.bonusPoints === p ? 'contained' : 'outlined'}
+                    size="small"
+                    color="error"
+                    onClick={() => selectBonus(p)}
+                  >
+                    {p}
+                  </Button>
+                ))}
+              </Stack>
+            )}
           </Stack>
         </Popover>
 
