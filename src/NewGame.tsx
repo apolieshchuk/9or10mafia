@@ -232,7 +232,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
 
   const setPlayerNickname = (n: number, title: string, id: string) => {
     if (readOnlyTournament || tournamentHidden) return;
-    if (gameLockedAfterWin) {
+    if (gameLockedAfterWin && !(isTournamentGame && players[n]?.pendingTeamIds?.length)) {
       alert('Гра закінчена');
       return;
     }
@@ -396,6 +396,20 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       alert('Не всім розподілено нікнейми');
       return
     }
+    if (!isTournamentGame) {
+      const missingId = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].some(
+        (seat) => players[seat]?.title && !String(players[seat].title).startsWith('Гість') && !players[seat].id
+      );
+      if (missingId) {
+        alert('Для кожного місця з командою оберіть гравця (конкретний акаунт)');
+        return;
+      }
+    }
+    setWinState(() => winner);
+  }
+
+  const submitGame = async () => {
+    if (!winState) return;
     const missingId = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].some(
       (seat) => players[seat]?.title && !String(players[seat].title).startsWith('Гість') && !players[seat].id
     );
@@ -403,11 +417,6 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
       alert('Для кожного місця з командою оберіть гравця (конкретний акаунт)');
       return;
     }
-    setWinState(() => winner);
-  }
-
-  const submitGame = async () => {
-    if (!winState) return;
     const updatingSaved = Boolean(isTournamentGame && editingSavedTournamentGame);
     if (!confirm(updatingSaved ? 'Зберегти зміни в цій грі турніру?' : 'Відправити результати гри?')) return;
     const playersPayload = Object.values(players).map((p: any) => ({
