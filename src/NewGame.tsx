@@ -188,6 +188,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
   const setPlayers = (item: any) => _setPlayers(() => item);
   const [bonusAnchorEl, setBonusAnchorEl] = React.useState<HTMLElement | null>(null);
   const [bonusPlayerN, setBonusPlayerN] = React.useState<number>(0);
+  const [killedShowInfo, setKilledShowInfo] = React.useState(false);
 
   const gameLockedAfterWin = Boolean(winState && !(editingSavedTournamentGame && isTournamentGame));
 
@@ -732,7 +733,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
             [{n: 0}, ...Object.values(players)].map(({n}: any) => (
               <React.Fragment key={n}>
                 {
-                  players[n]?.killed !== 1 && <>
+                  (players[n]?.killed !== 1 || (n !== 0 && killedShowInfo)) && <>
                         <Grid onClick={() => promoteVote(n)} sx={{cursor: 'pointer', p: '.2rem'}}
                               size={{xs: 1.5, sm: 1, lg: 1}}>
                           {n === 0 ? <ThumbUpIcon/> : n}
@@ -746,7 +747,6 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                               if (typeof newValue === 'string') {
                                 setPlayerNickname(n, newValue, '');
                               } else if (newValue && newValue.inputValue) {
-                                // Create a new value from the user input
                                 setPlayerNickname(n, newValue.inputValue || newValue.inputValue?.title || '', newValue.inputValue?.id || '');
                               } else {
                                 setPlayerNickname(n, newValue?.title || `Гість ${n}`, newValue?._id);
@@ -756,7 +756,6 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                               const filtered = filter(options, params);
 
                               const {inputValue} = params;
-                              // Suggest the creation of a new value
                               const isExisting = options.some((option) => inputValue === option.title);
                               if (inputValue !== '' && !isExisting) {
                                 filtered.push({
@@ -780,15 +779,12 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                             })()}
                             freeSolo={!readOnlyTournament && !(players[n] as any)?.pendingTeamIds?.length}
                             getOptionLabel={(option) => {
-                              // Value selected with enter, right from the input
                               if (typeof option === 'string') {
                                 return option;
                               }
-                              // Add "xxx" option created dynamically
                               if (option.inputValue) {
                                 return option.inputValue;
                               }
-                              // Regular option
                               return option.title;
                             }}
                             renderOption={(props, option) => {
@@ -821,7 +817,7 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
                     </>
                 }
                 {
-                  n !== 0 && players[n]?.killed === 1 &&
+                  n !== 0 && players[n]?.killed === 1 && !killedShowInfo &&
                     <Grid container columns={12} sx={{p: '.3rem', backgroundColor: 'rgba(200, 200, 210, 0.25)'}} size={{xs: 10.75, sm: 11.5, lg: 11.5}}>
                       {
                         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
@@ -874,6 +870,17 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
             ))
           }
         </Grid>
+
+        {Object.values(players).some((p: any) => p.killed === 1) && (
+          <Button
+            onClick={() => setKilledShowInfo(!killedShowInfo)}
+            variant="text"
+            size="small"
+            sx={{ mt: 0.5, textTransform: 'none', fontSize: '0.75rem' }}
+          >
+            {killedShowInfo ? 'ОП5' : 'Роль / Нік / Фоли'}
+          </Button>
+        )}
 
         <Popover
           open={Boolean(bonusAnchorEl)}
