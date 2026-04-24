@@ -429,12 +429,14 @@ export default function NewGame(props: { disableCustomTheme?: boolean }) {
     if (!winState) return;
     const effective = resolveTeamSeats(players);
     if (effective !== players) setPlayers(effective);
-    const missingId = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].some(
-      (seat) => effective[seat]?.title && !String(effective[seat].title).startsWith('Гість') && !effective[seat].id
-    );
-    if (missingId) {
-      alert('Для кожного місця з командою оберіть гравця (конкретний акаунт)');
-      return;
+    if (isTournamentGame) {
+      const missingId = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].some(
+        (seat) => effective[seat]?.title && !String(effective[seat].title).startsWith('Гість') && !effective[seat].id
+      );
+      if (missingId) {
+        alert('Для кожного місця з командою оберіть гравця (конкретний акаунт)');
+        return;
+      }
     }
     const updatingSaved = Boolean(isTournamentGame && editingSavedTournamentGame);
     if (!confirm(updatingSaved ? 'Зберегти зміни в цій грі турніру?' : 'Відправити результати гри?')) return;
